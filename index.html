@@ -1,0 +1,1572 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Festival — Missions</title>
+    <style>
+        * { box-sizing: border-box; }
+
+        :root {
+          --bg: #f7f3eb;
+          --bg-2: #efe7db;
+          --card: rgba(255,255,255,0.9);
+          --text: #2f2a24;
+          --muted: #6c6358;
+          --line: #ded5c8;
+          --accent: #7a8f6f;
+          --accent-2: #b76f53;
+          --soft: #f4ede4;
+          --shadow: 0 14px 36px rgba(0,0,0,0.08);
+          --radius: 22px;
+          --radius-sm: 14px;
+        }
+
+        body {
+          margin: 0;
+          font-family: Arial, sans-serif;
+          background: linear-gradient(180deg, var(--bg) 0%, var(--bg-2) 100%);
+          color: var(--text);
+          min-height: 100vh;
+          padding: 18px;
+        }
+
+        .app {
+          width: 100%;
+          max-width: 720px;
+          margin: 0 auto;
+          background: var(--card);
+          backdrop-filter: blur(8px);
+          border-radius: 28px;
+          box-shadow: var(--shadow);
+          overflow: hidden;
+          border: 1px solid rgba(255,255,255,0.65);
+        }
+
+        .topbar {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          gap: 12px;
+          padding: 16px 18px;
+          border-bottom: 1px solid var(--line);
+          background: rgba(255,255,255,0.65);
+          position: sticky;
+          top: 0;
+          z-index: 5;
+          backdrop-filter: blur(10px);
+        }
+
+        .brand {
+          font-weight: 700;
+          letter-spacing: 0.02em;
+        }
+
+        .top-actions {
+          display: flex;
+          gap: 8px;
+          flex-wrap: wrap;
+          justify-content: flex-end;
+        }
+
+        .screen {
+          display: none;
+          padding: 20px 18px 28px;
+          animation: fadeIn 0.25s ease;
+        }
+
+        .screen.active {
+          display: block;
+        }
+
+        @keyframes fadeIn {
+          from {
+            opacity: 0;
+            transform: translateY(8px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+
+        h1, h2, h3, p {
+          margin: 0;
+        }
+
+        h1 {
+          font-size: 1.9rem;
+          line-height: 1.12;
+          margin-bottom: 10px;
+        }
+
+        h2 {
+          font-size: 1.3rem;
+          margin-bottom: 10px;
+        }
+
+        h3 {
+          margin-bottom: 12px;
+        }
+
+        .sub {
+          color: var(--muted);
+          line-height: 1.45;
+          margin-top: 4px;
+        }
+
+        .stack {
+          display: grid;
+          gap: 14px;
+        }
+
+        .card {
+          background: rgba(255,255,255,0.92);
+          border: 1px solid rgba(222,213,200,0.7);
+          border-radius: var(--radius);
+          padding: 18px;
+          box-shadow: 0 20px 40px rgba(0,0,0,0.08);
+          backdrop-filter: blur(10px);
+        }
+
+        .mission-card {
+          padding: 26px;
+          background: linear-gradient(180deg, rgba(255,255,255,0.98), rgba(255,255,255,0.88));
+          border-color: rgba(122,143,111,0.18);
+        }
+
+        .mission-text {
+          font-size: 1.72rem;
+          line-height: 1.22;
+          text-align: center;
+          margin: 18px 0 10px;
+          color: #2a2a22;
+        }
+
+        .micro {
+          font-size: 0.92rem;
+          color: #6e6457;
+        }
+
+        .input, .textarea, .select {
+          width: 100%;
+          border: 1px solid rgba(47,42,36,0.12);
+          border-radius: 16px;
+          padding: 14px 16px;
+          font-size: 1rem;
+          background: rgba(255,255,255,0.95);
+          color: var(--text);
+          box-shadow: inset 0 1px 2px rgba(47,42,36,0.05);
+        }
+
+        .textarea {
+          min-height: 120px;
+          resize: vertical;
+          font-family: inherit;
+        }
+
+        .label {
+          display: block;
+          font-weight: 700;
+          margin-bottom: 10px;
+        }
+
+        .row {
+          display: flex;
+          gap: 12px;
+          flex-wrap: wrap;
+          align-items: center;
+        }
+
+        .btn {
+          border: 1px solid rgba(0,0,0,0.08);
+          border-radius: 999px;
+          padding: 14px 18px;
+          font-size: 0.98rem;
+          font-weight: 700;
+          cursor: pointer;
+          color: var(--text);
+          background: rgba(255,255,255,0.95);
+          box-shadow: 0 10px 18px rgba(0,0,0,0.08);
+          transition: transform 0.12s ease, opacity 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .btn:hover {
+          opacity: 1;
+          transform: translateY(-1px);
+          box-shadow: 0 14px 22px rgba(0,0,0,0.12);
+        }
+
+        .btn:active {
+          transform: translateY(1px);
+        }
+
+        .btn-primary {
+          background: linear-gradient(135deg, #7a8f6f 0%, #6f7c65 100%);
+          color: white;
+          border-color: transparent;
+        }
+
+        .btn-secondary {
+          background: rgba(247,241,232,0.95);
+          color: var(--text);
+        }
+
+        .btn-warm {
+          background: linear-gradient(135deg, #b76f53 0%, #9f624f 100%);
+          color: white;
+          border-color: transparent;
+        }
+
+        .btn-link {
+          background: transparent;
+          border: 0;
+          padding: 8px 0;
+          color: var(--accent);
+          text-decoration: underline;
+          border-radius: 0;
+          font-weight: 700;
+        }
+
+        .home-hero {
+          padding: 8px 0 14px;
+        }
+
+        .home-actions {
+          display: grid;
+          gap: 10px;
+          margin-top: 8px;
+        }
+
+        .pill {
+          display: inline-block;
+          font-size: 0.8rem;
+          color: var(--muted);
+          background: var(--soft);
+          border: 1px solid var(--line);
+          border-radius: 999px;
+          padding: 7px 10px;
+        }
+
+        .hint-box {
+          background: #fff8ef;
+          border: 1px solid #edd9ba;
+          color: #695233;
+          border-radius: 16px;
+          padding: 12px 14px;
+          line-height: 1.4;
+        }
+
+        .validation-photo-box {
+          display: grid;
+          gap: 10px;
+        }
+
+        .radio-group {
+          display: grid;
+          gap: 10px;
+          margin-top: 6px;
+        }
+
+        .radio-option {
+          display: flex;
+          gap: 10px;
+          align-items: flex-start;
+          border: 1px solid var(--line);
+          border-radius: 16px;
+          padding: 12px;
+          background: white;
+        }
+
+        .radio-option input {
+          margin-top: 3px;
+        }
+
+        .list {
+          display: grid;
+          gap: 12px;
+        }
+
+        .journal-item,
+        .photo-item,
+        .suggestion-item {
+          border: 1px solid var(--line);
+          border-radius: 18px;
+          padding: 14px;
+          background: white;
+          display: grid;
+          gap: 10px;
+        }
+
+        .journal-top {
+          display: flex;
+          gap: 12px;
+          align-items: flex-start;
+        }
+
+        .thumb {
+          width: 72px;
+          height: 72px;
+          border-radius: 14px;
+          object-fit: cover;
+          background: var(--soft);
+          border: 1px solid var(--line);
+          flex: 0 0 72px;
+        }
+
+        .journal-main {
+          flex: 1 1 auto;
+          min-width: 0;
+          display: grid;
+          gap: 8px;
+        }
+
+        .journal-title,
+        .photo-title {
+          font-weight: 700;
+          line-height: 1.35;
+        }
+
+        .stars {
+          display: flex;
+          gap: 6px;
+          flex-wrap: wrap;
+        }
+
+        .star-btn {
+          border: 1px solid var(--line);
+          border-radius: 999px;
+          background: white;
+          min-width: 40px;
+          padding: 8px 10px;
+          cursor: pointer;
+          font-weight: 700;
+        }
+
+        .star-btn.active {
+          background: var(--soft);
+          border-color: #c5b196;
+        }
+
+        .grid-photos {
+          display: grid;
+          grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+          gap: 12px;
+        }
+
+        .photo-card {
+          background: white;
+          border: 1px solid var(--line);
+          border-radius: 18px;
+          padding: 10px;
+          display: grid;
+          gap: 8px;
+        }
+
+        .photo-card img {
+          width: 100%;
+          aspect-ratio: 1 / 1;
+          object-fit: cover;
+          border-radius: 12px;
+          background: var(--soft);
+          border: 1px solid var(--line);
+        }
+
+        .empty {
+          color: var(--muted);
+          text-align: center;
+          padding: 22px 12px;
+          border: 1px dashed var(--line);
+          border-radius: 18px;
+          background: rgba(255,255,255,0.6);
+        }
+
+        .orga-grid {
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+          gap: 12px;
+        }
+
+        .stat {
+          background: white;
+          border: 1px solid var(--line);
+          border-radius: 18px;
+          padding: 14px;
+          display: grid;
+          gap: 6px;
+        }
+
+        .stat strong {
+          font-size: 1.5rem;
+        }
+
+        .muted-list {
+          display: grid;
+          gap: 8px;
+          color: var(--muted);
+          line-height: 1.45;
+        }
+
+        details summary {
+          cursor: pointer;
+          font-weight: 700;
+        }
+
+        .footer-note {
+          color: var(--muted);
+          text-align: center;
+          font-size: 0.9rem;
+          margin-top: 8px;
+        }
+
+        /* Toast Notifications */
+        .toast-container {
+          position: fixed;
+          bottom: 20px;
+          right: 20px;
+          z-index: 999;
+          display: flex;
+          flex-direction: column;
+          gap: 8px;
+          pointer-events: none;
+        }
+
+        .toast {
+          background: var(--accent);
+          color: white;
+          padding: 14px 18px;
+          border-radius: 12px;
+          box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+          opacity: 0;
+          transform: translateY(20px);
+          transition: opacity 0.3s ease, transform 0.3s ease;
+          font-size: 0.95rem;
+          font-weight: 600;
+          max-width: 280px;
+          pointer-events: auto;
+        }
+
+        .toast.show {
+          opacity: 1;
+          transform: translateY(0);
+        }
+
+        .toast-success { background: #7a8f6f; }
+        .toast-error { background: #b76f53; }
+        .toast-info { background: #7a8f6f; }
+        .toast-warning { background: #d4a574; color: #2f2a24; }
+
+        /* Progress Bar */
+        .progress-section {
+          padding: 12px 0;
+          margin-bottom: 8px;
+        }
+
+        .progress-bar {
+          width: 100%;
+          height: 4px;
+          background: rgba(0,0,0,0.08);
+          border-radius: 999px;
+          overflow: hidden;
+          margin: 8px 0;
+        }
+
+        .progress-bar-fill {
+          height: 100%;
+          background: var(--accent);
+          transition: width 0.4s ease;
+        }
+
+        .progress-text {
+          font-size: 0.85rem;
+          color: var(--muted);
+          text-align: center;
+        }
+
+        @media (max-width: 560px) {
+          .topbar {
+            align-items: flex-start;
+            flex-direction: column;
+          }
+
+          .top-actions {
+            width: 100%;
+            justify-content: flex-start;
+          }
+
+          .mission-text {
+            font-size: 1.32rem;
+          }
+
+          .journal-top {
+            flex-direction: column;
+          }
+        }
+
+        .input-file-hidden {
+          display: none;
+        }
+
+        .file-label {
+          cursor: pointer;
+          margin-bottom: 8px;
+        }
+
+        .file-name {
+          margin-top: 4px;
+          color: var(--muted);
+        }
+    </style>
+</head>
+<body>
+<div id="toast-container" class="toast-container"></div>
+<div class="app">
+    <div class="topbar">
+      <div>
+        <div class="brand">Festival — Missions</div>
+      </div>
+      <div class="top-actions">
+        <button class="btn btn-link" data-go="home">Accueil</button>
+      </div>
+    </div>
+
+    <section id="screen-home" class="screen active">
+      <div class="stack">
+        <div class="home-hero">
+          <h1>Commence simplement. Le reste suivra.</h1>
+          <p class="sub">Laisse-toi surprendre.</p>
+        </div>
+
+        <div class="card stack">
+          <div>
+            <label class="label" for="display-name-input">Prénom ou pseudo <span class="micro">(facultatif)</span></label>
+            <input id="display-name-input" class="input" type="text" placeholder="Ex. Léo" maxlength="40" />
+          </div>
+
+          <div class="home-actions">
+            <button id="start-btn" class="btn btn-primary">Je joue</button>
+            <button id="journal-btn" class="btn btn-secondary">Mon journal</button>
+          </div>
+        </div>
+
+        <div class="hint-box">
+          Les photos peuvent rester <strong>juste pour toi</strong> ou être <strong>partagées avec les participants</strong> qui ont le lien du festival. Rien n'est partagé automatiquement.
+        </div>
+      </div>
+    </section>
+
+    <section id="screen-mission" class="screen">
+      <div class="stack">
+        <div class="card mission-card stack">
+          <span class="pill">Mission du moment</span>
+          <div id="mission-text" class="mission-text">…</div>
+          <div class="footer-note">Tu peux essayer, passer, ou revenir plus tard.</div>
+        </div>
+
+        <div class="row">
+          <button id="validate-mission-btn" class="btn btn-primary">Valider</button>
+          <button id="another-mission-btn" class="btn btn-secondary">Autre mission</button>
+        </div>
+      </div>
+    </section>
+
+    <section id="screen-validation" class="screen">
+      <div class="stack">
+        <div>
+          <h2>Valider cette mission</h2>
+          <p class="sub">Tu peux laisser une trace… ou juste valider simplement.</p>
+        </div>
+
+        <div class="card stack validation-photo-box">
+          <div>
+            <input id="photo-input" class="input-file-hidden" type="file" accept="image/*" />
+            <label for="photo-input" class="btn btn-secondary file-label">Choisir une photo</label>
+            <div id="file-name-display" class="micro file-name"></div>
+          </div>
+
+          <div id="photo-preview-wrap" class="stack" style="display:none;">
+            <img id="photo-preview" alt="Aperçu" class="thumb" style="width:120px;height:120px;" />
+          </div>
+        </div>
+
+        <div class="card stack">
+          <div>
+            <label class="label" for="orga-message-input">Un retour sur cette mission <span class="micro">(facultatif)</span></label>
+            <textarea id="orga-message-input" class="textarea" placeholder="Un ressenti, un retour, ou un petit mot pour les orgas…"></textarea>
+          </div>
+        </div>
+
+        <div class="row">
+          <button id="confirm-validation-btn" class="btn btn-primary">Valider</button>
+          <button id="cancel-validation-btn" class="btn btn-secondary">Retour</button>
+        </div>
+      </div>
+    </section>
+
+    <section id="screen-missions" class="screen" style="display: none;"></section>
+    <section id="screen-journal" class="screen">
+      <div class="stack">
+        <div>
+          <h2>Mon journal</h2>
+          <p class="sub">Les missions que tu as faites, les traces que tu as laissées, et celles que tu veux peut-être refaire.</p>
+        </div>
+        <div id="journal-list" class="list"></div>
+      </div>
+    </section>
+
+    <section id="screen-photos" class="screen" style="display: none;">
+      <div class="stack">
+        <div>
+          <h2>Photos du festival</h2>
+          <p class="sub">Ici, tu vois seulement les photos que les participants ont choisi de partager avec le lien du festival.</p>
+        </div>
+        <div id="photos-grid" class="grid-photos"></div>
+      </div>
+    </section>
+
+    <section id="screen-suggest" class="screen" style="display: none;">
+      <div class="stack">
+        <div>
+          <h2>Proposer une mission</h2>
+          <p class="sub">Tu as une idée de défi, de rencontre ou de jeu ? Ajoute-la. Elle ne sera pas publiée automatiquement.</p>
+        </div>
+
+        <div class="card stack">
+          <div>
+            <label class="label" for="suggest-text">Ta mission</label>
+            <textarea id="suggest-text" class="textarea" placeholder="Ex. Fais découvrir ton coin préféré du festival à quelqu'un…"></textarea>
+          </div>
+
+          <div>
+            <label class="label" for="suggest-category">Catégorie estimée</label>
+            <select id="suggest-category" class="select">
+              <option value="">Choisir</option>
+              <option value="OSE">OSE</option>
+              <option value="ENTRAÎNE">ENTRAÎNE</option>
+              <option value="RESSENS">RESSENS</option>
+              <option value="LIEN">LIEN</option>
+              <option value="JOUE">JOUE</option>
+            </select>
+          </div>
+
+          <div>
+            <label class="label" for="suggest-level">Niveau estimé</label>
+            <select id="suggest-level" class="select">
+              <option value="">Choisir</option>
+              <option value="1">1</option>
+              <option value="2">2</option>
+              <option value="3">3</option>
+              <option value="4">4</option>
+              <option value="5">5</option>
+              <option value="6">6</option>
+              <option value="7">7</option>
+              <option value="8">8</option>
+            </select>
+          </div>
+
+          <div class="row">
+            <button id="submit-suggestion-btn" class="btn btn-primary">Envoyer la mission</button>
+          </div>
+        </div>
+
+        <details class="card">
+          <summary>Voir les propositions déjà stockées sur cet appareil</summary>
+          <div id="suggestions-list" class="list" style="margin-top: 14px;"></div>
+        </details>
+      </div>
+    </section>
+
+    <section id="screen-orga" class="screen" style="display: none;">
+      <div class="stack">
+        <div>
+          <h2>Vue orga</h2>
+          <p class="sub">Stats locales de démonstration. À brancher ensuite à Supabase pour les vraies données partagées.</p>
+        </div>
+
+        <div id="orga-stats" class="orga-grid"></div>
+
+        <div class="card stack">
+          <h3>Top missions</h3>
+          <div id="top-missions" class="muted-list"></div>
+        </div>
+
+        <div class="card stack">
+          <h3>Missions les mieux notées</h3>
+          <div id="top-rated" class="muted-list"></div>
+        </div>
+
+        <div class="card stack">
+          <h3>Enchaînements les plus fréquents</h3>
+          <div id="top-sequences" class="muted-list"></div>
+        </div>
+
+        <div class="card stack">
+          <h3>Messages orgas</h3>
+          <div id="orga-messages" class="muted-list"></div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+<script>
+    // ===== Toast Notifications System =====
+    const Toast = {
+      container: document.getElementById("toast-container"),
+      
+      show(message, type = "info", duration = 3000) {
+        const toast = document.createElement("div");
+        toast.className = `toast toast-${type}`;
+        toast.setAttribute("role", "alert");
+        toast.setAttribute("aria-live", "polite");
+        toast.textContent = message;
+        
+        this.container.appendChild(toast);
+        
+        // Trigger animation
+        setTimeout(() => toast.classList.add("show"), 10);
+        
+        // Remove after duration
+        setTimeout(() => {
+          toast.classList.remove("show");
+          setTimeout(() => toast.remove(), 300);
+        }, duration);
+      },
+      
+      success: (msg, duration) => Toast.show(msg, "success", duration),
+      error: (msg, duration) => Toast.show(msg, "error", duration),
+      info: (msg, duration) => Toast.show(msg, "info", duration),
+      warning: (msg, duration) => Toast.show(msg, "warning", duration)
+    };
+
+    // ===== Stockage =====
+    const STORAGE_KEYS = {
+      profile: "festival_user_profile",
+      results: "festival_results",
+      suggestions: "festival_mission_suggestions",
+      progress: "festival_progress_state",
+      sessionId: "festival_session_id",
+      missions: "festival_missions"
+    };
+
+    // ===== Métadonnées internes =====
+    const CATEGORIES = ["OSE", "ENTRAÎNE", "RESSENS", "LIEN", "JOUE", "BONUS"];
+    const THEMES = ["festival"];
+    const PLACES = ["general", "pool", "expression_wall"];
+
+    function createMission({
+      id,
+      text,
+      category,
+      level,
+      theme = "festival",
+      peopleMin = 1,
+      place = ["general"],
+      photoOk = true,
+      active = true,
+      bonus = false,
+      tags = [],
+      note = ""
+    }) {
+      return {
+        id,
+        text,
+        category,
+        level,
+        theme,
+        peopleMin,
+        place,
+        photoOk,
+        active,
+        bonus,
+        tags,
+        note
+      };
+    }
+
+    const DEFAULT_MISSIONS = [
+      createMission({ id: 1, text: "Va parler à quelqu'un que tu n'aurais pas abordé… et reste un vrai moment avec lui", category: "OSE", level: 3, tags: ["rencontre"] }),
+      createMission({ id: 2, text: "Regarde quelqu'un dans les yeux et souris", category: "OSE", level: 1, tags: ["simple", "regard"] }),
+      createMission({ id: 3, text: "Dis à quelqu'un : \"j'avais envie de te parler\"… et vois où ça t'emmène", category: "OSE", level: 2, tags: ["rencontre"] }),
+      createMission({ id: 4, text: "Va vers la personne qui t'impressionne… et dis-lui pourquoi (ex : très à l'aise / très stylée)", category: "OSE", level: 4, tags: ["audace"] }),
+      createMission({ id: 5, text: "Invite un inconnu à danser (même 20 secondes)", category: "OSE", level: 3, tags: ["danse", "rencontre"] }),
+      createMission({ id: 6, text: "Motive une personne à sauter dans la piscine avec toi", category: "OSE", level: 8, place: ["pool"], tags: ["piscine"], note: "piscine" }),
+      createMission({ id: 7, text: "Fais une danse ridicule assumée… et tiens-la jusqu'au bout avec le sourire", category: "OSE", level: 3, tags: ["danse", "fun"] }),
+      createMission({ id: 8, text: "Va voir quelqu'un seul et prends le temps avec lui", category: "OSE", level: 2, tags: ["rencontre", "présence"] }),
+      createMission({ id: 9, text: "Fais un vrai compliment à un inconnu (ex : énergie, style, regard)", category: "OSE", level: 2, tags: ["compliment", "rencontre"] }),
+
+      createMission({ id: 10, text: "Entraîne 5 personnes dans une chenille (et agrandis-la)", category: "ENTRAÎNE", level: 5, peopleMin: 5, tags: ["collectif", "fun"] }),
+      createMission({ id: 11, text: "Lance un chifoumi, même de loin, à au moins 3 personnes dans les 10 minutes qui suivent", category: "ENTRAÎNE", level: 4, peopleMin: 3, tags: ["jeu", "collectif"], note: "niveau à confirmer" }),
+      createMission({ id: 12, text: "Lance un cri collectif (tu lances, ils répondent)", category: "ENTRAÎNE", level: 5, peopleMin: 2, tags: ["collectif", "énergie"] }),
+      createMission({ id: 13, text: "Invite quelqu'un dans un défi danse (ex : 10 secondes chacun)", category: "ENTRAÎNE", level: 4, peopleMin: 2, tags: ["danse", "défi"] }),
+      createMission({ id: 14, text: "Rassemble 2 inconnus dans une action (danse, pose, jeu…)", category: "ENTRAÎNE", level: 5, peopleMin: 3, tags: ["collectif", "lien"] }),
+      createMission({ id: 15, text: "Lance un défilé (marche + attitude)", category: "ENTRAÎNE", level: 5, peopleMin: 2, tags: ["jeu", "collectif"] }),
+      createMission({ id: 16, text: "Entraîne un groupe dans un mouvement simple (ex : limbo, clap, saut)", category: "ENTRAÎNE", level: 4, peopleMin: 3, tags: ["collectif", "corps"] }),
+      createMission({ id: 17, text: "Embarque quelqu'un dans un jeu (ex : imitation, regard, mini défi, chifoumi…)", category: "ENTRAÎNE", level: 2, peopleMin: 2, tags: ["jeu", "duo"] }),
+      createMission({ id: 18, text: "Fais une visite guidée du lieu avec 2 personnes (à ta manière)", category: "ENTRAÎNE", level: 5, peopleMin: 3, tags: ["collectif", "impro"] }),
+      createMission({ id: 19, text: "Lance un saut collectif dans la piscine", category: "ENTRAÎNE", level: 8, peopleMin: 2, place: ["pool"], tags: ["piscine", "collectif"], note: "piscine" }),
+
+      createMission({ id: 20, text: "Trouve quelqu'un seul et reste avec lui (écoute vraiment)", category: "RESSENS", level: 2, tags: ["écoute", "présence"] }),
+      createMission({ id: 21, text: "Demande à quelqu'un ce qu'il aime vraiment (ex : passion, moment préféré)", category: "RESSENS", level: 3, tags: ["écoute", "vrai"] }),
+      createMission({ id: 22, text: "Fais un compliment sincère (pas générique)", category: "RESSENS", level: 1, tags: ["compliment"] }),
+      createMission({ id: 23, text: "Complimente un bénévole (remercie-le vraiment)", category: "RESSENS", level: 5, tags: ["gratitude", "bénévole"] }),
+      createMission({ id: 24, text: "Parle de quelque chose de vrai (ex : pourquoi tu es là)", category: "RESSENS", level: 3, tags: ["vrai", "partage"] }),
+      createMission({ id: 25, text: "Fais sourire quelqu'un (ex : regard, geste, mot simple)", category: "RESSENS", level: 1, tags: ["simple", "sourire"] }),
+      createMission({ id: 26, text: "Ramène un verre d'eau à quelqu'un qui en a besoin", category: "RESSENS", level: 1, tags: ["attention", "aide"] }),
+      createMission({ id: 27, text: "Partage un moment calme avec quelqu'un (à l'écart ou posé)", category: "RESSENS", level: 3, tags: ["calme", "présence"] }),
+      createMission({ id: 28, text: "Partage quelque chose à manger avec quelqu'un", category: "RESSENS", level: 3, tags: ["partage"] }),
+      createMission({ id: 29, text: "Fais un cadeau à quelqu'un (même symbolique)", category: "RESSENS", level: 5, tags: ["cadeau", "attention"] }),
+
+      createMission({ id: 30, text: "Crée un duo (ex : mini danse, pose, délire commun)", category: "LIEN", level: 2, peopleMin: 2, tags: ["duo", "lien"] }),
+      createMission({ id: 31, text: "Crée un trio (ex : nom + pose d'équipe)", category: "LIEN", level: 2, peopleMin: 3, tags: ["trio", "lien"] }),
+      createMission({ id: 32, text: "Présente deux personnes (comme dans une émission)", category: "LIEN", level: 2, peopleMin: 3, tags: ["rencontre", "lien"] }),
+      createMission({ id: 33, text: "Fais rencontrer deux inconnus (et lance un échange)", category: "LIEN", level: 2, peopleMin: 3, tags: ["rencontre", "lien"] }),
+      createMission({ id: 34, text: "Crée une rencontre entre 2 inconnus et reste un moment avec eux", category: "LIEN", level: 2, peopleMin: 3, tags: ["rencontre", "présence"] }),
+      createMission({ id: 35, text: "Apprends quelque chose à quelqu'un (ex : mouvement, jeu)", category: "LIEN", level: 2, peopleMin: 2, tags: ["transmission", "lien"] }),
+      createMission({ id: 36, text: "Trouve 3 points communs avec quelqu'un (rapide)", category: "LIEN", level: 2, peopleMin: 2, tags: ["duo", "échange"] }),
+      createMission({ id: 37, text: "Crée une poignée de main (simple et unique)", category: "LIEN", level: 2, peopleMin: 2, tags: ["duo", "jeu"] }),
+      createMission({ id: 38, text: "Fais quelque chose ensemble (ex : danser, jouer, poser)", category: "LIEN", level: 2, peopleMin: 2, tags: ["action", "lien"] }),
+
+      createMission({ id: 39, text: "Bouge au ralenti (et entraîne 1–2 personnes)", category: "JOUE", level: 1, tags: ["jeu", "corps"] }),
+      createMission({ id: 40, text: "Fige-toi comme une statue (et vois si d'autres suivent)", category: "JOUE", level: 1, tags: ["jeu", "corps"] }),
+      createMission({ id: 41, text: "Cache-toi en pleine piste (quelques secondes)", category: "JOUE", level: 4, tags: ["absurde", "fun"] }),
+      createMission({ id: 42, text: "Invente une autre vie (ex : métier improbable)", category: "JOUE", level: 4, tags: ["impro", "absurde"] }),
+      createMission({ id: 43, text: "Fais chanter quelqu'un (objet = micro)", category: "JOUE", level: 4, tags: ["jeu", "impro"] }),
+      createMission({ id: 44, text: "Crée une scène avec quelqu'un (ex : dispute, rencontre)", category: "JOUE", level: 4, peopleMin: 2, tags: ["impro", "duo"] }),
+      createMission({ id: 45, text: "Fais quelque chose d'absurde à plusieurs (ex : marcher bizarrement)", category: "JOUE", level: 4, peopleMin: 2, tags: ["absurde", "collectif"] }),
+      createMission({ id: 46, text: "Transforme une situation en jeu (ex : danse → défi)", category: "JOUE", level: 4, tags: ["jeu", "impro"] }),
+      createMission({ id: 47, text: "Crée un cercle et lance un battle de danse", category: "JOUE", level: 4, peopleMin: 3, tags: ["danse", "collectif"] }),
+      createMission({ id: 48, text: "Trouve une personne qui connaît le jeu du ninja et demande-lui une démo", category: "JOUE", level: 4, peopleMin: 2, tags: ["jeu", "rencontre"] }),
+      createMission({ id: 49, text: "Fais une photo originale avec plusieurs personnes", category: "JOUE", level: 4, peopleMin: 2, tags: ["photo", "collectif"] }),
+      createMission({ id: 50, text: "Va au mur d'expression et ajoute quelque chose en collaboration (dessin, mot…)", category: "JOUE", level: 1, place: ["expression_wall"], tags: ["mur", "expression"] }),
+      createMission({ id: 51, text: "Invite quelqu'un à participer au mur d'expression", category: "JOUE", level: 1, place: ["expression_wall"], tags: ["mur", "invitation"] }),
+      createMission({ id: 52, text: "Crée une course : objectif traverser le plus vite possible la piscine", category: "JOUE", level: 8, peopleMin: 2, place: ["pool"], tags: ["piscine", "défi"], note: "piscine" }),
+      createMission({ id: 53, text: "Fais une action synchronisée dans l'eau", category: "JOUE", level: 8, peopleMin: 2, place: ["pool"], tags: ["piscine", "collectif"], note: "piscine" }),
+
+      createMission({ id: 54, text: "Trouve Double Face… il a quelque chose à te proposer !", category: "BONUS", level: 0, bonus: true, tags: ["bonus"], note: "bonus" }),
+
+      createMission({ id: 55, text: "Propose un 2 vérités, 1 mensonge (dire 3 phrases sur soi, faire deviner le mensonge)", category: "JOUE", level: 4, peopleMin: 2, tags: ["jeu", "duo"] }),
+      createMission({ id: 56, text: "Lance un action ou vérité", category: "JOUE", level: 4, peopleMin: 2, tags: ["jeu", "duo"] }),
+      createMission({ id: 57, text: "Propose un je n'ai jamais… (3 tours)", category: "JOUE", level: 4, peopleMin: 2, tags: ["jeu", "collectif"] }),
+      createMission({ id: 58, text: "Invente un jeu avec une règle cachée", category: "JOUE", level: 4, peopleMin: 2, tags: ["jeu", "impro"] }),
+      createMission({ id: 59, text: "Transforme une discussion en jeu", category: "JOUE", level: 4, peopleMin: 2, tags: ["jeu", "impro"] }),
+      createMission({ id: 60, text: "Joue comme si tu tournais un clip", category: "JOUE", level: 4, peopleMin: 2, tags: ["impro", "duo"] }),
+      createMission({ id: 61, text: "Marche comme si tu étais dans un autre monde", category: "JOUE", level: 4, tags: ["impro", "absurde"] }),
+      createMission({ id: 62, text: "Invente une pub ridicule avec quelqu'un", category: "JOUE", level: 4, peopleMin: 2, tags: ["impro", "duo"] }),
+      createMission({ id: 63, text: "Incarne un personnage pendant 1 min", category: "JOUE", level: 4, tags: ["impro", "absurde"] }),
+      createMission({ id: 64, text: "Fais semblant de connaître quelqu'un depuis longtemps", category: "JOUE", level: 4, peopleMin: 2, tags: ["impro", "duo"] }),
+      createMission({ id: 65, text: "Crée une photo figée comme une scène de film", category: "JOUE", level: 4, peopleMin: 2, tags: ["photo", "collectif"] }),
+      createMission({ id: 66, text: "Construis un texte cohérent à plusieurs au mur d'expression (une phrase chacun)", category: "JOUE", level: 4, place: ["expression_wall"], tags: ["mur", "expression"] }),
+
+      createMission({ id: 67, text: "Lance un effet domino (5 pers min)", category: "ENTRAÎNE", level: 5, peopleMin: 5, tags: ["collectif", "fun"] }),
+      createMission({ id: 68, text: "Crée une choré à plusieurs dans l'eau", category: "JOUE", level: 5, peopleMin: 3, place: ["pool"], tags: ["piscine", "collectif"], note: "piscine" }),
+      createMission({ id: 69, text: "Fais reproduire un mouvement par d'autres dans l'eau", category: "JOUE", level: 5, peopleMin: 2, place: ["pool"], tags: ["piscine", "collectif"], note: "piscine" }),
+      createMission({ id: 70, text: "Crée une photo vivante dans l'eau", category: "JOUE", level: 5, peopleMin: 2, place: ["pool"], tags: ["piscine", "photo"], note: "piscine" }),
+      createMission({ id: 71, text: "Prends une photo avec le plus de monde possible dans un espace exigu", category: "JOUE", level: 5, peopleMin: 3, tags: ["photo", "collectif"] }),
+      createMission({ id: 72, text: "Forme un cercle et lance une danse commune", category: "JOUE", level: 5, peopleMin: 3, tags: ["danse", "collectif"] }),
+      createMission({ id: 73, text: "Convaincs un groupe de faire une action ensemble", category: "ENTRAÎNE", level: 5, peopleMin: 3, tags: ["collectif", "lien"] }),
+      createMission({ id: 74, text: "Compose une mini choré avec 3 inconnus", category: "JOUE", level: 5, peopleMin: 3, tags: ["danse", "collectif"] }),
+      createMission({ id: 75, text: "Organise un téléphone arabe en mode danse (en ligne : chacun refait le mouvement jusqu'au dernier)", category: "JOUE", level: 5, peopleMin: 4, tags: ["danse", "collectif"] }),
+      createMission({ id: 76, text: "Fais sauter 5 personnes en même temps", category: "ENTRAÎNE", level: 5, peopleMin: 5, tags: ["collectif", "fun"] })
+    ];
+
+    let MISSIONS = [];
+
+    function loadMissions() {
+      const stored = loadJSON(STORAGE_KEYS.missions, null);
+      if (Array.isArray(stored) && stored.length) {
+        MISSIONS = stored;
+      } else {
+        MISSIONS = DEFAULT_MISSIONS.map(m => ({ ...m }));
+        saveMissions(MISSIONS);
+      }
+      return MISSIONS;
+    }
+
+    function saveMissions(list) {
+      MISSIONS = list;
+      return saveJSON(STORAGE_KEYS.missions, MISSIONS);
+    }
+
+    function resetMissions() {
+      saveMissions(DEFAULT_MISSIONS.map(m => ({ ...m })));
+      Toast.success("Missions réinitialisées.");
+    }
+
+    function addMissionToList({ text, category, level, note }) {
+      const nextId = Math.max(0, ...MISSIONS.map(m => m.id), 0) + 1;
+      const mission = createMission({ id: nextId, text, category, level, note, active: true });
+      MISSIONS.push(mission);
+      saveMissions(MISSIONS);
+      return mission;
+    }
+
+    function removeMissionById(id) {
+      saveMissions(MISSIONS.filter(m => m.id !== id));
+    }
+
+    function toggleMissionActive(id) {
+      const mission = getMissionById(id);
+      if (!mission) return;
+      mission.active = !mission.active;
+      saveMissions(MISSIONS);
+    }
+
+    // ===== Helpers stockage =====
+    function loadJSON(key, fallback) {
+      try {
+        const raw = localStorage.getItem(key);
+        return raw ? JSON.parse(raw) : fallback;
+      } catch {
+        return fallback;
+      }
+    }
+
+    function saveJSON(key, value) {
+      localStorage.setItem(key, JSON.stringify(value));
+      return value;
+    }
+
+    function nowIso() {
+      return new Date().toISOString();
+    }
+
+    function formatDateTime(iso) {
+      const d = new Date(iso);
+      return new Intl.DateTimeFormat("fr-CH", {
+        day: "2-digit",
+        month: "2-digit",
+        hour: "2-digit",
+        minute: "2-digit"
+      }).format(d);
+    }
+
+    function uid() {
+      if (window.crypto && crypto.randomUUID) return crypto.randomUUID();
+      return `id_${Date.now()}_${Math.random().toString(16).slice(2)}`;
+    }
+
+    // ===== Profil =====
+    function getUserProfile() {
+      return loadJSON(STORAGE_KEYS.profile, { displayName: "" });
+    }
+
+    function saveUserProfile(profile) {
+      return saveJSON(STORAGE_KEYS.profile, profile);
+    }
+
+    function getOrCreateSessionId() {
+      let sessionId = localStorage.getItem(STORAGE_KEYS.sessionId);
+      if (!sessionId) {
+        sessionId = uid();
+        localStorage.setItem(STORAGE_KEYS.sessionId, sessionId);
+      }
+      return sessionId;
+    }
+
+    // ===== Progression invisible =====
+    function getDefaultProgressState() {
+      return {
+        internalLevel: 1,
+        shownMissionIds: [],
+        doneMissionIds: [],
+        skippedMissionIds: [],
+        currentMissionId: null,
+        lastMissionId: null
+      };
+    }
+
+    function getProgressState() {
+      return loadJSON(STORAGE_KEYS.progress, getDefaultProgressState());
+    }
+
+    function saveProgressState(state) {
+      return saveJSON(STORAGE_KEYS.progress, state);
+    }
+
+    function computeInternalLevel(doneCount) {
+      const level = 1 + Math.floor(doneCount / 2);
+      return Math.min(level, 8);
+    }
+
+    function getMissionById(missionId) {
+      return MISSIONS.find(m => m.id === missionId) || null;
+    }
+
+    function shuffleArray(array) {
+      const copy = [...array];
+      for (let i = copy.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [copy[i], copy[j]] = [copy[j], copy[i]];
+      }
+      return copy;
+    }
+
+    function getRecentMissionIds(state, limit = 6) {
+      return state.shownMissionIds.slice(-limit);
+    }
+
+    function getMissionPoolForProgression(state) {
+      const level = state.internalLevel;
+      const allowedLevels = [level, level - 1, level + 1].filter(n => n >= 1 && n <= 8);
+
+      return MISSIONS.filter(m => {
+        if (!m.active) return false;
+        if (m.bonus) return false;
+        if (!allowedLevels.includes(m.level)) return false;
+        if (m.id === state.currentMissionId) return false;
+        return true;
+      });
+    }
+
+    function pickNextMission() {
+      const state = getProgressState();
+      state.internalLevel = computeInternalLevel(state.doneMissionIds.length);
+
+      const pool = getMissionPoolForProgression(state);
+      const recentIds = getRecentMissionIds(state, 6);
+
+      let candidates = pool.filter(m => !recentIds.includes(m.id) && m.id !== state.lastMissionId);
+      if (!candidates.length) candidates = pool.filter(m => m.id !== state.lastMissionId);
+      if (!candidates.length) candidates = pool;
+      if (!candidates.length) return null;
+
+      const mission = shuffleArray(candidates)[0];
+      state.currentMissionId = mission.id;
+      state.lastMissionId = mission.id;
+      state.shownMissionIds.push(mission.id);
+      saveProgressState(state);
+
+      return mission;
+    }
+
+    function skipCurrentMission() {
+      const state = getProgressState();
+      if (state.currentMissionId) state.skippedMissionIds.push(state.currentMissionId);
+      state.currentMissionId = null;
+      saveProgressState(state);
+    }
+
+    function getAnotherMission() {
+      skipCurrentMission();
+      return pickNextMission();
+    }
+
+    function completeCurrentMission() {
+      const state = getProgressState();
+      if (!state.currentMissionId) return state;
+      if (!state.doneMissionIds.includes(state.currentMissionId)) {
+        state.doneMissionIds.push(state.currentMissionId);
+      }
+      state.currentMissionId = null;
+      state.internalLevel = computeInternalLevel(state.doneMissionIds.length);
+      saveProgressState(state);
+      return state;
+    }
+
+    function replayMission(missionId) {
+      const state = getProgressState();
+      const mission = getMissionById(missionId);
+      if (!mission) return null;
+      state.currentMissionId = mission.id;
+      state.lastMissionId = mission.id;
+      saveProgressState(state);
+      return mission;
+    }
+
+    // ===== Résultats =====
+    function getResults() {
+      return loadJSON(STORAGE_KEYS.results, []);
+    }
+
+    function saveResults(results) {
+      return saveJSON(STORAGE_KEYS.results, results);
+    }
+
+    function createMissionResult({
+      sessionId,
+      missionId,
+      previousMissionId = null,
+      status = "done",
+      photoUrl = "",
+      visibility = "private",
+      orgaMessage = "",
+      rating = null,
+      displayName = "",
+      createdAt = nowIso()
+    }) {
+      return {
+        id: uid(),
+        sessionId,
+        missionId,
+        previousMissionId,
+        status,
+        photoUrl,
+        visibility,
+        orgaMessage,
+        rating,
+        displayName,
+        createdAt
+      };
+    }
+
+    function saveResult(result) {
+      const results = getResults();
+      results.push(result);
+      saveResults(results);
+      return result;
+    }
+
+    function updateResultRating(resultId, rating) {
+      const results = getResults();
+      const item = results.find(r => r.id === resultId);
+      if (!item) return null;
+      item.rating = rating;
+      saveResults(results);
+      return item;
+    }
+
+    // ===== Suggestions =====
+    function getSuggestions() {
+      return loadJSON(STORAGE_KEYS.suggestions, []);
+    }
+
+    function saveSuggestions(items) {
+      return saveJSON(STORAGE_KEYS.suggestions, items);
+    }
+
+    function createMissionSuggestion({ text, category = "", level = null, displayName = "" }) {
+      return {
+        id: uid(),
+        text,
+        category,
+        level,
+        displayName,
+        status: "proposed",
+        createdAt: nowIso()
+      };
+    }
+
+    function saveSuggestion(item) {
+      const suggestions = getSuggestions();
+      suggestions.push(item);
+      saveSuggestions(suggestions);
+      return item;
+    }
+
+    // ===== Stats =====
+    function countShown(results) {
+      const progress = getProgressState();
+      return progress.shownMissionIds.length;
+    }
+
+    function countDone(results) {
+      return results.filter(r => r.status === "done").length;
+    }
+
+    function countSkipped() {
+      return getProgressState().skippedMissionIds.length;
+    }
+
+    function countPhotos(results) {
+      return results.filter(r => !!r.photoUrl).length;
+    }
+
+    function countSharedPhotos(results) {
+      return results.filter(r => !!r.photoUrl && r.visibility === "participants").length;
+    }
+
+    function countOrgaMessages(results) {
+      return results.filter(r => (r.orgaMessage || "").trim()).length;
+    }
+
+    function countDoneByMission(results) {
+      const map = {};
+      for (const result of results) {
+        if (result.status !== "done") continue;
+        map[result.missionId] = (map[result.missionId] || 0) + 1;
+      }
+      return map;
+    }
+
+    function countMissionSequences(results) {
+      const map = {};
+      for (const result of results) {
+        if (!result.previousMissionId || result.status !== "done") continue;
+        const key = `${result.previousMissionId}->${result.missionId}`;
+        map[key] = (map[key] || 0) + 1;
+      }
+      return map;
+    }
+
+    function getAverageRatings(results) {
+      const sums = {};
+      const counts = {};
+      for (const r of results) {
+        if (!r.rating) continue;
+        sums[r.missionId] = (sums[r.missionId] || 0) + r.rating;
+        counts[r.missionId] = (counts[r.missionId] || 0) + 1;
+      }
+      const avg = {};
+      for (const missionId in sums) {
+        avg[missionId] = sums[missionId] / counts[missionId];
+      }
+      return avg;
+    }
+
+    // ===== Simu upload locale =====
+    function fileToLocalDataUrl(file) {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(reader.result);
+        reader.onerror = reject;
+        reader.readAsDataURL(file);
+      });
+    }
+
+    // ===== État UI =====
+    const STATE = {
+      currentMission: null,
+      currentPhotoDataUrl: ""
+    };
+
+    // ===== DOM =====
+    const screens = {
+      home: document.getElementById("screen-home"),
+      mission: document.getElementById("screen-mission"),
+      validation: document.getElementById("screen-validation"),
+      journal: document.getElementById("screen-journal")
+    };
+
+    const displayNameInput = document.getElementById("display-name-input");
+    const missionText = document.getElementById("mission-text");
+    const photoInput = document.getElementById("photo-input");
+    const photoPreviewWrap = document.getElementById("photo-preview-wrap");
+    const photoPreview = document.getElementById("photo-preview");
+    const orgaMessageInput = document.getElementById("orga-message-input");
+    const fileNameDisplay = document.getElementById("file-name-display");
+    const journalList = document.getElementById("journal-list");
+
+    // ===== Navigation =====
+    function showScreen(name) {
+      Object.values(screens).forEach(screen => screen.classList.remove("active"));
+      screens[name].classList.add("active");
+
+      if (name === "journal") renderJournal();
+      if (name === "home") updateProgressBar();
+    }
+
+    document.querySelectorAll("[data-go]").forEach(btn => {
+      btn.addEventListener("click", () => showScreen(btn.dataset.go));
+    });
+
+    function updateProgressBar() {
+      // Progression masquée à l'utilisateur, mais logique interne conservée
+      const state = getProgressState();
+      const totalMissions = MISSIONS.filter(m => m.active && !m.bonus).length;
+      const done = state.doneMissionIds.length;
+      const percent = totalMissions ? Math.round((done / totalMissions) * 100) : 0;
+      // Éléments DOM supprimés pour interface simplifiée
+    }
+
+    // ===== Profil =====
+    function syncProfileFromInput() {
+      const profile = getUserProfile();
+      profile.displayName = displayNameInput.value.trim();
+      saveUserProfile(profile);
+    }
+
+    displayNameInput.addEventListener("input", syncProfileFromInput);
+
+    function hydrateProfile() {
+      const profile = getUserProfile();
+      displayNameInput.value = profile.displayName || "";
+    }
+
+    // ===== Mission =====
+    function renderMission(mission) {
+      STATE.currentMission = mission;
+      missionText.textContent = mission ? mission.text : "Aucune mission disponible pour le moment.";
+      showScreen("mission");
+    }
+
+    function startGame() {
+      syncProfileFromInput();
+      const mission = pickNextMission();
+      if (!mission) {
+        Toast.warning("Aucune mission disponible pour le moment.");
+        return;
+      }
+      renderMission(mission);
+    }
+
+    function goToAnotherMission() {
+      const mission = getAnotherMission();
+      if (!mission) {
+        Toast.warning("Aucune autre mission disponible.");
+        return;
+      }
+      renderMission(mission);
+    }
+
+    // ===== Validation =====
+    function resetValidationForm() {
+      photoInput.value = "";
+      orgaMessageInput.value = "";
+      fileNameDisplay.textContent = "";
+      STATE.currentPhotoDataUrl = "";
+      photoPreview.src = "";
+      photoPreviewWrap.style.display = "none";
+    }
+
+    function openValidation() {
+      if (!STATE.currentMission) return;
+      resetValidationForm();
+      showScreen("validation");
+    }
+
+    async function handlePhotoChange(event) {
+      const file = event.target.files?.[0];
+      if (!file) {
+        STATE.currentPhotoDataUrl = "";
+        photoPreviewWrap.style.display = "none";
+        fileNameDisplay.textContent = "";
+        return;
+      }
+
+      fileNameDisplay.textContent = file.name;
+
+      const dataUrl = await fileToLocalDataUrl(file);
+      STATE.currentPhotoDataUrl = dataUrl;
+      photoPreview.src = dataUrl;
+      photoPreviewWrap.style.display = "grid";
+    }
+
+    async function confirmValidation() {
+      if (!STATE.currentMission) return;
+
+      const sessionId = getOrCreateSessionId();
+      const profile = getUserProfile();
+      const progress = getProgressState();
+      const previousMissionId = progress.doneMissionIds.length
+        ? progress.doneMissionIds[progress.doneMissionIds.length - 1]
+        : null;
+
+      const visibility = STATE.currentPhotoDataUrl ? "private" : "private";
+
+      saveResult(
+        createMissionResult({
+          sessionId,
+          missionId: STATE.currentMission.id,
+          previousMissionId,
+          status: "done",
+          photoUrl: STATE.currentPhotoDataUrl || "",
+          visibility,
+          orgaMessage: orgaMessageInput.value.trim(),
+          displayName: profile.displayName || ""
+        })
+      );
+
+      completeCurrentMission();
+      resetValidationForm();
+      updateProgressBar();
+      goToAnotherMission();
+      Toast.success("Mission validée !");
+    }
+
+    // ===== Journal =====
+    function getOwnResults() {
+      const sessionId = getOrCreateSessionId();
+      return getResults()
+        .filter(r => r.sessionId === sessionId)
+        .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+    }
+
+    function renderStars(result) {
+      const wrap = document.createElement("div");
+      wrap.className = "stars";
+
+      for (let i = 1; i <= 5; i++) {
+        const btn = document.createElement("button");
+        btn.className = "star-btn" + (result.rating === i ? " active" : "");
+        btn.textContent = `${i}`;
+        btn.type = "button";
+        btn.addEventListener("click", () => {
+          updateResultRating(result.id, i);
+          renderJournal();
+          renderOrga();
+        });
+        wrap.appendChild(btn);
+      }
+
+      return wrap;
+    }
+
+    function renderJournal() {
+      const results = getOwnResults();
+      journalList.innerHTML = "";
+
+      if (!results.length) {
+        journalList.innerHTML = '<div class="empty">Aucune mission pour l\'instant.</div>';
+        return;
+      }
+
+      results.forEach(result => {
+        const mission = getMissionById(result.missionId);
+        if (!mission) return;
+
+        const item = document.createElement("div");
+        item.className = "journal-item";
+
+        const top = document.createElement("div");
+        top.className = "journal-top";
+
+        if (result.photoUrl) {
+          const img = document.createElement("img");
+          img.className = "thumb";
+          img.src = result.photoUrl;
+          img.alt = "Photo mission";
+          top.appendChild(img);
+        }
+
+        const main = document.createElement("div");
+        main.className = "journal-main";
+
+        const title = document.createElement("div");
+        title.className = "journal-title";
+        title.textContent = mission.text;
+
+        const meta = document.createElement("div");
+        meta.className = "micro";
+        meta.textContent = formatDateTime(result.createdAt);
+
+        const ratingLabel = document.createElement("div");
+        ratingLabel.className = "micro";
+        ratingLabel.textContent = "Ta note (1 à 5)";
+
+        const row = document.createElement("div");
+        row.className = "row";
+
+        const replayBtn = document.createElement("button");
+        replayBtn.className = "btn btn-secondary";
+        replayBtn.textContent = "Refaire cette mission";
+        replayBtn.addEventListener("click", () => {
+          const missionToReplay = replayMission(result.missionId);
+          if (missionToReplay) renderMission(missionToReplay);
+        });
+
+        row.appendChild(replayBtn);
+
+        main.appendChild(title);
+        main.appendChild(meta);
+        main.appendChild(ratingLabel);
+        main.appendChild(renderStars(result));
+        main.appendChild(row);
+
+        top.appendChild(main);
+        item.appendChild(top);
+        journalList.appendChild(item);
+      });
+    }
+
+    // ===== Photos =====
+    function getSharedPhotos() {
+      return getResults()
+        .filter(r => !!r.photoUrl && r.visibility === "participants")
+        .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+    }
+
+    // ===== Orga =====
+    function sortMapDesc(map) {
+      return Object.entries(map).sort((a, b) => b[1] - a[1]);
+    }
+
+    function renderOrga() {
+      const results = getResults();
+      const stats = {
+        vues: countShown(results),
+        validées: countDone(results),
+        passées: countSkipped(),
+        photos: countPhotos(results),
+        partagées: countSharedPhotos(results),
+        messages: countOrgaMessages(results),
+        propositions: getSuggestions().length
+      };
+
+      orgaStats.innerHTML = "";
+      Object.entries(stats).forEach(([label, value]) => {
+        const block = document.createElement("div");
+        block.className = "stat";
+        block.innerHTML = `<div class="micro">${label}</div><strong>${value}</strong>`;
+        orgaStats.appendChild(block);
+      });
+
+      const doneByMission = sortMapDesc(countDoneByMission(results)).slice(0, 8);
+      topMissions.innerHTML = doneByMission.length
+        ? doneByMission.map(([missionId, count]) => {
+            const mission = getMissionById(Number(missionId));
+            return `<div>${mission ? escapeHtml(mission.text) : missionId} — ${count}</div>`;
+          }).join("")
+        : '<div class="micro">Pas encore de données.</div>';
+
+      const ratings = sortMapDesc(getAverageRatings(results)).slice(0, 8);
+      topRated.innerHTML = ratings.length
+        ? ratings.map(([missionId, avg]) => {
+            const mission = getMissionById(Number(missionId));
+            return `<div>${mission ? escapeHtml(mission.text) : missionId} — ${avg.toFixed(1)}/5</div>`;
+          }).join("")
+        : '<div class="micro">Aucune note pour l\'instant.</div>';
+
+      const sequences = sortMapDesc(countMissionSequences(results)).slice(0, 8);
+      topSequences.innerHTML = sequences.length
+        ? sequences.map(([key, count]) => `<div>${escapeHtml(key)} — ${count}</div>`).join("")
+        : '<div class="micro">Pas encore d\'enchaînements relevés.</div>';
+
+      const messages = results.filter(r => (r.orgaMessage || "").trim()).sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)).slice(0, 10);
+      orgaMessages.innerHTML = messages.length
+        ? messages.map(r => {
+            const mission = getMissionById(r.missionId);
+            return `<div><strong>${mission ? escapeHtml(mission.text) : "Mission"}</strong><br><span class="micro">${formatDateTime(r.createdAt)}${r.displayName ? ` · ${escapeHtml(r.displayName)}` : ""}</span><br>${escapeHtml(r.orgaMessage)}</div>`;
+          }).join("")
+        : '<div class="micro">Aucun message pour l\'instant.</div>';
+    }
+
+    // ===== Utilitaires =====
+    function escapeHtml(str) {
+      return String(str)
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+    }
+
+    // ===== Événements =====
+    document.getElementById("start-btn").addEventListener("click", startGame);
+    document.getElementById("journal-btn").addEventListener("click", () => showScreen("journal"));
+    document.getElementById("validate-mission-btn").addEventListener("click", openValidation);
+    document.getElementById("another-mission-btn").addEventListener("click", goToAnotherMission);
+    document.getElementById("confirm-validation-btn").addEventListener("click", confirmValidation);
+    document.getElementById("cancel-validation-btn").addEventListener("click", () => showScreen("mission"));
+    photoInput.addEventListener("change", handlePhotoChange);
+
+    // ===== Initialisation =====
+    function init() {
+      getOrCreateSessionId();
+      loadMissions();
+      hydrateProfile();
+      renderJournal();
+      updateProgressBar();
+
+      if (location.hash === "#orga") {
+        showScreen("orga");
+      }
+      if (location.hash === "#missions") {
+        showScreen("missions");
+      }
+    }
+
+    init();
+</script>
+
+</body>
+</html>
