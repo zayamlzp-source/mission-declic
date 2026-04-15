@@ -1196,6 +1196,63 @@
       return item;
     }
 
+    function renderSuggestions() {
+      const suggestions = getSuggestions().sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+      suggestionsList.innerHTML = "";
+
+      if (!suggestions.length) {
+        suggestionsList.innerHTML = '<div class="empty">Aucune proposition pour l\'instant.</div>';
+        return;
+      }
+
+      suggestions.forEach(item => {
+        const row = document.createElement("div");
+        row.className = "journal-item";
+
+        const levelLabel = item.level ? ` · Niveau ${item.level}` : "";
+        const categoryLabel = item.category ? ` · ${escapeHtml(item.category)}` : "";
+        const authorLabel = item.displayName ? ` · ${escapeHtml(item.displayName)}` : "";
+
+        row.innerHTML = `
+          <div class="journal-main">
+            <div class="journal-title">${escapeHtml(item.text)}</div>
+            <div class="micro">${formatDateTime(item.createdAt)}${categoryLabel}${levelLabel}${authorLabel}</div>
+          </div>
+        `;
+
+        suggestionsList.appendChild(row);
+      });
+    }
+
+    function submitSuggestion() {
+      const text = suggestText.value.trim();
+      if (!text) {
+        Toast.warning("Écris d'abord une mission à proposer.");
+        suggestText.focus();
+        return;
+      }
+
+      const profile = getUserProfile();
+      const category = suggestCategory.value || "";
+      const parsedLevel = Number(suggestLevel.value);
+      const level = Number.isFinite(parsedLevel) && parsedLevel >= 1 && parsedLevel <= 8 ? parsedLevel : null;
+
+      saveSuggestion(
+        createMissionSuggestion({
+          text,
+          category,
+          level,
+          displayName: profile.displayName || ""
+        })
+      );
+
+      suggestText.value = "";
+      suggestCategory.value = "";
+      suggestLevel.value = "";
+      renderSuggestions();
+      Toast.success("Mission proposée enregistrée.");
+    }
+
     // ===== Stats =====
     function countShown(results) {
       const progress = getProgressState();
