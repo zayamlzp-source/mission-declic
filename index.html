@@ -527,6 +527,7 @@
       </div>
       <div class="top-actions">
         <button class="btn btn-link" data-go="home">Accueil</button>
+        <button class="btn btn-link" data-go="suggest">Proposer</button>
       </div>
     </div>
 
@@ -624,7 +625,7 @@
       </div>
     </section>
 
-    <section id="screen-suggest" class="screen" style="display: none;">
+    <section id="screen-suggest" class="screen">
       <div class="stack">
         <div>
           <h2>Proposer une mission</h2>
@@ -676,7 +677,7 @@
       </div>
     </section>
 
-    <section id="screen-orga" class="screen" style="display: none;">
+    <section id="screen-orga" class="screen">
       <div class="stack">
         <div>
           <h2>Vue orga</h2>
@@ -1245,6 +1246,15 @@
     const orgaMessageInput = document.getElementById("orga-message-input");
     const fileNameDisplay = document.getElementById("file-name-display");
     const journalList = document.getElementById("journal-list");
+    const orgaStats = document.getElementById("orga-stats");
+    const topMissions = document.getElementById("top-missions");
+    const topRated = document.getElementById("top-rated");
+    const topSequences = document.getElementById("top-sequences");
+    const orgaMessages = document.getElementById("orga-messages");
+    const suggestText = document.getElementById("suggest-text");
+    const suggestCategory = document.getElementById("suggest-category");
+    const suggestLevel = document.getElementById("suggest-level");
+    const suggestionsList = document.getElementById("suggestions-list");
 
     // ===== Navigation =====
     function showScreen(name) {
@@ -1252,6 +1262,8 @@
       screens[name].classList.add("active");
 
       if (name === "journal") renderJournal();
+      if (name === "suggest") renderSuggestions();
+      if (name === "orga") renderOrga();
       if (name === "home") updateProgressBar();
     }
 
@@ -1333,12 +1345,19 @@
         return;
       }
 
-      fileNameDisplay.textContent = file.name;
-
-      const dataUrl = await fileToLocalDataUrl(file);
-      STATE.currentPhotoDataUrl = dataUrl;
-      photoPreview.src = dataUrl;
-      photoPreviewWrap.style.display = "grid";
+      try {
+        fileNameDisplay.textContent = file.name;
+        const dataUrl = await fileToLocalDataUrl(file);
+        STATE.currentPhotoDataUrl = dataUrl;
+        photoPreview.src = dataUrl;
+        photoPreviewWrap.style.display = "grid";
+      } catch (error) {
+        console.error("Erreur lors du chargement de la photo:", error);
+        Toast.error("Erreur lors du chargement de la photo");
+        STATE.currentPhotoDataUrl = "";
+        photoPreviewWrap.style.display = "none";
+        fileNameDisplay.textContent = "";
+      }
     }
 
     async function confirmValidation() {
@@ -1547,6 +1566,7 @@
     document.getElementById("another-mission-btn").addEventListener("click", goToAnotherMission);
     document.getElementById("confirm-validation-btn").addEventListener("click", confirmValidation);
     document.getElementById("cancel-validation-btn").addEventListener("click", () => showScreen("mission"));
+    document.getElementById("submit-suggestion-btn").addEventListener("click", submitSuggestion);
     photoInput.addEventListener("change", handlePhotoChange);
 
     // ===== Initialisation =====
@@ -1555,6 +1575,7 @@
       loadMissions();
       hydrateProfile();
       renderJournal();
+      renderSuggestions();
       updateProgressBar();
 
       if (location.hash === "#orga") {
