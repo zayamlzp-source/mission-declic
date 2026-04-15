@@ -734,19 +734,39 @@
       container: document.getElementById("toast-container"),
       
       show(message, type = "info", duration = 3000) {
-      if (Array.isArray(stored) && stored.length) {
-        const normalized = stored.map(normalizeMissionRecord);
-        if (hasUsableMissions(normalized)) {
-          MISSIONS = normalized;
-          saveMissions(MISSIONS);
-          return MISSIONS;
-        }
-      }
+        const toast = document.createElement("div");
+        toast.className = `toast toast-${type}`;
+        toast.setAttribute("role", "alert");
+        toast.setAttribute("aria-live", "polite");
+        toast.textContent = message;
+        
+        this.container.appendChild(toast);
+        
+        // Trigger animation
+        setTimeout(() => toast.classList.add("show"), 10);
+        
+        // Remove after duration
+        setTimeout(() => {
+          toast.classList.remove("show");
+          setTimeout(() => toast.remove(), 300);
+        }, duration);
+      },
+      
+      success: (msg, duration) => Toast.show(msg, "success", duration),
+      error: (msg, duration) => Toast.show(msg, "error", duration),
+      info: (msg, duration) => Toast.show(msg, "info", duration),
+      warning: (msg, duration) => Toast.show(msg, "warning", duration)
+    };
 
-      MISSIONS = DEFAULT_MISSIONS.map(m => ({ ...m }));
-      saveMissions(MISSIONS);
-      return MISSIONS;
-    }
+    // ===== Stockage =====
+    const STORAGE_KEYS = {
+      profile: "festival_user_profile",
+      results: "festival_results",
+      suggestions: "festival_mission_suggestions",
+      progress: "festival_progress_state",
+      sessionId: "festival_session_id",
+      missions: "festival_missions"
+    };
 
     function saveMissions(list) {
       MISSIONS = list.map(normalizeMissionRecord);
