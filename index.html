@@ -714,20 +714,6 @@
     </section>
   </div>
 
-    function normalizeMissionLevel(value) {
-      const n = Number(value);
-      return Number.isFinite(n) ? n : 1;
-    }
-
-    function normalizeMissionRecord(mission) {
-      return {
-        ...mission,
-        level: normalizeMissionLevel(mission.level),
-        active: mission.active !== false,
-        bonus: !!mission.bonus
-      };
-    }
-
 <script>
     // ===== Toast Notifications System =====
     const Toast = {
@@ -767,6 +753,21 @@
       sessionId: "festival_session_id",
       missions: "festival_missions"
     };
+
+    // ===== Mission normalization =====
+    function normalizeMissionLevel(value) {
+      const n = Number(value);
+      return Number.isFinite(n) ? n : 1;
+    }
+
+    function normalizeMissionRecord(mission) {
+      return {
+        ...mission,
+        level: normalizeMissionLevel(mission.level),
+        active: mission.active !== false,
+        bonus: !!mission.bonus
+      };
+    }
 
     function saveMissions(list) {
       MISSIONS = list.map(normalizeMissionRecord);
@@ -1071,7 +1072,8 @@
       return MISSIONS.filter(m => {
         if (!m.active) return false;
         if (m.bonus) return false;
-        if (!allowedLevels.includes(m.level)) return false;
+        const normalizedLevel = normalizeMissionLevel(m.level);
+        if (!allowedLevels.includes(normalizedLevel)) return false;
         if (m.id === state.currentMissionId) return false;
         return true;
       });
