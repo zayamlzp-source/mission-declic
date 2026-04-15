@@ -754,8 +754,16 @@
       suggestions: "festival_mission_suggestions",
       progress: "festival_progress_state",
       sessionId: "festival_session_id",
-      missions: "festival_missions"
+      missions: "festival_missions",
+      backendConfig: "festival_backend_config"
     };
+
+    const REMOTE_SYNC_KEYS = new Set([
+      STORAGE_KEYS.missions,
+      STORAGE_KEYS.suggestions,
+      STORAGE_KEYS.results
+    ]);
+    let remoteSyncTimer = null;
 
     // ===== Mission normalization =====
     function normalizeMissionLevel(value) {
@@ -813,7 +821,108 @@
 
     function saveJSON(key, value) {
       localStorage.setItem(key, JSON.stringify(value));
+      if (REMOTE_SYNC_KEYS.has(key)) {
+        queueRemotePush();
+      }
       return value;
+    }
+
+    function getBackendConfig() {
+      const config = loadJSON(STORAGE_KEYS.backendConfig, null);
+      return {
+        mode: config?.mode || "local",
+        supabaseUrl: config?.supabaseUrl || "",
+        supabaseAnonKey: config?.supabaseAnonKey || "",
+        stateRowId: config?.stateRowId || "global"
+      };
+    }
+
+    function isSupabaseEnabled(config = getBackendConfig()) {
+      return (
+        config.mode === "supabase" &&
+        !!config.supabaseUrl &&
+        !!config.supabaseAnonKey
+      );
+    }
+
+    function supabaseHeaders(config = getBackendConfig()) {
+      return {
+        "Content-Type": "application/json",
+        apikey: config.supabaseAnonKey,
+        Authorization: `Bearer ${config.supabaseAnonKey}`
+      };
+    }
+
+    async function pullRemoteState() {
+      const config = getBackendConfig();
+      if (!isSupabaseEnabled(config)) return null;
+
+      const url = `${config.supabaseUrl.replace(/\/$/, "")}/rest/v1/festival_state?id=eq.${encodeURIComponent(config.stateRowId)}&select=payload`;
+      const response = await fetch(url, {
+        method: "GET",
+        headers: supabaseHeaders(config)
+      });
+
+      if (!response.ok) {
+        throw new Error(`Remote pull failed (${response.status})`);
+      }
+
+      const rows = await response.json();
+      return Array.isArray(rows) && rows[0] ? rows[0].payload || null : null;
+    }
+
+    async function pushRemoteState() {
+      const config = getBackendConfig();
+      if (!isSupabaseEnabled(config)) return;
+
+      const payload = {
+        missions: loadJSON(STORAGE_KEYS.missions, []),
+        suggestions: loadJSON(STORAGE_KEYS.suggestions, []),
+        results: loadJSON(STORAGE_KEYS.results, []),
+        updatedAt: nowIso()
+      };
+
+      const url = `${config.supabaseUrl.replace(/\/$/, "")}/rest/v1/festival_state?on_conflict=id`;
+      const response = await fetch(url, {
+        method: "POST",
+        headers: {
+          ...supabaseHeaders(config),
+          Prefer: "resolution=merge-duplicates,return=minimal"
+        },
+        body: JSON.stringify([{ id: config.stateRowId, payload }])
+      });
+
+      if (!response.ok) {
+        throw new Error(`Remote push failed (${response.status})`);
+      }
+    }
+
+    function queueRemotePush() {
+      if (remoteSyncTimer) clearTimeout(remoteSyncTimer);
+      remoteSyncTimer = setTimeout(() => {
+        pushRemoteState().catch(error => {
+          console.warn("Remote sync warning:", error.message);
+        });
+      }, 450);
+    }
+
+    async function bootstrapRemoteState() {
+      try {
+        const remote = await pullRemoteState();
+        if (!remote || typeof remote !== "object") return;
+
+        if (Array.isArray(remote.missions)) {
+          localStorage.setItem(STORAGE_KEYS.missions, JSON.stringify(remote.missions));
+        }
+        if (Array.isArray(remote.suggestions)) {
+          localStorage.setItem(STORAGE_KEYS.suggestions, JSON.stringify(remote.suggestions));
+        }
+        if (Array.isArray(remote.results)) {
+          localStorage.setItem(STORAGE_KEYS.results, JSON.stringify(remote.results));
+        }
+      } catch (error) {
+        console.warn("Remote bootstrap warning:", error.message);
+      }
     }
 
     function nowIso() {
@@ -1743,8 +1852,9 @@
     photoInput.addEventListener("change", handlePhotoChange);
 
     // ===== Initialisation =====
-    function init() {
+    async function init() {
       getOrCreateSessionId();
+      await bootstrapRemoteState();
       loadMissions();
       hydrateProfile();
       renderJournal();
