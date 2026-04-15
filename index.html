@@ -872,9 +872,13 @@
 
     let MISSIONS = [];
 
+    function hasUsableMissions(list) {
+      return Array.isArray(list) && list.some(m => m && m.active && !m.bonus && Number.isFinite(m.level));
+    }
+
     function loadMissions() {
       const stored = loadJSON(STORAGE_KEYS.missions, null);
-      if (Array.isArray(stored) && stored.length) {
+      if (Array.isArray(stored) && stored.length && hasUsableMissions(stored)) {
         MISSIONS = stored;
       } else {
         MISSIONS = DEFAULT_MISSIONS.map(m => ({ ...m }));
@@ -1235,7 +1239,11 @@
       home: document.getElementById("screen-home"),
       mission: document.getElementById("screen-mission"),
       validation: document.getElementById("screen-validation"),
-      journal: document.getElementById("screen-journal")
+      journal: document.getElementById("screen-journal"),
+      missions: document.getElementById("screen-missions"),
+      photos: document.getElementById("screen-photos"),
+      suggest: document.getElementById("screen-suggest"),
+      orga: document.getElementById("screen-orga")
     };
 
     const displayNameInput = document.getElementById("display-name-input");
@@ -1258,8 +1266,15 @@
 
     // ===== Navigation =====
     function showScreen(name) {
-      Object.values(screens).forEach(screen => screen.classList.remove("active"));
-      screens[name].classList.add("active");
+      const target = screens[name];
+      if (!target) {
+        console.warn("Ecran introuvable:", name);
+        return;
+      }
+      Object.values(screens).forEach(screen => {
+        if (screen) screen.classList.remove("active");
+      });
+      target.classList.add("active");
 
       if (name === "journal") renderJournal();
       if (name === "suggest") renderSuggestions();
@@ -1303,7 +1318,12 @@
 
     function startGame() {
       syncProfileFromInput();
-      const mission = pickNextMission();
+      let mission = pickNextMission();
+      if (!mission) {
+        // If local missions were corrupted/disabled, restore defaults once and retry.
+        loadMissions();
+        mission = pickNextMission();
+      }
       if (!mission) {
         Toast.warning("Aucune mission disponible pour le moment.");
         return;
