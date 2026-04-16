@@ -541,6 +541,7 @@
       </div>
       <div class="top-actions">
         <button class="btn btn-link" data-go="home">Accueil</button>
+        <button class="btn btn-link" data-go="photos">Photos</button>
         <button class="btn btn-link" data-go="suggest">Proposer</button>
       </div>
     </div>
@@ -1837,40 +1838,56 @@
     async function confirmValidation() {
       if (!STATE.currentMission) return;
 
-      const sessionId = getOrCreateSessionId();
-      const profile = getUserProfile();
-      const progress = getProgressState();
-      const previousMissionId = progress.doneMissionIds.length
-        ? progress.doneMissionIds[progress.doneMissionIds.length - 1]
-        : null;
+      const confirmBtn = document.getElementById("confirm-validation-btn");
+      if (confirmBtn) confirmBtn.disabled = true;
 
-      const visibilityRadio = document.querySelector('input[name="photo-visibility"]:checked');
-      const visibility = STATE.currentPhotoDataUrl ? (visibilityRadio?.value || "private") : "private";
-      const photoModerationStatus = !STATE.currentPhotoDataUrl
-        ? "private"
-        : visibility === "participants"
-          ? "pending"
-          : "private";
+      try {
+        const sessionId = getOrCreateSessionId();
+        const profile = getUserProfile();
+        const progress = getProgressState();
+        const previousMissionId = progress.doneMissionIds.length
+          ? progress.doneMissionIds[progress.doneMissionIds.length - 1]
+          : null;
 
-      saveResult(
-        createMissionResult({
-          sessionId,
-          missionId: STATE.currentMission.id,
-          previousMissionId,
-          status: "done",
-          photoUrl: STATE.currentPhotoDataUrl || "",
-          visibility,
-          photoModerationStatus,
-          orgaMessage: orgaMessageInput.value.trim(),
-          displayName: profile.displayName || ""
-        })
-      );
+        const visibilityRadio = document.querySelector('input[name="photo-visibility"]:checked');
+        const hasPhoto = STATE.currentPhotoDataUrl !== "";
+        const visibility = hasPhoto ? (visibilityRadio?.value || "private") : "private";
+        const photoModerationStatus = !hasPhoto
+          ? "private"
+          : visibility === "participants"
+            ? "pending"
+            : "private";
 
-      completeCurrentMission();
-      resetValidationForm();
-      updateProgressBar();
-      goToAnotherMission();
-      Toast.success("Mission validée !");
+        saveResult(
+          createMissionResult({
+            sessionId,
+            missionId: STATE.currentMission.id,
+            previousMissionId,
+            status: "done",
+            photoUrl: STATE.currentPhotoDataUrl || "",
+            visibility,
+            photoModerationStatus,
+            orgaMessage: orgaMessageInput.value.trim(),
+            displayName: profile.displayName || ""
+          })
+        );
+
+        completeCurrentMission();
+        resetValidationForm();
+        updateProgressBar();
+        await goToAnotherMission();
+
+        if (visibility === "participants" && hasPhoto) {
+          Toast.success("Mission validée. Photo envoyée aux orgas pour validation.");
+        } else {
+          Toast.success("Mission validée !");
+        }
+      } catch (error) {
+        console.error("Erreur validation mission:", error);
+        Toast.error("Impossible de valider la mission. Réessaie avec une photo plus légère si besoin.");
+      } finally {
+        if (confirmBtn) confirmBtn.disabled = false;
+      }
     }
 
     // ===== Journal =====
