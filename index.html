@@ -536,7 +536,7 @@
           <div class="progress-bar">
             <div class="progress-bar-fill" id="progress-fill" style="width: 0%;"></div>
           </div>
-          <div class="progress-text" id="progress-text">0 / 75</div>
+          <div class="progress-text" id="progress-text">0 / 10</div>
         </div>
       </div>
       <div class="top-actions">
@@ -558,16 +558,6 @@
             <input id="display-name-input" class="input" type="text" placeholder="Ex. Léo" maxlength="40" />
           </div>
 
-          <div class="progress-section" data-progress-gauge aria-label="Avancement des missions">
-            <div class="row" style="justify-content: space-between; align-items: baseline; gap: 8px;">
-              <div class="micro" data-progress-label>Progression</div>
-              <div class="micro" data-progress-meta>0 / 0</div>
-            </div>
-            <div class="progress-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
-              <div class="progress-bar-fill" data-progress-fill style="width: 0%;"></div>
-            </div>
-          </div>
-
           <div class="home-actions">
             <button id="start-btn" class="btn btn-primary">Je joue</button>
             <button id="journal-btn" class="btn btn-secondary">Mon journal</button>
@@ -584,15 +574,6 @@
       <div class="stack">
         <div class="card mission-card stack">
           <span class="pill">Mission du moment</span>
-          <div class="progress-section" data-progress-gauge aria-label="Avancement des missions">
-            <div class="row" style="justify-content: space-between; align-items: baseline; gap: 8px;">
-              <div class="micro" data-progress-label>Progression</div>
-              <div class="micro" data-progress-meta>0 / 0</div>
-            </div>
-            <div class="progress-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
-              <div class="progress-bar-fill" data-progress-fill style="width: 0%;"></div>
-            </div>
-          </div>
           <div id="mission-text" class="mission-text">…</div>
           <div class="footer-note">Tu peux essayer, passer, ou revenir plus tard.</div>
         </div>
@@ -735,16 +716,6 @@
         <div>
           <h2>Vue orga</h2>
           <p class="sub">Stats locales de démonstration. À brancher ensuite à Supabase pour les vraies données partagées.</p>
-        </div>
-
-        <div class="progress-section" data-progress-gauge aria-label="Avancement des missions">
-          <div class="row" style="justify-content: space-between; align-items: baseline; gap: 8px;">
-            <div class="micro" data-progress-label>Progression globale</div>
-            <div class="micro" data-progress-meta>0 / 0</div>
-          </div>
-          <div class="progress-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
-            <div class="progress-bar-fill" data-progress-fill style="width: 0%;"></div>
-          </div>
         </div>
 
         <div class="card stack">
@@ -1365,6 +1336,15 @@
       return item;
     }
 
+    function updateResultVisibility(resultId, visibility) {
+      const results = getResults();
+      const item = results.find(r => r.id === resultId);
+      if (!item) return null;
+      item.visibility = visibility;
+      saveResults(results);
+      return item;
+    }
+
     // ===== Suggestions =====
     function getSuggestions() {
       return loadJSON(STORAGE_KEYS.suggestions, []);
@@ -1540,7 +1520,6 @@
 
     const displayNameInput = document.getElementById("display-name-input");
     const missionText = document.getElementById("mission-text");
-    const progressGauges = Array.from(document.querySelectorAll("[data-progress-gauge]"));
     const photoInput = document.getElementById("photo-input");
     const photoPreviewWrap = document.getElementById("photo-preview-wrap");
     const photoPreview = document.getElementById("photo-preview");
@@ -1585,37 +1564,17 @@
 
     function updateProgressBar() {
       const state = getProgressState();
-      const missionSource = MISSIONS.length ? MISSIONS : DEFAULT_MISSIONS;
-      const totalMissions = missionSource.filter(m => m.active !== false && !m.bonus).length;
       const done = state.doneMissionIds.length;
-      const percent = totalMissions ? Math.round((done / totalMissions) * 100) : 0;
-      const level = computeInternalLevel(done);
+      const cycleSize = 10;
+      const cyclePosition = done % cycleSize;
+      const doneInCycle = cyclePosition === 0 && done > 0 ? cycleSize : cyclePosition;
+      const percent = Math.round((doneInCycle / cycleSize) * 100);
 
       // Update topbar progress
       const fillEl = document.getElementById("progress-fill");
       const textEl = document.getElementById("progress-text");
       if (fillEl) fillEl.style.width = `${percent}%`;
-      if (textEl) textEl.textContent = `${done} / ${totalMissions}`;
-
-      progressGauges.forEach(gauge => {
-        const label = gauge.querySelector("[data-progress-label]");
-        const meta = gauge.querySelector("[data-progress-meta]");
-        const fill = gauge.querySelector("[data-progress-fill]");
-        const progressBar = gauge.querySelector(".progress-bar");
-
-        if (label) {
-          label.textContent = `Niveau ${level} · ${percent}%`;
-        }
-        if (meta) {
-          meta.textContent = `${done} / ${totalMissions} missions validées`;
-        }
-        if (fill) {
-          fill.style.width = `${percent}%`;
-        }
-        if (progressBar) {
-          progressBar.setAttribute("aria-valuenow", String(percent));
-        }
-      });
+      if (textEl) textEl.textContent = `${doneInCycle} / ${cycleSize} (total: ${done})`;
     }
 
     // ===== Profil =====
@@ -1826,6 +1785,32 @@
         });
 
         row.appendChild(replayBtn);
+
+        if (result.photoUrl && result.visibility !== "participants") {
+          const shareBtn = document.createElement("button");
+          shareBtn.className = "btn btn-primary";
+          shareBtn.type = "button";
+          shareBtn.textContent = "Partager la photo";
+          shareBtn.addEventListener("click", () => {
+            const updated = updateResultVisibility(result.id, "participants");
+            if (!updated) {
+              Toast.error("Impossible de partager cette photo.");
+              return;
+            }
+            renderJournal();
+            renderPhotos();
+            renderOrga();
+            Toast.success("Photo partagée avec les participants.");
+          });
+          row.appendChild(shareBtn);
+        }
+
+        if (result.photoUrl && result.visibility === "participants") {
+          const sharedTag = document.createElement("div");
+          sharedTag.className = "micro";
+          sharedTag.textContent = "Photo partagée";
+          row.appendChild(sharedTag);
+        }
 
         main.appendChild(title);
         main.appendChild(meta);
