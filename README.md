@@ -1,44 +1,52 @@
 # Festival — Missions
 
-Une application web interactive pour un festival. Les participants relèvent des missions, valident leurs réalisations avec des photos optionnelles, et laissent leurs traces.
+Application web de missions festival, utilisable en mode local ou avec backend central Supabase.
 
-## Fonctionnalités
+## Ce qui est prêt
 
-- **Missions aléatoires** : chaque participant reçoit des missions adaptées à sa progression
-- **Validation progressive** : option photo + retour libre
-- **Journal personnel** : historique des missions complétées
-- **Pas de compte** : simple et sans friction
-- **Données locales** : tout reste sur l'appareil du participant
+- Application participant: `index.html`
+- Interface orga/backoffice: `orga.html`
+- Web app installable (PWA): `manifest.webmanifest`, `sw.js`
+- Fallback GitHub Pages: `404.html`, `.nojekyll`
+- Setup backend: `SUPABASE_SETUP.md`
+
+## Mise en ligne sur GitHub Pages
+
+1. Publier ce dossier dans un repository GitHub (branche `main`).
+2. Dans le repo GitHub: `Settings` -> `Pages`.
+3. Source: `Deploy from a branch`.
+4. Branch: `main`, dossier: `/ (root)`.
+5. Attendre 1 a 3 minutes.
+
+URL finale:
+
+`https://<votre-username>.github.io/<nom-du-repo>/`
 
 ## Utilisation
 
-Ouvrez `index.html` dans votre navigateur.
+- Participants: ouvrir `index.html` (ou l'URL GitHub Pages)
+- Orga: ouvrir `orga.html` pour configurer le backend et publier/importer l'etat central
 
-Interface orga/admin : `orga.html`
+## Backend Supabase (optionnel mais recommande)
 
-## Déploiement
+Suivre les etapes de `SUPABASE_SETUP.md`:
 
-Cette app est déployée sur GitHub Pages :
+1. Creer la table `festival_state` dans Supabase.
+2. Recuperer l'URL du projet et la cle anon.
+3. Dans `orga.html`, configurer le mode `Supabase (central)`.
+4. Publier une premiere fois vers le backend.
 
-- Participant : https://zayamlzp-source.github.io/festival-missions/
-- Orga/Admin : https://zayamlzp-source.github.io/festival-missions/orga.html
+Ensuite, `index.html` lit automatiquement cette configuration depuis le navigateur.
 
-## Missions
+## PWA (installation mobile/desktop)
 
-76 missions réparties sur 5 catégories (+ bonus) :
-- **OSE** : défis de courage et rencontre
-- **ENTRAÎNE** : lancer du mouvement collectif
-- **RESSENS** : moments d'écoute et présence
-- **LIEN** : créer des connexions
-- **JOUE** : jeux et impro
-- **BONUS** : défis spéciaux
+Depuis le site publie:
 
-## Structure actuelle
+- Chrome/Edge desktop: menu navigateur -> `Installer l'application`
+- Android: `Ajouter a l'ecran d'accueil`
+- iOS Safari: `Partager` -> `Sur l'ecran d'accueil`
 
-- `index.html` : application participant (source active)
-- `orga.html` : interface orga/admin (source active)
-- `legacy/` : anciens fichiers conservés à titre d'archive
+## Notes
 
----
-
-*Créé pour [nom du festival]*
+- Les donnees sensibles ne doivent pas rester avec des policies ouvertes en production.
+- Renforcer les policies Supabase avant un usage public large.

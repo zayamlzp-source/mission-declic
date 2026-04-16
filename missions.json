@@ -1,0 +1,1439 @@
+﻿[
+    {
+        "id":  1,
+        "text":  "Va parler Ã  quelqu\u0027un que tu n\u0027aurais pas abordÃ©â€¦ et reste un vrai moment avec lui",
+        "category":  "OSE",
+        "level":  3,
+        "theme":  "festival",
+        "peopleMin":  1,
+        "place":  [
+                      "general"
+                  ],
+        "photoOk":  true,
+        "active":  true,
+        "bonus":  false,
+        "tags":  [
+                     "rencontre"
+                 ],
+        "note":  ""
+    },
+    {
+        "id":  2,
+        "text":  "Regarde quelqu\u0027un dans les yeux et souris",
+        "category":  "OSE",
+        "level":  1,
+        "theme":  "festival",
+        "peopleMin":  1,
+        "place":  [
+                      "general"
+                  ],
+        "photoOk":  true,
+        "active":  true,
+        "bonus":  false,
+        "tags":  [
+                     "simple",
+                     "regard"
+                 ],
+        "note":  ""
+    },
+    {
+        "id":  3,
+        "text":  "Dis Ã  quelqu\u0027un : \\\"j\u0027avais envie de te parler\\\"â€¦ et vois oÃ¹ Ã§a t\u0027emmÃ¨ne",
+        "category":  "OSE",
+        "level":  2,
+        "theme":  "festival",
+        "peopleMin":  1,
+        "place":  [
+                      "general"
+                  ],
+        "photoOk":  true,
+        "active":  true,
+        "bonus":  false,
+        "tags":  [
+                     "rencontre"
+                 ],
+        "note":  ""
+    },
+    {
+        "id":  4,
+        "text":  "Va vers la personne qui t\u0027impressionneâ€¦ et dis-lui pourquoi (ex : trÃ¨s Ã  l\u0027aise / trÃ¨s stylÃ©e)",
+        "category":  "OSE",
+        "level":  4,
+        "theme":  "festival",
+        "peopleMin":  1,
+        "place":  [
+                      "general"
+                  ],
+        "photoOk":  true,
+        "active":  true,
+        "bonus":  false,
+        "tags":  [
+                     "audace"
+                 ],
+        "note":  ""
+    },
+    {
+        "id":  5,
+        "text":  "Invite un inconnu Ã  danser (mÃªme 20 secondes)",
+        "category":  "OSE",
+        "level":  3,
+        "theme":  "festival",
+        "peopleMin":  1,
+        "place":  [
+                      "general"
+                  ],
+        "photoOk":  true,
+        "active":  true,
+        "bonus":  false,
+        "tags":  [
+                     "danse",
+                     "rencontre"
+                 ],
+        "note":  ""
+    },
+    {
+        "id":  6,
+        "text":  "Motive une personne Ã  sauter dans la piscine avec toi",
+        "category":  "OSE",
+        "level":  8,
+        "theme":  "festival",
+        "peopleMin":  1,
+        "place":  [
+                      "pool"
+                  ],
+        "photoOk":  true,
+        "active":  true,
+        "bonus":  false,
+        "tags":  [
+                     "piscine"
+                 ],
+        "note":  "piscine"
+    },
+    {
+        "id":  7,
+        "text":  "Fais une danse ridicule assumÃ©eâ€¦ et tiens-la jusqu\u0027au bout avec le sourire",
+        "category":  "OSE",
+        "level":  3,
+        "theme":  "festival",
+        "peopleMin":  1,
+        "place":  [
+                      "general"
+                  ],
+        "photoOk":  true,
+        "active":  true,
+        "bonus":  false,
+        "tags":  [
+                     "danse",
+                     "fun"
+                 ],
+        "note":  ""
+    },
+    {
+        "id":  8,
+        "text":  "Va voir quelqu\u0027un seul et prends le temps avec lui",
+        "category":  "OSE",
+        "level":  2,
+        "theme":  "festival",
+        "peopleMin":  1,
+        "place":  [
+                      "general"
+                  ],
+        "photoOk":  true,
+        "active":  true,
+        "bonus":  false,
+        "tags":  [
+                     "rencontre",
+                     "prÃ©sence"
+                 ],
+        "note":  ""
+    },
+    {
+        "id":  9,
+        "text":  "Fais un vrai compliment Ã  un inconnu (ex : Ã©nergie, style, regard)",
+        "category":  "OSE",
+        "level":  2,
+        "theme":  "festival",
+        "peopleMin":  1,
+        "place":  [
+                      "general"
+                  ],
+        "photoOk":  true,
+        "active":  true,
+        "bonus":  false,
+        "tags":  [
+                     "compliment",
+                     "rencontre"
+                 ],
+        "note":  ""
+    },
+    {
+        "id":  10,
+        "text":  "EntraÃ®ne 5 personnes dans une chenille (et agrandis-la)",
+        "category":  "ENTRAÃŽNE",
+        "level":  5,
+        "theme":  "festival",
+        "peopleMin":  5,
+        "place":  [
+                      "general"
+                  ],
+        "photoOk":  true,
+        "active":  true,
+        "bonus":  false,
+        "tags":  [
+                     "collectif",
+                     "fun"
+                 ],
+        "note":  ""
+    },
+    {
+        "id":  11,
+        "text":  "Lance un chifoumi, mÃªme de loin, Ã  au moins 3 personnes dans les 10 minutes qui suivent",
+        "category":  "ENTRAÃŽNE",
+        "level":  4,
+        "theme":  "festival",
+        "peopleMin":  3,
+        "place":  [
+                      "general"
+                  ],
+        "photoOk":  true,
+        "active":  true,
+        "bonus":  false,
+        "tags":  [
+                     "jeu",
+                     "collectif"
+                 ],
+        "note":  "niveau Ã  confirmer"
+    },
+    {
+        "id":  12,
+        "text":  "Lance un cri collectif (tu lances, ils rÃ©pondent)",
+        "category":  "ENTRAÃŽNE",
+        "level":  5,
+        "theme":  "festival",
+        "peopleMin":  2,
+        "place":  [
+                      "general"
+                  ],
+        "photoOk":  true,
+        "active":  true,
+        "bonus":  false,
+        "tags":  [
+                     "collectif",
+                     "Ã©nergie"
+                 ],
+        "note":  ""
+    },
+    {
+        "id":  13,
+        "text":  "Invite quelqu\u0027un dans un dÃ©fi danse (ex : 10 secondes chacun)",
+        "category":  "ENTRAÃŽNE",
+        "level":  4,
+        "theme":  "festival",
+        "peopleMin":  2,
+        "place":  [
+                      "general"
+                  ],
+        "photoOk":  true,
+        "active":  true,
+        "bonus":  false,
+        "tags":  [
+                     "danse",
+                     "dÃ©fi"
+                 ],
+        "note":  ""
+    },
+    {
+        "id":  14,
+        "text":  "Rassemble 2 inconnus dans une action (danse, pose, jeuâ€¦)",
+        "category":  "ENTRAÃŽNE",
+        "level":  5,
+        "theme":  "festival",
+        "peopleMin":  3,
+        "place":  [
+                      "general"
+                  ],
+        "photoOk":  true,
+        "active":  true,
+        "bonus":  false,
+        "tags":  [
+                     "collectif",
+                     "lien"
+                 ],
+        "note":  ""
+    },
+    {
+        "id":  15,
+        "text":  "Lance un dÃ©filÃ© (marche + attitude)",
+        "category":  "ENTRAÃŽNE",
+        "level":  5,
+        "theme":  "festival",
+        "peopleMin":  2,
+        "place":  [
+                      "general"
+                  ],
+        "photoOk":  true,
+        "active":  true,
+        "bonus":  false,
+        "tags":  [
+                     "jeu",
+                     "collectif"
+                 ],
+        "note":  ""
+    },
+    {
+        "id":  16,
+        "text":  "EntraÃ®ne un groupe dans un mouvement simple (ex : limbo, clap, saut)",
+        "category":  "ENTRAÃŽNE",
+        "level":  4,
+        "theme":  "festival",
+        "peopleMin":  3,
+        "place":  [
+                      "general"
+                  ],
+        "photoOk":  true,
+        "active":  true,
+        "bonus":  false,
+        "tags":  [
+                     "collectif",
+                     "corps"
+                 ],
+        "note":  ""
+    },
+    {
+        "id":  17,
+        "text":  "Embarque quelqu\u0027un dans un jeu (ex : imitation, regard, mini dÃ©fi, chifoumiâ€¦)",
+        "category":  "ENTRAÃŽNE",
+        "level":  2,
+        "theme":  "festival",
+        "peopleMin":  2,
+        "place":  [
+                      "general"
+                  ],
+        "photoOk":  true,
+        "active":  true,
+        "bonus":  false,
+        "tags":  [
+                     "jeu",
+                     "duo"
+                 ],
+        "note":  ""
+    },
+    {
+        "id":  18,
+        "text":  "Fais une visite guidÃ©e du lieu avec 2 personnes (Ã  ta maniÃ¨re)",
+        "category":  "ENTRAÃŽNE",
+        "level":  5,
+        "theme":  "festival",
+        "peopleMin":  3,
+        "place":  [
+                      "general"
+                  ],
+        "photoOk":  true,
+        "active":  true,
+        "bonus":  false,
+        "tags":  [
+                     "collectif",
+                     "impro"
+                 ],
+        "note":  ""
+    },
+    {
+        "id":  19,
+        "text":  "Lance un saut collectif dans la piscine",
+        "category":  "ENTRAÃŽNE",
+        "level":  8,
+        "theme":  "festival",
+        "peopleMin":  2,
+        "place":  [
+                      "pool"
+                  ],
+        "photoOk":  true,
+        "active":  true,
+        "bonus":  false,
+        "tags":  [
+                     "piscine",
+                     "collectif"
+                 ],
+        "note":  "piscine"
+    },
+    {
+        "id":  20,
+        "text":  "Trouve quelqu\u0027un seul et reste avec lui (Ã©coute vraiment)",
+        "category":  "RESSENS",
+        "level":  2,
+        "theme":  "festival",
+        "peopleMin":  1,
+        "place":  [
+                      "general"
+                  ],
+        "photoOk":  true,
+        "active":  true,
+        "bonus":  false,
+        "tags":  [
+                     "Ã©coute",
+                     "prÃ©sence"
+                 ],
+        "note":  ""
+    },
+    {
+        "id":  21,
+        "text":  "Demande Ã  quelqu\u0027un ce qu\u0027il aime vraiment (ex : passion, moment prÃ©fÃ©rÃ©)",
+        "category":  "RESSENS",
+        "level":  3,
+        "theme":  "festival",
+        "peopleMin":  1,
+        "place":  [
+                      "general"
+                  ],
+        "photoOk":  true,
+        "active":  true,
+        "bonus":  false,
+        "tags":  [
+                     "Ã©coute",
+                     "vrai"
+                 ],
+        "note":  ""
+    },
+    {
+        "id":  22,
+        "text":  "Fais un compliment sincÃ¨re (pas gÃ©nÃ©rique)",
+        "category":  "RESSENS",
+        "level":  1,
+        "theme":  "festival",
+        "peopleMin":  1,
+        "place":  [
+                      "general"
+                  ],
+        "photoOk":  true,
+        "active":  true,
+        "bonus":  false,
+        "tags":  [
+                     "compliment"
+                 ],
+        "note":  ""
+    },
+    {
+        "id":  23,
+        "text":  "Complimente un bÃ©nÃ©vole (remercie-le vraiment)",
+        "category":  "RESSENS",
+        "level":  5,
+        "theme":  "festival",
+        "peopleMin":  1,
+        "place":  [
+                      "general"
+                  ],
+        "photoOk":  true,
+        "active":  true,
+        "bonus":  false,
+        "tags":  [
+                     "gratitude",
+                     "bÃ©nÃ©vole"
+                 ],
+        "note":  ""
+    },
+    {
+        "id":  24,
+        "text":  "Parle de quelque chose de vrai (ex : pourquoi tu es lÃ )",
+        "category":  "RESSENS",
+        "level":  3,
+        "theme":  "festival",
+        "peopleMin":  1,
+        "place":  [
+                      "general"
+                  ],
+        "photoOk":  true,
+        "active":  true,
+        "bonus":  false,
+        "tags":  [
+                     "vrai",
+                     "partage"
+                 ],
+        "note":  ""
+    },
+    {
+        "id":  25,
+        "text":  "Fais sourire quelqu\u0027un (ex : regard, geste, mot simple)",
+        "category":  "RESSENS",
+        "level":  1,
+        "theme":  "festival",
+        "peopleMin":  1,
+        "place":  [
+                      "general"
+                  ],
+        "photoOk":  true,
+        "active":  true,
+        "bonus":  false,
+        "tags":  [
+                     "simple",
+                     "sourire"
+                 ],
+        "note":  ""
+    },
+    {
+        "id":  26,
+        "text":  "RamÃ¨ne un verre d\u0027eau Ã  quelqu\u0027un qui en a besoin",
+        "category":  "RESSENS",
+        "level":  1,
+        "theme":  "festival",
+        "peopleMin":  1,
+        "place":  [
+                      "general"
+                  ],
+        "photoOk":  true,
+        "active":  true,
+        "bonus":  false,
+        "tags":  [
+                     "attention",
+                     "aide"
+                 ],
+        "note":  ""
+    },
+    {
+        "id":  27,
+        "text":  "Partage un moment calme avec quelqu\u0027un (Ã  l\u0027Ã©cart ou posÃ©)",
+        "category":  "RESSENS",
+        "level":  3,
+        "theme":  "festival",
+        "peopleMin":  1,
+        "place":  [
+                      "general"
+                  ],
+        "photoOk":  true,
+        "active":  true,
+        "bonus":  false,
+        "tags":  [
+                     "calme",
+                     "prÃ©sence"
+                 ],
+        "note":  ""
+    },
+    {
+        "id":  28,
+        "text":  "Partage quelque chose Ã  manger avec quelqu\u0027un",
+        "category":  "RESSENS",
+        "level":  3,
+        "theme":  "festival",
+        "peopleMin":  1,
+        "place":  [
+                      "general"
+                  ],
+        "photoOk":  true,
+        "active":  true,
+        "bonus":  false,
+        "tags":  [
+                     "partage"
+                 ],
+        "note":  ""
+    },
+    {
+        "id":  29,
+        "text":  "Fais un cadeau Ã  quelqu\u0027un (mÃªme symbolique)",
+        "category":  "RESSENS",
+        "level":  5,
+        "theme":  "festival",
+        "peopleMin":  1,
+        "place":  [
+                      "general"
+                  ],
+        "photoOk":  true,
+        "active":  true,
+        "bonus":  false,
+        "tags":  [
+                     "cadeau",
+                     "attention"
+                 ],
+        "note":  ""
+    },
+    {
+        "id":  30,
+        "text":  "CrÃ©e un duo (ex : mini danse, pose, dÃ©lire commun)",
+        "category":  "LIEN",
+        "level":  2,
+        "theme":  "festival",
+        "peopleMin":  2,
+        "place":  [
+                      "general"
+                  ],
+        "photoOk":  true,
+        "active":  true,
+        "bonus":  false,
+        "tags":  [
+                     "duo",
+                     "lien"
+                 ],
+        "note":  ""
+    },
+    {
+        "id":  31,
+        "text":  "CrÃ©e un trio (ex : nom + pose d\u0027Ã©quipe)",
+        "category":  "LIEN",
+        "level":  2,
+        "theme":  "festival",
+        "peopleMin":  3,
+        "place":  [
+                      "general"
+                  ],
+        "photoOk":  true,
+        "active":  true,
+        "bonus":  false,
+        "tags":  [
+                     "trio",
+                     "lien"
+                 ],
+        "note":  ""
+    },
+    {
+        "id":  32,
+        "text":  "PrÃ©sente deux personnes (comme dans une Ã©mission)",
+        "category":  "LIEN",
+        "level":  2,
+        "theme":  "festival",
+        "peopleMin":  3,
+        "place":  [
+                      "general"
+                  ],
+        "photoOk":  true,
+        "active":  true,
+        "bonus":  false,
+        "tags":  [
+                     "rencontre",
+                     "lien"
+                 ],
+        "note":  ""
+    },
+    {
+        "id":  33,
+        "text":  "Fais rencontrer deux inconnus (et lance un Ã©change)",
+        "category":  "LIEN",
+        "level":  2,
+        "theme":  "festival",
+        "peopleMin":  3,
+        "place":  [
+                      "general"
+                  ],
+        "photoOk":  true,
+        "active":  true,
+        "bonus":  false,
+        "tags":  [
+                     "rencontre",
+                     "lien"
+                 ],
+        "note":  ""
+    },
+    {
+        "id":  34,
+        "text":  "CrÃ©e une rencontre entre 2 inconnus et reste un moment avec eux",
+        "category":  "LIEN",
+        "level":  2,
+        "theme":  "festival",
+        "peopleMin":  3,
+        "place":  [
+                      "general"
+                  ],
+        "photoOk":  true,
+        "active":  true,
+        "bonus":  false,
+        "tags":  [
+                     "rencontre",
+                     "prÃ©sence"
+                 ],
+        "note":  ""
+    },
+    {
+        "id":  35,
+        "text":  "Apprends quelque chose Ã  quelqu\u0027un (ex : mouvement, jeu)",
+        "category":  "LIEN",
+        "level":  2,
+        "theme":  "festival",
+        "peopleMin":  2,
+        "place":  [
+                      "general"
+                  ],
+        "photoOk":  true,
+        "active":  true,
+        "bonus":  false,
+        "tags":  [
+                     "transmission",
+                     "lien"
+                 ],
+        "note":  ""
+    },
+    {
+        "id":  36,
+        "text":  "Trouve 3 points communs avec quelqu\u0027un (rapide)",
+        "category":  "LIEN",
+        "level":  2,
+        "theme":  "festival",
+        "peopleMin":  2,
+        "place":  [
+                      "general"
+                  ],
+        "photoOk":  true,
+        "active":  true,
+        "bonus":  false,
+        "tags":  [
+                     "duo",
+                     "Ã©change"
+                 ],
+        "note":  ""
+    },
+    {
+        "id":  37,
+        "text":  "CrÃ©e une poignÃ©e de main (simple et unique)",
+        "category":  "LIEN",
+        "level":  2,
+        "theme":  "festival",
+        "peopleMin":  2,
+        "place":  [
+                      "general"
+                  ],
+        "photoOk":  true,
+        "active":  true,
+        "bonus":  false,
+        "tags":  [
+                     "duo",
+                     "jeu"
+                 ],
+        "note":  ""
+    },
+    {
+        "id":  38,
+        "text":  "Fais quelque chose ensemble (ex : danser, jouer, poser)",
+        "category":  "LIEN",
+        "level":  2,
+        "theme":  "festival",
+        "peopleMin":  2,
+        "place":  [
+                      "general"
+                  ],
+        "photoOk":  true,
+        "active":  true,
+        "bonus":  false,
+        "tags":  [
+                     "action",
+                     "lien"
+                 ],
+        "note":  ""
+    },
+    {
+        "id":  39,
+        "text":  "Bouge au ralenti (et entraÃ®ne 1â€“2 personnes)",
+        "category":  "JOUE",
+        "level":  1,
+        "theme":  "festival",
+        "peopleMin":  1,
+        "place":  [
+                      "general"
+                  ],
+        "photoOk":  true,
+        "active":  true,
+        "bonus":  false,
+        "tags":  [
+                     "jeu",
+                     "corps"
+                 ],
+        "note":  ""
+    },
+    {
+        "id":  40,
+        "text":  "Fige-toi comme une statue (et vois si d\u0027autres suivent)",
+        "category":  "JOUE",
+        "level":  1,
+        "theme":  "festival",
+        "peopleMin":  1,
+        "place":  [
+                      "general"
+                  ],
+        "photoOk":  true,
+        "active":  true,
+        "bonus":  false,
+        "tags":  [
+                     "jeu",
+                     "corps"
+                 ],
+        "note":  ""
+    },
+    {
+        "id":  41,
+        "text":  "Cache-toi en pleine piste (quelques secondes)",
+        "category":  "JOUE",
+        "level":  4,
+        "theme":  "festival",
+        "peopleMin":  1,
+        "place":  [
+                      "general"
+                  ],
+        "photoOk":  true,
+        "active":  true,
+        "bonus":  false,
+        "tags":  [
+                     "absurde",
+                     "fun"
+                 ],
+        "note":  ""
+    },
+    {
+        "id":  42,
+        "text":  "Invente une autre vie (ex : mÃ©tier improbable)",
+        "category":  "JOUE",
+        "level":  4,
+        "theme":  "festival",
+        "peopleMin":  1,
+        "place":  [
+                      "general"
+                  ],
+        "photoOk":  true,
+        "active":  true,
+        "bonus":  false,
+        "tags":  [
+                     "impro",
+                     "absurde"
+                 ],
+        "note":  ""
+    },
+    {
+        "id":  43,
+        "text":  "Fais chanter quelqu\u0027un (objet = micro)",
+        "category":  "JOUE",
+        "level":  4,
+        "theme":  "festival",
+        "peopleMin":  1,
+        "place":  [
+                      "general"
+                  ],
+        "photoOk":  true,
+        "active":  true,
+        "bonus":  false,
+        "tags":  [
+                     "jeu",
+                     "impro"
+                 ],
+        "note":  ""
+    },
+    {
+        "id":  44,
+        "text":  "CrÃ©e une scÃ¨ne avec quelqu\u0027un (ex : dispute, rencontre)",
+        "category":  "JOUE",
+        "level":  4,
+        "theme":  "festival",
+        "peopleMin":  2,
+        "place":  [
+                      "general"
+                  ],
+        "photoOk":  true,
+        "active":  true,
+        "bonus":  false,
+        "tags":  [
+                     "impro",
+                     "duo"
+                 ],
+        "note":  ""
+    },
+    {
+        "id":  45,
+        "text":  "Fais quelque chose d\u0027absurde Ã  plusieurs (ex : marcher bizarrement)",
+        "category":  "JOUE",
+        "level":  4,
+        "theme":  "festival",
+        "peopleMin":  2,
+        "place":  [
+                      "general"
+                  ],
+        "photoOk":  true,
+        "active":  true,
+        "bonus":  false,
+        "tags":  [
+                     "absurde",
+                     "collectif"
+                 ],
+        "note":  ""
+    },
+    {
+        "id":  46,
+        "text":  "Transforme une situation en jeu (ex : danse â†’ dÃ©fi)",
+        "category":  "JOUE",
+        "level":  4,
+        "theme":  "festival",
+        "peopleMin":  1,
+        "place":  [
+                      "general"
+                  ],
+        "photoOk":  true,
+        "active":  true,
+        "bonus":  false,
+        "tags":  [
+                     "jeu",
+                     "impro"
+                 ],
+        "note":  ""
+    },
+    {
+        "id":  47,
+        "text":  "CrÃ©e un cercle et lance un battle de danse",
+        "category":  "JOUE",
+        "level":  4,
+        "theme":  "festival",
+        "peopleMin":  3,
+        "place":  [
+                      "general"
+                  ],
+        "photoOk":  true,
+        "active":  true,
+        "bonus":  false,
+        "tags":  [
+                     "danse",
+                     "collectif"
+                 ],
+        "note":  ""
+    },
+    {
+        "id":  48,
+        "text":  "Trouve une personne qui connaÃ®t le jeu du ninja et demande-lui une dÃ©mo",
+        "category":  "JOUE",
+        "level":  4,
+        "theme":  "festival",
+        "peopleMin":  2,
+        "place":  [
+                      "general"
+                  ],
+        "photoOk":  true,
+        "active":  true,
+        "bonus":  false,
+        "tags":  [
+                     "jeu",
+                     "rencontre"
+                 ],
+        "note":  ""
+    },
+    {
+        "id":  49,
+        "text":  "Fais une photo originale avec plusieurs personnes",
+        "category":  "JOUE",
+        "level":  4,
+        "theme":  "festival",
+        "peopleMin":  2,
+        "place":  [
+                      "general"
+                  ],
+        "photoOk":  true,
+        "active":  true,
+        "bonus":  false,
+        "tags":  [
+                     "photo",
+                     "collectif"
+                 ],
+        "note":  ""
+    },
+    {
+        "id":  50,
+        "text":  "Va au mur d\u0027expression et ajoute quelque chose en collaboration (dessin, motâ€¦)",
+        "category":  "JOUE",
+        "level":  1,
+        "theme":  "festival",
+        "peopleMin":  1,
+        "place":  [
+                      "expression_wall"
+                  ],
+        "photoOk":  true,
+        "active":  true,
+        "bonus":  false,
+        "tags":  [
+                     "mur",
+                     "expression"
+                 ],
+        "note":  ""
+    },
+    {
+        "id":  51,
+        "text":  "Invite quelqu\u0027un Ã  participer au mur d\u0027expression",
+        "category":  "JOUE",
+        "level":  1,
+        "theme":  "festival",
+        "peopleMin":  1,
+        "place":  [
+                      "expression_wall"
+                  ],
+        "photoOk":  true,
+        "active":  true,
+        "bonus":  false,
+        "tags":  [
+                     "mur",
+                     "invitation"
+                 ],
+        "note":  ""
+    },
+    {
+        "id":  52,
+        "text":  "CrÃ©e une course : objectif traverser le plus vite possible la piscine",
+        "category":  "JOUE",
+        "level":  8,
+        "theme":  "festival",
+        "peopleMin":  2,
+        "place":  [
+                      "pool"
+                  ],
+        "photoOk":  true,
+        "active":  true,
+        "bonus":  false,
+        "tags":  [
+                     "piscine",
+                     "dÃ©fi"
+                 ],
+        "note":  "piscine"
+    },
+    {
+        "id":  53,
+        "text":  "Fais une action synchronisÃ©e dans l\u0027eau",
+        "category":  "JOUE",
+        "level":  8,
+        "theme":  "festival",
+        "peopleMin":  2,
+        "place":  [
+                      "pool"
+                  ],
+        "photoOk":  true,
+        "active":  true,
+        "bonus":  false,
+        "tags":  [
+                     "piscine",
+                     "collectif"
+                 ],
+        "note":  "piscine"
+    },
+    {
+        "id":  54,
+        "text":  "Trouve Double Faceâ€¦ il a quelque chose Ã  te proposer !",
+        "category":  "BONUS",
+        "level":  0,
+        "theme":  "festival",
+        "peopleMin":  1,
+        "place":  [
+                      "general"
+                  ],
+        "photoOk":  true,
+        "active":  true,
+        "bonus":  true,
+        "tags":  [
+                     "bonus"
+                 ],
+        "note":  "bonus"
+    },
+    {
+        "id":  55,
+        "text":  "Propose un 2 vÃ©ritÃ©s, 1 mensonge (dire 3 phrases sur soi, faire deviner le mensonge)",
+        "category":  "JOUE",
+        "level":  4,
+        "theme":  "festival",
+        "peopleMin":  2,
+        "place":  [
+                      "general"
+                  ],
+        "photoOk":  true,
+        "active":  true,
+        "bonus":  false,
+        "tags":  [
+                     "jeu",
+                     "duo"
+                 ],
+        "note":  ""
+    },
+    {
+        "id":  56,
+        "text":  "Lance un action ou vÃ©ritÃ©",
+        "category":  "JOUE",
+        "level":  4,
+        "theme":  "festival",
+        "peopleMin":  2,
+        "place":  [
+                      "general"
+                  ],
+        "photoOk":  true,
+        "active":  true,
+        "bonus":  false,
+        "tags":  [
+                     "jeu",
+                     "duo"
+                 ],
+        "note":  ""
+    },
+    {
+        "id":  57,
+        "text":  "Propose un je n\u0027ai jamaisâ€¦ (3 tours)",
+        "category":  "JOUE",
+        "level":  4,
+        "theme":  "festival",
+        "peopleMin":  2,
+        "place":  [
+                      "general"
+                  ],
+        "photoOk":  true,
+        "active":  true,
+        "bonus":  false,
+        "tags":  [
+                     "jeu",
+                     "collectif"
+                 ],
+        "note":  ""
+    },
+    {
+        "id":  58,
+        "text":  "Invente un jeu avec une rÃ¨gle cachÃ©e",
+        "category":  "JOUE",
+        "level":  4,
+        "theme":  "festival",
+        "peopleMin":  2,
+        "place":  [
+                      "general"
+                  ],
+        "photoOk":  true,
+        "active":  true,
+        "bonus":  false,
+        "tags":  [
+                     "jeu",
+                     "impro"
+                 ],
+        "note":  ""
+    },
+    {
+        "id":  59,
+        "text":  "Transforme une discussion en jeu",
+        "category":  "JOUE",
+        "level":  4,
+        "theme":  "festival",
+        "peopleMin":  2,
+        "place":  [
+                      "general"
+                  ],
+        "photoOk":  true,
+        "active":  true,
+        "bonus":  false,
+        "tags":  [
+                     "jeu",
+                     "impro"
+                 ],
+        "note":  ""
+    },
+    {
+        "id":  60,
+        "text":  "Joue comme si tu tournais un clip",
+        "category":  "JOUE",
+        "level":  4,
+        "theme":  "festival",
+        "peopleMin":  2,
+        "place":  [
+                      "general"
+                  ],
+        "photoOk":  true,
+        "active":  true,
+        "bonus":  false,
+        "tags":  [
+                     "impro",
+                     "duo"
+                 ],
+        "note":  ""
+    },
+    {
+        "id":  61,
+        "text":  "Marche comme si tu Ã©tais dans un autre monde",
+        "category":  "JOUE",
+        "level":  4,
+        "theme":  "festival",
+        "peopleMin":  1,
+        "place":  [
+                      "general"
+                  ],
+        "photoOk":  true,
+        "active":  true,
+        "bonus":  false,
+        "tags":  [
+                     "impro",
+                     "absurde"
+                 ],
+        "note":  ""
+    },
+    {
+        "id":  62,
+        "text":  "Invente une pub ridicule avec quelqu\u0027un",
+        "category":  "JOUE",
+        "level":  4,
+        "theme":  "festival",
+        "peopleMin":  2,
+        "place":  [
+                      "general"
+                  ],
+        "photoOk":  true,
+        "active":  true,
+        "bonus":  false,
+        "tags":  [
+                     "impro",
+                     "duo"
+                 ],
+        "note":  ""
+    },
+    {
+        "id":  63,
+        "text":  "Incarne un personnage pendant 1 min",
+        "category":  "JOUE",
+        "level":  4,
+        "theme":  "festival",
+        "peopleMin":  1,
+        "place":  [
+                      "general"
+                  ],
+        "photoOk":  true,
+        "active":  true,
+        "bonus":  false,
+        "tags":  [
+                     "impro",
+                     "absurde"
+                 ],
+        "note":  ""
+    },
+    {
+        "id":  64,
+        "text":  "Fais semblant de connaÃ®tre quelqu\u0027un depuis longtemps",
+        "category":  "JOUE",
+        "level":  4,
+        "theme":  "festival",
+        "peopleMin":  2,
+        "place":  [
+                      "general"
+                  ],
+        "photoOk":  true,
+        "active":  true,
+        "bonus":  false,
+        "tags":  [
+                     "impro",
+                     "duo"
+                 ],
+        "note":  ""
+    },
+    {
+        "id":  65,
+        "text":  "CrÃ©e une photo figÃ©e comme une scÃ¨ne de film",
+        "category":  "JOUE",
+        "level":  4,
+        "theme":  "festival",
+        "peopleMin":  2,
+        "place":  [
+                      "general"
+                  ],
+        "photoOk":  true,
+        "active":  true,
+        "bonus":  false,
+        "tags":  [
+                     "photo",
+                     "collectif"
+                 ],
+        "note":  ""
+    },
+    {
+        "id":  66,
+        "text":  "Construis un texte cohÃ©rent Ã  plusieurs au mur d\u0027expression (une phrase chacun)",
+        "category":  "JOUE",
+        "level":  4,
+        "theme":  "festival",
+        "peopleMin":  1,
+        "place":  [
+                      "expression_wall"
+                  ],
+        "photoOk":  true,
+        "active":  true,
+        "bonus":  false,
+        "tags":  [
+                     "mur",
+                     "expression"
+                 ],
+        "note":  ""
+    },
+    {
+        "id":  67,
+        "text":  "Lance un effet domino (5 pers min)",
+        "category":  "ENTRAÃŽNE",
+        "level":  5,
+        "theme":  "festival",
+        "peopleMin":  5,
+        "place":  [
+                      "general"
+                  ],
+        "photoOk":  true,
+        "active":  true,
+        "bonus":  false,
+        "tags":  [
+                     "collectif",
+                     "fun"
+                 ],
+        "note":  ""
+    },
+    {
+        "id":  68,
+        "text":  "CrÃ©e une chorÃ© Ã  plusieurs dans l\u0027eau",
+        "category":  "JOUE",
+        "level":  5,
+        "theme":  "festival",
+        "peopleMin":  3,
+        "place":  [
+                      "pool"
+                  ],
+        "photoOk":  true,
+        "active":  true,
+        "bonus":  false,
+        "tags":  [
+                     "piscine",
+                     "collectif"
+                 ],
+        "note":  "piscine"
+    },
+    {
+        "id":  69,
+        "text":  "Fais reproduire un mouvement par d\u0027autres dans l\u0027eau",
+        "category":  "JOUE",
+        "level":  5,
+        "theme":  "festival",
+        "peopleMin":  2,
+        "place":  [
+                      "pool"
+                  ],
+        "photoOk":  true,
+        "active":  true,
+        "bonus":  false,
+        "tags":  [
+                     "piscine",
+                     "collectif"
+                 ],
+        "note":  "piscine"
+    },
+    {
+        "id":  70,
+        "text":  "CrÃ©e une photo vivante dans l\u0027eau",
+        "category":  "JOUE",
+        "level":  5,
+        "theme":  "festival",
+        "peopleMin":  2,
+        "place":  [
+                      "pool"
+                  ],
+        "photoOk":  true,
+        "active":  true,
+        "bonus":  false,
+        "tags":  [
+                     "piscine",
+                     "photo"
+                 ],
+        "note":  "piscine"
+    },
+    {
+        "id":  71,
+        "text":  "Prends une photo avec le plus de monde possible dans un espace exigu",
+        "category":  "JOUE",
+        "level":  5,
+        "theme":  "festival",
+        "peopleMin":  3,
+        "place":  [
+                      "general"
+                  ],
+        "photoOk":  true,
+        "active":  true,
+        "bonus":  false,
+        "tags":  [
+                     "photo",
+                     "collectif"
+                 ],
+        "note":  ""
+    },
+    {
+        "id":  72,
+        "text":  "Forme un cercle et lance une danse commune",
+        "category":  "JOUE",
+        "level":  5,
+        "theme":  "festival",
+        "peopleMin":  3,
+        "place":  [
+                      "general"
+                  ],
+        "photoOk":  true,
+        "active":  true,
+        "bonus":  false,
+        "tags":  [
+                     "danse",
+                     "collectif"
+                 ],
+        "note":  ""
+    },
+    {
+        "id":  73,
+        "text":  "Convaincs un groupe de faire une action ensemble",
+        "category":  "ENTRAÃŽNE",
+        "level":  5,
+        "theme":  "festival",
+        "peopleMin":  3,
+        "place":  [
+                      "general"
+                  ],
+        "photoOk":  true,
+        "active":  true,
+        "bonus":  false,
+        "tags":  [
+                     "collectif",
+                     "lien"
+                 ],
+        "note":  ""
+    },
+    {
+        "id":  74,
+        "text":  "Compose une mini chorÃ© avec 3 inconnus",
+        "category":  "JOUE",
+        "level":  5,
+        "theme":  "festival",
+        "peopleMin":  3,
+        "place":  [
+                      "general"
+                  ],
+        "photoOk":  true,
+        "active":  true,
+        "bonus":  false,
+        "tags":  [
+                     "danse",
+                     "collectif"
+                 ],
+        "note":  ""
+    },
+    {
+        "id":  75,
+        "text":  "Organise un tÃ©lÃ©phone arabe en mode danse (en ligne : chacun refait le mouvement jusqu\u0027au dernier)",
+        "category":  "JOUE",
+        "level":  5,
+        "theme":  "festival",
+        "peopleMin":  4,
+        "place":  [
+                      "general"
+                  ],
+        "photoOk":  true,
+        "active":  true,
+        "bonus":  false,
+        "tags":  [
+                     "danse",
+                     "collectif"
+                 ],
+        "note":  ""
+    },
+    {
+        "id":  76,
+        "text":  "Fais sauter 5 personnes en mÃªme temps",
+        "category":  "ENTRAÃŽNE",
+        "level":  5,
+        "theme":  "festival",
+        "peopleMin":  5,
+        "place":  [
+                      "general"
+                  ],
+        "photoOk":  true,
+        "active":  true,
+        "bonus":  false,
+        "tags":  [
+                     "collectif",
+                     "fun"
+                 ],
+        "note":  ""
+    }
+]

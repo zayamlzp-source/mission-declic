@@ -197,6 +197,30 @@
       line-height: 1.4;
     }
 
+    .flash-banner {
+      border-radius: 12px;
+      padding: 10px 12px;
+      line-height: 1.4;
+      border: 1px solid transparent;
+      display: none;
+    }
+
+    .flash-banner.is-visible {
+      display: block;
+    }
+
+    .flash-banner.is-success {
+      background: #edf7ee;
+      border-color: #b9d7bf;
+      color: #315439;
+    }
+
+    .flash-banner.is-error {
+      background: #fff1ec;
+      border-color: #e3b8ab;
+      color: #7b3f2f;
+    }
+
     .config-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
@@ -262,6 +286,8 @@
         Toutes les actions ici modifient les donnees locales utilisees par l'app (cles <strong>festival_missions</strong> et <strong>festival_mission_suggestions</strong>).
       </div>
 
+      <div id="flash-banner" class="flash-banner" aria-live="polite"></div>
+
       <div class="card">
         <div class="mission-head">
           <strong>Configuration backend (V2)</strong>
@@ -318,6 +344,7 @@
     };
 
     let remoteSyncTimer = null;
+    let flashBannerTimer = null;
 
     function loadJSON(key, fallback) {
       try {
@@ -363,6 +390,25 @@
       const el = document.getElementById("backend-status");
       el.textContent = message;
       el.className = isError ? "meta status-error" : "meta status-ok";
+    }
+
+    function showFlashMessage(message, isError = false) {
+      const el = document.getElementById("flash-banner");
+      if (!el) return;
+
+      if (flashBannerTimer) {
+        clearTimeout(flashBannerTimer);
+        flashBannerTimer = null;
+      }
+
+      el.textContent = message;
+      el.className = `flash-banner is-visible ${isError ? "is-error" : "is-success"}`;
+
+      flashBannerTimer = setTimeout(() => {
+        el.textContent = "";
+        el.className = "flash-banner";
+        flashBannerTimer = null;
+      }, 2400);
     }
 
     function backendConfigFromInputs() {
@@ -947,6 +993,14 @@
       item.photoModerationStatus = nextStatus;
       persistResults();
       render();
+
+      if (nextStatus === "approved") {
+        showFlashMessage("Photo validee. Elle est maintenant visible dans la galerie participant.");
+      } else if (nextStatus === "rejected") {
+        showFlashMessage("Photo refusee. Elle reste conservee cote orga.");
+      } else if (nextStatus === "pending") {
+        showFlashMessage("Photo remise en attente de moderation.");
+      }
     }
 
     function deletePhotoFromResult(resultId) {
@@ -957,6 +1011,71 @@
       item.photoModerationStatus = "private";
       persistResults();
       render();
+      showFlashMessage("Photo refusee et effacee de la galerie orga.");
+    }
+
+    function renderPhotoModerationCard(item) {
+      const card = document.createElement("div");
+      card.className = "card";
+      const status = item.photoModerationStatus || "pending";
+      const badgeClass = status === "approved" ? "active" : (status === "rejected" ? "rejected" : "pending");
+      const badgeText = status === "approved" ? "validee" : (status === "rejected" ? "refusee" : "en attente");
+
+      card.innerHTML = `
+        <div class="mission-head">
+          <div>
+            <strong>${escapeHtml(missionLabelById(item.missionId))}</strong>
+            <span class="badge ${badgeClass}">${badgeText}</span>
+          </div>
+          <div class="meta">${formatDate(item.createdAt)}${item.displayName ? " - " + escapeHtml(item.displayName) : ""}</div>
+        </div>
+      `;
+
+      const img = document.createElement("img");
+      img.src = item.photoUrl;
+      img.alt = "Photo proposee";
+      img.style.width = "100%";
+      img.style.maxWidth = "340px";
+      img.style.borderRadius = "12px";
+      img.style.border = "1px solid var(--line)";
+      card.appendChild(img);
+
+      const actions = document.createElement("div");
+      actions.className = "row";
+
+      const approveBtn = document.createElement("button");
+      approveBtn.className = "btn btn-primary";
+      approveBtn.textContent = "Valider";
+      approveBtn.disabled = status === "approved";
+      approveBtn.addEventListener("click", () => setPhotoModerationStatus(item.id, "approved"));
+
+      const rejectBtn = document.createElement("button");
+      rejectBtn.className = "btn btn-danger";
+      rejectBtn.textContent = "Refuser (garder)";
+      rejectBtn.disabled = status === "rejected";
+      rejectBtn.addEventListener("click", () => setPhotoModerationStatus(item.id, "rejected"));
+
+      const rejectDeleteBtn = document.createElement("button");
+      rejectDeleteBtn.className = "btn btn-danger";
+      rejectDeleteBtn.textContent = "Refuser et effacer";
+      rejectDeleteBtn.addEventListener("click", () => {
+        const confirmed = window.confirm("Refuser et effacer cette photo ? Cette action retire la photo de l'historique visuel.");
+        if (!confirmed) return;
+        deletePhotoFromResult(item.id);
+      });
+
+      const pendingBtn = document.createElement("button");
+      pendingBtn.className = "btn";
+      pendingBtn.textContent = "Remettre en attente";
+      pendingBtn.disabled = status === "pending";
+      pendingBtn.addEventListener("click", () => setPhotoModerationStatus(item.id, "pending"));
+
+      actions.appendChild(approveBtn);
+      actions.appendChild(rejectBtn);
+      actions.appendChild(rejectDeleteBtn);
+      actions.appendChild(pendingBtn);
+      card.appendChild(actions);
+      return card;
     }
 
     function renderPhotosModeration(root) {
@@ -969,69 +1088,30 @@
         return;
       }
 
-      items.forEach(item => {
-        const card = document.createElement("div");
-        card.className = "card";
-        const status = item.photoModerationStatus || "pending";
-        const badgeClass = status === "approved" ? "active" : (status === "rejected" ? "rejected" : "pending");
-        const badgeText = status === "approved" ? "validee" : (status === "rejected" ? "refusee" : "en attente");
+      const pendingItems = items.filter(item => (item.photoModerationStatus || "pending") === "pending");
+      const reviewedItems = items.filter(item => (item.photoModerationStatus || "pending") !== "pending");
 
-        card.innerHTML = `
-          <div class="mission-head">
-            <div>
-              <strong>${escapeHtml(missionLabelById(item.missionId))}</strong>
-              <span class="badge ${badgeClass}">${badgeText}</span>
-            </div>
-            <div class="meta">${formatDate(item.createdAt)}${item.displayName ? " - " + escapeHtml(item.displayName) : ""}</div>
-          </div>
-        `;
+      if (pendingItems.length) {
+        const pendingTitle = document.createElement("div");
+        pendingTitle.className = "meta";
+        pendingTitle.textContent = `Photos en attente (${pendingItems.length})`;
+        root.appendChild(pendingTitle);
+        pendingItems.forEach(item => root.appendChild(renderPhotoModerationCard(item)));
+      } else {
+        const emptyPending = document.createElement("div");
+        emptyPending.className = "empty";
+        emptyPending.textContent = "Aucune photo en attente de validation.";
+        root.appendChild(emptyPending);
+      }
 
-        const img = document.createElement("img");
-        img.src = item.photoUrl;
-        img.alt = "Photo proposee";
-        img.style.width = "100%";
-        img.style.maxWidth = "340px";
-        img.style.borderRadius = "12px";
-        img.style.border = "1px solid var(--line)";
-        card.appendChild(img);
-
-        const actions = document.createElement("div");
-        actions.className = "row";
-
-        const approveBtn = document.createElement("button");
-        approveBtn.className = "btn btn-primary";
-        approveBtn.textContent = "Valider";
-        approveBtn.disabled = status === "approved";
-        approveBtn.addEventListener("click", () => setPhotoModerationStatus(item.id, "approved"));
-
-        const rejectBtn = document.createElement("button");
-        rejectBtn.className = "btn btn-danger";
-        rejectBtn.textContent = "Refuser (garder)";
-        rejectBtn.disabled = status === "rejected";
-        rejectBtn.addEventListener("click", () => setPhotoModerationStatus(item.id, "rejected"));
-
-        const rejectDeleteBtn = document.createElement("button");
-        rejectDeleteBtn.className = "btn btn-danger";
-        rejectDeleteBtn.textContent = "Refuser et effacer";
-        rejectDeleteBtn.addEventListener("click", () => {
-          const confirmed = window.confirm("Refuser et effacer cette photo ? Cette action retire la photo de l'historique visuel.");
-          if (!confirmed) return;
-          deletePhotoFromResult(item.id);
-        });
-
-        const pendingBtn = document.createElement("button");
-        pendingBtn.className = "btn";
-        pendingBtn.textContent = "Remettre en attente";
-        pendingBtn.disabled = status === "pending";
-        pendingBtn.addEventListener("click", () => setPhotoModerationStatus(item.id, "pending"));
-
-        actions.appendChild(approveBtn);
-        actions.appendChild(rejectBtn);
-        actions.appendChild(rejectDeleteBtn);
-        actions.appendChild(pendingBtn);
-        card.appendChild(actions);
-        root.appendChild(card);
-      });
+      if (reviewedItems.length) {
+        const reviewedTitle = document.createElement("div");
+        reviewedTitle.className = "meta";
+        reviewedTitle.style.marginTop = "8px";
+        reviewedTitle.textContent = `Photos deja traitees (${reviewedItems.length})`;
+        root.appendChild(reviewedTitle);
+        reviewedItems.forEach(item => root.appendChild(renderPhotoModerationCard(item)));
+      }
     }
 
     function render() {
