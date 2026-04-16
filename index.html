@@ -1777,12 +1777,13 @@
         return;
       }
 
-      // Rich alphabet pool: FR + accented + a few other-language chars for visual variety
+      // Rich alphabet pool: Latin + accented + Greek + Cyrillic + Runic
       const spinPool = [...("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz" +
-        "ÀÂÄÉÈÊËÎÏÔÙÛÜÇàâäéèêëîïôùûüç" +   // French
-        "ÑñÁáÍíÓóÚú" +                        // Spanish
-        "ÄäÖöÜüß" +                            // German
-        "ÅåØøÆæ")];
+        "ÀÂÄÉÈÊËÎÏÔÙÛÜÇàâäéèêëîïôùûüç" +         // French
+        "ÑñÁáÍíÓóÚúÄäÖöÜüßÅåØøÆæ" +               // Spanish / German / Nordic
+        "ΑΒΓΔΕΖΗΘΙΚΛΜΝΞΟΠΡΣΤΥΦΧΨΩαβγδεζηθικλμνξοπρστυφχψω" + // Greek
+        "АБВГДЕЖЗИКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯабвгдежзиклмнопрстуфхцчшщъыьэюя" + // Cyrillic
+        "ᚠᚢᚦᚨᚱᚲᚷᚹᚺᚾᛁᛃᛇᛈᛉᛊᛏᛒᛖᛗᛚᛜᛞᛟ")];
 
       // Build one slot-reel <span> per character
       missionText.innerHTML = "";
