@@ -45,7 +45,7 @@
     const MISSIONS = [
       createMission({ id: 1, text: "Va parler à quelqu'un que tu n'aurais pas abordé… et reste un vrai moment avec lui", category: "OSE", level: 3, tags: ["rencontre"] }),
       createMission({ id: 2, text: "Regarde quelqu'un dans les yeux et souris", category: "OSE", level: 1, tags: ["simple", "regard"] }),
-      createMission({ id: 3, text: "Dis à quelqu'un : "j'avais envie de te parler"… et vois où ça t'emmène", category: "OSE", level: 2, tags: ["rencontre"] }),
+      createMission({ id: 3, text: "Dis à quelqu'un : \"j'avais envie de te parler\"… et vois où ça t'emmène", category: "OSE", level: 2, tags: ["rencontre"] }),
       createMission({ id: 4, text: "Va vers la personne qui t'impressionne… et dis-lui pourquoi (ex : très à l'aise / très stylée)", category: "OSE", level: 3, tags: ["audace"] }),
       createMission({ id: 5, text: "Invite un inconnu à danser (même 20 secondes)", category: "OSE", level: 3, tags: ["danse", "rencontre"] }),
       createMission({ id: 6, text: "Motive une personne à sauter dans la piscine avec toi", category: "OSE", level: 8, place: ["pool"], tags: ["piscine"], note: "piscine" }),
@@ -606,7 +606,7 @@
       journalList.innerHTML = "";
 
       if (!results.length) {
-        journalList.innerHTML = '<div class="empty">Aucune mission pour l'instant.</div>';
+        journalList.innerHTML = '<div class="empty">Aucune mission pour l\'instant.</div>';
         return;
       }
 
@@ -716,7 +716,7 @@
       suggestionsList.innerHTML = "";
 
       if (!items.length) {
-        suggestionsList.innerHTML = '<div class="empty">Aucune proposition pour l'instant.</div>';
+        suggestionsList.innerHTML = '<div class="empty">Aucune proposition pour l\'instant.</div>';
         return;
       }
 
@@ -797,12 +797,12 @@
             const mission = getMissionById(Number(missionId));
             return `<div>${mission ? escapeHtml(mission.text) : missionId} — ${avg.toFixed(1)}/5</div>`;
           }).join("")
-        : '<div class="micro">Aucune note pour l'instant.</div>';
+        : '<div class="micro">Aucune note pour l\'instant.</div>';
 
       const sequences = sortMapDesc(countMissionSequences(results)).slice(0, 8);
       topSequences.innerHTML = sequences.length
         ? sequences.map(([key, count]) => `<div>${escapeHtml(key)} — ${count}</div>`).join("")
-        : '<div class="micro">Pas encore d'enchaînements relevés.</div>';
+        : '<div class="micro">Pas encore d\'enchaînements relevés.</div>';
 
       const messages = results.filter(r => (r.orgaMessage || "").trim()).sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)).slice(0, 10);
       orgaMessages.innerHTML = messages.length
@@ -810,7 +810,7 @@
             const mission = getMissionById(r.missionId);
             return `<div><strong>${mission ? escapeHtml(mission.text) : "Mission"}</strong><br><span class="micro">${formatDateTime(r.createdAt)}${r.displayName ? ` · ${escapeHtml(r.displayName)}` : ""}</span><br>${escapeHtml(r.orgaMessage)}</div>`;
           }).join("")
-        : '<div class="micro">Aucun message pour l'instant.</div>';
+        : '<div class="micro">Aucun message pour l\'instant.</div>';
     }
 
     // ===== Utilitaires =====

@@ -500,11 +500,13 @@
     function normalizeResultRecord(item) {
       const hasPhoto = !!item?.photoUrl;
       const visibility = item?.visibility || "private";
-      const rawStatus = item?.photoModerationStatus;
+      const hasModerationStatus = typeof item?.photoModerationStatus === "string";
       let photoModerationStatus = "private";
 
       if (hasPhoto && visibility === "participants") {
-        photoModerationStatus = ["pending", "approved", "rejected"].includes(rawStatus) ? rawStatus : "pending";
+        photoModerationStatus = hasModerationStatus
+          ? (["pending", "approved", "rejected"].includes(item.photoModerationStatus) ? item.photoModerationStatus : "pending")
+          : "approved";
       }
 
       return {

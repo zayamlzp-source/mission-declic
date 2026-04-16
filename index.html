@@ -1285,8 +1285,34 @@
     }
 
     // ===== Résultats =====
+    function normalizeResultRecord(result) {
+      const hasPhoto = !!result?.photoUrl;
+      const visibility = result?.visibility || "private";
+      const hasModerationStatus = typeof result?.photoModerationStatus === "string";
+
+      // Keep legacy behavior: previously shared photos remain visible after update.
+      const photoModerationStatus = !hasPhoto
+        ? "private"
+        : visibility === "participants"
+          ? (hasModerationStatus ? result.photoModerationStatus : "approved")
+          : "private";
+
+      return {
+        ...result,
+        visibility,
+        photoModerationStatus
+      };
+    }
+
     function getResults() {
-      return loadJSON(STORAGE_KEYS.results, []);
+      const raw = loadJSON(STORAGE_KEYS.results, []);
+      const normalized = Array.isArray(raw) ? raw.map(normalizeResultRecord) : [];
+
+      if (JSON.stringify(raw) !== JSON.stringify(normalized)) {
+        saveJSON(STORAGE_KEYS.results, normalized);
+      }
+
+      return normalized;
     }
 
     function saveResults(results) {
