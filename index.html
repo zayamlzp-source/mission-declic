@@ -1555,6 +1555,8 @@
 
     const displayNameInput = document.getElementById("display-name-input");
     const missionText = document.getElementById("mission-text");
+    const validateMissionBtn = document.getElementById("validate-mission-btn");
+    const anotherMissionBtn = document.getElementById("another-mission-btn");
     const photoInput = document.getElementById("photo-input");
     const photoPreviewWrap = document.getElementById("photo-preview-wrap");
     const photoPreview = document.getElementById("photo-preview");
@@ -1626,14 +1628,141 @@
       displayNameInput.value = profile.displayName || "";
     }
 
-    // ===== Mission =====
-    function renderMission(mission) {
-      STATE.currentMission = mission;
-      missionText.textContent = mission ? mission.text : "Aucune mission disponible pour le moment.";
-      showScreen("mission");
+    // ===== Animation tirage mission =====
+    let missionAnimationToken = 0;
+
+    function wait(ms) {
+      return new Promise(resolve => setTimeout(resolve, ms));
     }
 
-    function startGame() {
+    function randomInt(min, max) {
+      return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+
+    function getMissionWordPool() {
+      const missionSource = MISSIONS.length ? MISSIONS : DEFAULT_MISSIONS;
+      const words = missionSource
+        .filter(m => !!m?.text)
+        .flatMap(m => String(m.text).replace(/[.,!?;:()]/g, " ").split(/\s+/))
+        .map(w => w.trim())
+        .filter(Boolean);
+
+      if (words.length) return words;
+      return ["Regarde", "quelqu'un", "bouge", "partage", "souris", "ensemble"];
+    }
+
+    function pickRandomWords(wordPool, minCount, maxCount) {
+      const count = randomInt(minCount, maxCount);
+      const tokens = [];
+      for (let i = 0; i < count; i += 1) {
+        tokens.push(wordPool[randomInt(0, wordPool.length - 1)]);
+      }
+      return tokens.join(" ");
+    }
+
+    function splitMissionIntoBlocks(text) {
+      const rawTokens = String(text || "").trim().split(/\s+/).filter(Boolean);
+      if (!rawTokens.length) {
+        return { verb: "", target: "", complement: "" };
+      }
+
+      if (rawTokens.length === 1) {
+        return { verb: rawTokens[0], target: "", complement: "" };
+      }
+
+      const determiners = new Set(["un", "une", "le", "la", "les", "des", "du", "de", "l'"]);
+      let targetEndIndex = 1;
+      const secondToken = rawTokens[1].toLowerCase();
+
+      if (determiners.has(secondToken) && rawTokens.length >= 3) {
+        targetEndIndex = 2;
+      }
+
+      const verb = rawTokens[0];
+      const target = rawTokens.slice(1, targetEndIndex + 1).join(" ");
+      const complement = rawTokens.slice(targetEndIndex + 1).join(" ");
+
+      return { verb, target, complement };
+    }
+
+    function setMissionActionsEnabled(enabled) {
+      if (validateMissionBtn) validateMissionBtn.disabled = !enabled;
+      if (anotherMissionBtn) anotherMissionBtn.disabled = !enabled;
+    }
+
+    async function animateMissionDrawReveal(mission) {
+      const animationToken = ++missionAnimationToken;
+      const safeSetMissionText = value => {
+        if (animationToken !== missionAnimationToken) return false;
+        missionText.textContent = value;
+        return true;
+      };
+
+      const { verb, target, complement } = splitMissionIntoBlocks(mission.text);
+      const wordPool = getMissionWordPool();
+
+      const fullPhraseDuration = 1300;
+      const verbLockDuration = 650;
+      const targetLockDuration = 550;
+
+      const fullPhraseStart = Date.now();
+      while (Date.now() - fullPhraseStart < fullPhraseDuration) {
+        if (!safeSetMissionText(pickRandomWords(wordPool, 3, 9))) return;
+        await wait(85);
+      }
+
+      const verbLockStart = Date.now();
+      while (Date.now() - verbLockStart < verbLockDuration) {
+        const tail = pickRandomWords(wordPool, 1, 6);
+        const phrase = [verb, tail].filter(Boolean).join(" ");
+        if (!safeSetMissionText(phrase)) return;
+        await wait(90);
+      }
+
+      const fixedPrefix = [verb, target].filter(Boolean).join(" ");
+      const targetLockStart = Date.now();
+      while (Date.now() - targetLockStart < targetLockDuration) {
+        const tail = pickRandomWords(wordPool, 1, 4);
+        const phrase = [fixedPrefix, tail].filter(Boolean).join(" ");
+        if (!safeSetMissionText(phrase)) return;
+        await wait(95);
+      }
+
+      let progressiveText = fixedPrefix;
+      if (!safeSetMissionText(progressiveText)) return;
+
+      const complementWords = complement ? complement.split(/\s+/).filter(Boolean) : [];
+      for (const word of complementWords) {
+        await wait(115);
+        progressiveText = [progressiveText, word].filter(Boolean).join(" ");
+        if (!safeSetMissionText(progressiveText)) return;
+      }
+
+      await wait(160);
+      safeSetMissionText(mission.text);
+    }
+
+    // ===== Mission =====
+    async function renderMission(mission, { animate = true } = {}) {
+      STATE.currentMission = mission;
+      showScreen("mission");
+
+      if (!mission) {
+        missionText.textContent = "Aucune mission disponible pour le moment.";
+        setMissionActionsEnabled(false);
+        return;
+      }
+
+      setMissionActionsEnabled(false);
+      if (animate) {
+        await animateMissionDrawReveal(mission);
+      } else {
+        missionText.textContent = mission.text;
+      }
+      setMissionActionsEnabled(true);
+    }
+
+    async function startGame() {
       syncProfileFromInput();
       let mission = pickNextMission();
       if (!mission) {
@@ -1645,16 +1774,16 @@
         Toast.warning("Aucune mission disponible pour le moment.");
         return;
       }
-      renderMission(mission);
+      await renderMission(mission, { animate: true });
     }
 
-    function goToAnotherMission() {
+    async function goToAnotherMission() {
       const mission = getAnotherMission();
       if (!mission) {
         Toast.warning("Aucune autre mission disponible.");
         return;
       }
-      renderMission(mission);
+      await renderMission(mission, { animate: true });
     }
 
     // ===== Validation =====
