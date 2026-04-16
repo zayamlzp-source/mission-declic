@@ -531,6 +531,22 @@
           margin-top: 4px;
           color: var(--muted);
         }
+
+        .admin-grid {
+          display: grid;
+          gap: 10px;
+          grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+        }
+
+        .check-row {
+          display: flex;
+          gap: 8px;
+          align-items: center;
+          padding: 10px 12px;
+          border: 1px solid var(--line);
+          border-radius: 12px;
+          background: #fff;
+        }
     </style>
 </head>
 <body>
@@ -542,6 +558,7 @@
       </div>
       <div class="top-actions">
         <button id="install-btn" class="btn btn-secondary" style="display:none;">Installer l'app</button>
+        <button id="admin-access-btn" class="btn btn-secondary">Admin</button>
         <button class="btn btn-link" data-go="home">Accueil</button>
         <button class="btn btn-link" data-go="suggest">Proposer</button>
       </div>
@@ -560,9 +577,29 @@
             <input id="display-name-input" class="input" type="text" placeholder="Ex. Léo" maxlength="40" />
           </div>
 
+          <div>
+            <label class="label" for="mission-mode-select">Mode de missions</label>
+            <select id="mission-mode-select" class="select">
+              <option value="festival">Mission festi</option>
+              <option value="daily">Vie quotidienne</option>
+              <option value="health">Santé (mix sport + mental)</option>
+              <option value="health_sport">Santé sport</option>
+              <option value="health_mental">Santé mental</option>
+              <option value="all">Mix complet</option>
+            </select>
+          </div>
+
           <div class="home-actions">
             <button id="start-btn" class="btn btn-primary">Je joue</button>
             <button id="journal-btn" class="btn btn-secondary">Mon journal</button>
+          </div>
+
+          <div class="progress-section">
+            <div class="micro">Ta jauge progression</div>
+            <div class="progress-bar">
+              <div id="progress-bar-fill" class="progress-bar-fill" style="width: 0%;"></div>
+            </div>
+            <div id="progress-text" class="progress-text">0 mission validée</div>
           </div>
         </div>
 
@@ -603,6 +640,21 @@
 
           <div id="photo-preview-wrap" class="stack" style="display:none;">
             <img id="photo-preview" alt="Aperçu" class="thumb" style="width:120px;height:120px;" />
+          </div>
+
+          <div id="photo-visibility-wrap" class="stack" style="display:none;">
+            <label class="label">Partage de la photo</label>
+            <div class="radio-group">
+              <label class="radio-option">
+                <input type="radio" name="photo-visibility" value="private" checked />
+                <span>Privée (seulement dans mon journal)</span>
+              </label>
+              <label class="radio-option">
+                <input type="radio" name="photo-visibility" value="participants" />
+                <span>Partagée à la commu</span>
+              </label>
+            </div>
+            <div id="photo-visibility-lock" class="micro" style="display:none;">Le partage commu est désactivé par l'admin.</div>
           </div>
         </div>
 
@@ -696,8 +748,32 @@
     <section id="screen-orga" class="screen">
       <div class="stack">
         <div>
-          <h2>Vue orga</h2>
-          <p class="sub">Stats locales de démonstration. À brancher ensuite à Supabase pour les vraies données partagées.</p>
+          <h2>Espace admin</h2>
+          <p class="sub">Réglages festival: packs de missions, partage photo commu, code d'accès admin.</p>
+        </div>
+
+        <div class="card stack">
+          <h3>Réglages admin</h3>
+          <div class="check-row">
+            <input id="admin-allow-community-share" type="checkbox" />
+            <label for="admin-allow-community-share">Autoriser le partage photo à la commu</label>
+          </div>
+
+          <div class="admin-grid">
+            <label class="check-row"><input id="admin-theme-festival" type="checkbox" /> Mission festi</label>
+            <label class="check-row"><input id="admin-theme-daily" type="checkbox" /> Vie quotidienne</label>
+            <label class="check-row"><input id="admin-theme-health-sport" type="checkbox" /> Santé sport</label>
+            <label class="check-row"><input id="admin-theme-health-mental" type="checkbox" /> Santé mental</label>
+          </div>
+
+          <div>
+            <label class="label" for="admin-pin-input">Changer code admin <span class="micro">(laisser vide pour conserver)</span></label>
+            <input id="admin-pin-input" class="input" type="password" maxlength="24" placeholder="Nouveau code" />
+          </div>
+
+          <div class="row">
+            <button id="admin-save-settings-btn" class="btn btn-primary">Enregistrer réglages</button>
+          </div>
         </div>
 
         <div class="card stack">
@@ -768,7 +844,10 @@
       progress: "festival_progress_state",
       sessionId: "festival_session_id",
       missions: "festival_missions",
-      backendConfig: "festival_backend_config"
+      backendConfig: "festival_backend_config",
+      adminSettings: "festival_admin_settings",
+      missionMode: "festival_mission_mode",
+      adminPin: "festival_admin_pin"
     };
 
     const REMOTE_SYNC_KEYS = new Set([
@@ -777,6 +856,70 @@
       STORAGE_KEYS.results
     ]);
     let remoteSyncTimer = null;
+
+    const THEME_KEYS = ["festival", "daily", "health_sport", "health_mental"];
+
+    function getDefaultAdminSettings() {
+      return {
+        allowCommunityShare: true,
+        enabledThemes: {
+          festival: true,
+          daily: true,
+          health_sport: true,
+          health_mental: true
+        }
+      };
+    }
+
+    function getAdminSettings() {
+      const raw = loadJSON(STORAGE_KEYS.adminSettings, null) || {};
+      const defaults = getDefaultAdminSettings();
+      return {
+        allowCommunityShare: raw.allowCommunityShare !== false,
+        enabledThemes: {
+          festival: raw.enabledThemes?.festival ?? defaults.enabledThemes.festival,
+          daily: raw.enabledThemes?.daily ?? defaults.enabledThemes.daily,
+          health_sport: raw.enabledThemes?.health_sport ?? defaults.enabledThemes.health_sport,
+          health_mental: raw.enabledThemes?.health_mental ?? defaults.enabledThemes.health_mental
+        }
+      };
+    }
+
+    function saveAdminSettings(settings) {
+      return saveJSON(STORAGE_KEYS.adminSettings, settings);
+    }
+
+    function getAdminPin() {
+      return localStorage.getItem(STORAGE_KEYS.adminPin) || "2026";
+    }
+
+    function setAdminPin(value) {
+      localStorage.setItem(STORAGE_KEYS.adminPin, value);
+    }
+
+    function getMissionMode() {
+      const mode = localStorage.getItem(STORAGE_KEYS.missionMode) || "festival";
+      return ["festival", "daily", "health", "health_sport", "health_mental", "all"].includes(mode)
+        ? mode
+        : "festival";
+    }
+
+    function setMissionMode(mode) {
+      localStorage.setItem(STORAGE_KEYS.missionMode, mode);
+    }
+
+    function missionMatchesSelectedMode(mission, mode) {
+      const theme = mission.theme || "festival";
+      if (mode === "all") return true;
+      if (mode === "health") return theme === "health_sport" || theme === "health_mental";
+      return theme === mode;
+    }
+
+    function missionAllowedByAdmin(mission, settings = getAdminSettings()) {
+      const theme = mission.theme || "festival";
+      if (!THEME_KEYS.includes(theme)) return true;
+      return !!settings.enabledThemes[theme];
+    }
 
     // ===== Mission normalization =====
     function normalizeMissionLevel(value) {
@@ -1020,18 +1163,30 @@
     function getMissionPoolForProgression(state) {
       const level = state.internalLevel;
       const allowedLevels = [level, level - 1, level + 1].filter(n => n >= 1 && n <= 8);
+      const mode = getMissionMode();
+      const adminSettings = getAdminSettings();
 
       return MISSIONS.filter(m => {
         if (!m.active) return false;
         if (m.bonus) return false;
         if (!allowedLevels.includes(normalizeMissionLevel(m.level))) return false;
         if (m.id === state.currentMissionId) return false;
+        if (!missionAllowedByAdmin(m, adminSettings)) return false;
+        if (!missionMatchesSelectedMode(m, mode)) return false;
         return true;
       });
     }
 
     function getFallbackMissionPool(state) {
-      return MISSIONS.filter(m => m.active && !m.bonus && m.id !== state.currentMissionId);
+      const mode = getMissionMode();
+      const adminSettings = getAdminSettings();
+      return MISSIONS.filter(m =>
+        m.active &&
+        !m.bonus &&
+        m.id !== state.currentMissionId &&
+        missionAllowedByAdmin(m, adminSettings) &&
+        missionMatchesSelectedMode(m, mode)
+      );
     }
     function createMission({
       id,
@@ -1146,7 +1301,22 @@
       createMission({ id: 73, text: "Convaincs un groupe de faire une action ensemble", category: "ENTRAÎNE", level: 5, peopleMin: 3, tags: ["collectif", "lien"] }),
       createMission({ id: 74, text: "Compose une mini choré avec 3 inconnus", category: "JOUE", level: 5, peopleMin: 3, tags: ["danse", "collectif"] }),
       createMission({ id: 75, text: "Organise un téléphone arabe en mode danse (en ligne : chacun refait le mouvement jusqu'au dernier)", category: "JOUE", level: 5, peopleMin: 4, tags: ["danse", "collectif"] }),
-      createMission({ id: 76, text: "Fais sauter 5 personnes en même temps", category: "ENTRAÎNE", level: 5, peopleMin: 5, tags: ["collectif", "fun"] })
+      createMission({ id: 76, text: "Fais sauter 5 personnes en même temps", category: "ENTRAÎNE", level: 5, peopleMin: 5, tags: ["collectif", "fun"] }),
+
+      createMission({ id: 77, text: "Rends service à quelqu'un aujourd'hui (petit geste concret)", category: "RESSENS", level: 1, theme: "daily", tags: ["quotidien", "entraide"] }),
+      createMission({ id: 78, text: "Range un espace en 5 minutes chrono", category: "JOUE", level: 1, theme: "daily", tags: ["quotidien", "focus"] }),
+      createMission({ id: 79, text: "Envoie un message de gratitude à une personne", category: "LIEN", level: 1, theme: "daily", tags: ["quotidien", "lien"] }),
+      createMission({ id: 80, text: "Fais une tâche que tu repousses depuis plusieurs jours", category: "OSE", level: 3, theme: "daily", tags: ["quotidien", "discipline"] }),
+
+      createMission({ id: 81, text: "Fais 20 squats ou 10 pompes selon ton niveau", category: "ENTRAÎNE", level: 2, theme: "health_sport", tags: ["santé", "sport"] }),
+      createMission({ id: 82, text: "Marche 10 minutes à bon rythme", category: "RESSENS", level: 1, theme: "health_sport", tags: ["santé", "sport"] }),
+      createMission({ id: 83, text: "Fais 2 minutes de mobilité (nuque, épaules, hanches)", category: "JOUE", level: 1, theme: "health_sport", tags: ["santé", "sport"] }),
+      createMission({ id: 84, text: "Bois un grand verre d'eau maintenant", category: "RESSENS", level: 1, theme: "health_sport", tags: ["santé", "récup"] }),
+
+      createMission({ id: 85, text: "Prends 2 minutes de respiration lente (4 sec in / 6 sec out)", category: "RESSENS", level: 1, theme: "health_mental", tags: ["santé", "mental"] }),
+      createMission({ id: 86, text: "Note 3 choses positives de ta journée", category: "RESSENS", level: 1, theme: "health_mental", tags: ["santé", "mental"] }),
+      createMission({ id: 87, text: "Fais 5 minutes sans écran et observe simplement", category: "OSE", level: 2, theme: "health_mental", tags: ["santé", "mental"] }),
+      createMission({ id: 88, text: "Écris une intention simple pour la suite de ta journée", category: "LIEN", level: 1, theme: "health_mental", tags: ["santé", "mental"] })
     ];
 
     let MISSIONS = [];
@@ -1494,8 +1664,30 @@
     const suggestCategory = document.getElementById("suggest-category");
     const suggestLevel = document.getElementById("suggest-level");
     const suggestionsList = document.getElementById("suggestions-list");
+    const missionModeSelect = document.getElementById("mission-mode-select");
+    const progressBarFill = document.getElementById("progress-bar-fill");
+    const progressText = document.getElementById("progress-text");
+    const photoVisibilityWrap = document.getElementById("photo-visibility-wrap");
+    const photoVisibilityLock = document.getElementById("photo-visibility-lock");
+    const adminAllowCommunityShare = document.getElementById("admin-allow-community-share");
+    const adminThemeFestival = document.getElementById("admin-theme-festival");
+    const adminThemeDaily = document.getElementById("admin-theme-daily");
+    const adminThemeHealthSport = document.getElementById("admin-theme-health-sport");
+    const adminThemeHealthMental = document.getElementById("admin-theme-health-mental");
+    const adminPinInput = document.getElementById("admin-pin-input");
 
     // ===== Navigation =====
+    function openAdminAccess() {
+      const entered = window.prompt("Code admin:");
+      if (!entered) return;
+      if (entered !== getAdminPin()) {
+        Toast.error("Code admin incorrect.");
+        return;
+      }
+      hydrateAdminSettingsForm();
+      showScreen("orga");
+    }
+
     function showScreen(name) {
       const target = screens[name];
       if (!target) {
@@ -1510,7 +1702,10 @@
       if (name === "journal") renderJournal();
       if (name === "photos") renderPhotos();
       if (name === "suggest") renderSuggestions();
-      if (name === "orga") renderOrga();
+      if (name === "orga") {
+        renderOrga();
+        hydrateAdminSettingsForm();
+      }
       if (name === "home") updateProgressBar();
     }
 
@@ -1519,12 +1714,24 @@
     });
 
     function updateProgressBar() {
-      // Progression masquée à l'utilisateur, mais logique interne conservée
       const state = getProgressState();
-      const totalMissions = MISSIONS.filter(m => m.active && !m.bonus).length;
-      const done = state.doneMissionIds.length;
+      const mode = getMissionMode();
+      const adminSettings = getAdminSettings();
+      const available = MISSIONS.filter(m =>
+        m.active &&
+        !m.bonus &&
+        missionAllowedByAdmin(m, adminSettings) &&
+        missionMatchesSelectedMode(m, mode)
+      );
+      const availableIds = new Set(available.map(m => m.id));
+      const totalMissions = available.length;
+      const done = state.doneMissionIds.filter(id => availableIds.has(id)).length;
       const percent = totalMissions ? Math.round((done / totalMissions) * 100) : 0;
-      // Éléments DOM supprimés pour interface simplifiée
+      if (progressBarFill) progressBarFill.style.width = `${percent}%`;
+      if (progressText) {
+        const label = done <= 1 ? "mission validée" : "missions validées";
+        progressText.textContent = `${done} ${label} · ${percent}%`;
+      }
     }
 
     // ===== Profil =====
@@ -1539,6 +1746,45 @@
     function hydrateProfile() {
       const profile = getUserProfile();
       displayNameInput.value = profile.displayName || "";
+    }
+
+    function hydrateMissionMode() {
+      if (missionModeSelect) missionModeSelect.value = getMissionMode();
+    }
+
+    function hydrateAdminSettingsForm() {
+      const settings = getAdminSettings();
+      adminAllowCommunityShare.checked = settings.allowCommunityShare;
+      adminThemeFestival.checked = !!settings.enabledThemes.festival;
+      adminThemeDaily.checked = !!settings.enabledThemes.daily;
+      adminThemeHealthSport.checked = !!settings.enabledThemes.health_sport;
+      adminThemeHealthMental.checked = !!settings.enabledThemes.health_mental;
+      adminPinInput.value = "";
+    }
+
+    function saveAdminSettingsFromForm() {
+      const enabledThemes = {
+        festival: !!adminThemeFestival.checked,
+        daily: !!adminThemeDaily.checked,
+        health_sport: !!adminThemeHealthSport.checked,
+        health_mental: !!adminThemeHealthMental.checked
+      };
+
+      if (!Object.values(enabledThemes).some(Boolean)) {
+        Toast.warning("Active au moins un pack de missions.");
+        return;
+      }
+
+      saveAdminSettings({
+        allowCommunityShare: !!adminAllowCommunityShare.checked,
+        enabledThemes
+      });
+
+      const newPin = adminPinInput.value.trim();
+      if (newPin) setAdminPin(newPin);
+
+      updateProgressBar();
+      Toast.success("Réglages admin enregistrés.");
     }
 
     // ===== Mission =====
@@ -1580,11 +1826,19 @@
       STATE.currentPhotoDataUrl = "";
       photoPreview.src = "";
       photoPreviewWrap.style.display = "none";
+      photoVisibilityWrap.style.display = "none";
+      photoVisibilityLock.style.display = "none";
+      const privateChoice = document.querySelector('input[name="photo-visibility"][value="private"]');
+      if (privateChoice) privateChoice.checked = true;
     }
 
     function openValidation() {
       if (!STATE.currentMission) return;
       resetValidationForm();
+      const adminSettings = getAdminSettings();
+      if (!adminSettings.allowCommunityShare) {
+        photoVisibilityLock.style.display = "block";
+      }
       showScreen("validation");
     }
 
@@ -1593,6 +1847,7 @@
       if (!file) {
         STATE.currentPhotoDataUrl = "";
         photoPreviewWrap.style.display = "none";
+        photoVisibilityWrap.style.display = "none";
         fileNameDisplay.textContent = "";
         return;
       }
@@ -1603,11 +1858,15 @@
         STATE.currentPhotoDataUrl = dataUrl;
         photoPreview.src = dataUrl;
         photoPreviewWrap.style.display = "grid";
+        const adminSettings = getAdminSettings();
+        photoVisibilityWrap.style.display = "grid";
+        photoVisibilityLock.style.display = adminSettings.allowCommunityShare ? "none" : "block";
       } catch (error) {
         console.error("Erreur lors du chargement de la photo:", error);
         Toast.error("Erreur lors du chargement de la photo");
         STATE.currentPhotoDataUrl = "";
         photoPreviewWrap.style.display = "none";
+        photoVisibilityWrap.style.display = "none";
         fileNameDisplay.textContent = "";
       }
     }
@@ -1622,7 +1881,12 @@
         ? progress.doneMissionIds[progress.doneMissionIds.length - 1]
         : null;
 
-      const visibility = STATE.currentPhotoDataUrl ? "private" : "private";
+      const adminSettings = getAdminSettings();
+      let visibility = "private";
+      if (STATE.currentPhotoDataUrl && adminSettings.allowCommunityShare) {
+        const selectedVisibility = document.querySelector('input[name="photo-visibility"]:checked');
+        visibility = selectedVisibility ? selectedVisibility.value : "private";
+      }
 
       saveResult(
         createMissionResult({
@@ -1880,6 +2144,7 @@
     }
 
     // ===== Événements =====
+    document.getElementById("admin-access-btn").addEventListener("click", openAdminAccess);
     document.getElementById("start-btn").addEventListener("click", startGame);
     document.getElementById("journal-btn").addEventListener("click", () => showScreen("journal"));
     document.getElementById("validate-mission-btn").addEventListener("click", openValidation);
@@ -1887,6 +2152,12 @@
     document.getElementById("confirm-validation-btn").addEventListener("click", confirmValidation);
     document.getElementById("cancel-validation-btn").addEventListener("click", () => showScreen("mission"));
     document.getElementById("submit-suggestion-btn").addEventListener("click", submitSuggestion);
+    document.getElementById("admin-save-settings-btn").addEventListener("click", saveAdminSettingsFromForm);
+    missionModeSelect.addEventListener("change", () => {
+      setMissionMode(missionModeSelect.value);
+      Toast.info("Mode de missions mis à jour.");
+      updateProgressBar();
+    });
     photoInput.addEventListener("change", handlePhotoChange);
 
     // ===== Initialisation =====
@@ -1895,13 +2166,15 @@
       await bootstrapRemoteState();
       loadMissions();
       hydrateProfile();
+      hydrateMissionMode();
+      hydrateAdminSettingsForm();
       renderJournal();
       renderSuggestions();
       renderPhotos();
       updateProgressBar();
 
       if (location.hash === "#orga") {
-        showScreen("orga");
+        openAdminAccess();
       }
       if (location.hash === "#missions") {
         showScreen("missions");

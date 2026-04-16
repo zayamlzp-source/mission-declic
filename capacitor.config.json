@@ -1,0 +1,6 @@
+{
+  "appId": "io.festival.missions",
+  "appName": "Festival Missions",
+  "webDir": "web",
+  "bundledWebRuntime": false
+}

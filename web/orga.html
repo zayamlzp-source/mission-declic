@@ -1,0 +1,1361 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ORGA - Festival Missions</title>
+  <style>
+    * { box-sizing: border-box; }
+
+    :root {
+      --bg: #f7f3eb;
+      --bg-2: #efe7db;
+      --card: #ffffff;
+      --text: #2f2a24;
+      --muted: #6c6358;
+      --line: #ded5c8;
+      --accent: #7a8f6f;
+      --danger: #b76f53;
+      --warn: #d4a574;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: linear-gradient(180deg, var(--bg), var(--bg-2));
+      color: var(--text);
+      min-height: 100vh;
+      padding: 16px;
+    }
+
+    .app {
+      max-width: 1080px;
+      margin: 0 auto;
+      background: rgba(255, 255, 255, 0.9);
+      border: 1px solid rgba(255, 255, 255, 0.7);
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: 0 14px 36px rgba(0,0,0,0.08);
+    }
+
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      padding: 14px 16px;
+      border-bottom: 1px solid var(--line);
+      background: rgba(255,255,255,0.7);
+    }
+
+    .brand {
+      font-weight: 700;
+      letter-spacing: 0.02em;
+    }
+
+    .row {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .tabs {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--line);
+      background: rgba(255,255,255,0.65);
+    }
+
+    .tab {
+      border: 1px solid rgba(0,0,0,0.08);
+      border-radius: 999px;
+      padding: 10px 14px;
+      font-weight: 700;
+      background: white;
+      cursor: pointer;
+    }
+
+    .tab.active {
+      background: var(--accent);
+      color: white;
+      border-color: transparent;
+    }
+
+    .content {
+      padding: 16px;
+      display: grid;
+      gap: 14px;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 10px;
+    }
+
+    .stat {
+      background: white;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 12px;
+    }
+
+    .stat strong {
+      display: block;
+      font-size: 1.4rem;
+      margin-top: 4px;
+    }
+
+    .list {
+      display: grid;
+      gap: 10px;
+    }
+
+    .card {
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 12px;
+      background: white;
+      display: grid;
+      gap: 10px;
+    }
+
+    .mission-head {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      flex-wrap: wrap;
+      justify-content: space-between;
+    }
+
+    .badge {
+      display: inline-block;
+      border-radius: 999px;
+      padding: 4px 9px;
+      border: 1px solid var(--line);
+      font-size: 0.82rem;
+      color: var(--muted);
+      background: #faf8f4;
+    }
+
+    .badge.active { border-color: #9bc2a1; color: #315439; }
+    .badge.inactive { border-color: #d9b5a8; color: #7b3f2f; }
+    .badge.pending { border-color: #d6c29d; color: #735b30; }
+    .badge.rejected { border-color: #d9b5a8; color: #7b3f2f; }
+
+    .btn {
+      border: 1px solid rgba(0,0,0,0.08);
+      border-radius: 999px;
+      padding: 9px 12px;
+      font-weight: 700;
+      cursor: pointer;
+      background: white;
+      color: var(--text);
+    }
+
+    .btn-primary { background: var(--accent); color: white; border-color: transparent; }
+    .btn-danger { background: var(--danger); color: white; border-color: transparent; }
+    .btn-warn { background: var(--warn); color: #2f2a24; border-color: transparent; }
+
+    .input, .textarea, .select {
+      width: 100%;
+      border: 1px solid rgba(47,42,36,0.14);
+      border-radius: 10px;
+      padding: 10px 12px;
+      font: inherit;
+      background: white;
+      color: var(--text);
+    }
+
+    .textarea { min-height: 78px; resize: vertical; }
+
+    .meta {
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+
+    .hidden { display: none; }
+
+    .empty {
+      text-align: center;
+      border: 1px dashed var(--line);
+      border-radius: 14px;
+      padding: 20px;
+      color: var(--muted);
+      background: rgba(255,255,255,0.65);
+    }
+
+    .notice {
+      background: #fff8ef;
+      border: 1px solid #edd9ba;
+      color: #695233;
+      border-radius: 12px;
+      padding: 10px 12px;
+      line-height: 1.4;
+    }
+
+    .flash-banner {
+      border-radius: 12px;
+      padding: 10px 12px;
+      line-height: 1.4;
+      border: 1px solid transparent;
+      display: none;
+    }
+
+    .flash-banner.is-visible {
+      display: block;
+    }
+
+    .flash-banner.is-success {
+      background: #edf7ee;
+      border-color: #b9d7bf;
+      color: #315439;
+    }
+
+    .flash-banner.is-error {
+      background: #fff1ec;
+      border-color: #e3b8ab;
+      color: #7b3f2f;
+    }
+
+    .config-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 10px;
+    }
+
+    .status-ok { color: #315439; }
+    .status-error { color: #7b3f2f; }
+
+    .shared-photos {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+      gap: 10px;
+    }
+
+    .shared-photo {
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 8px;
+      background: #fff;
+      display: grid;
+      gap: 6px;
+    }
+
+    .shared-photo img {
+      width: 100%;
+      aspect-ratio: 1 / 1;
+      object-fit: cover;
+      border-radius: 10px;
+      border: 1px solid var(--line);
+      background: #f7f3eb;
+    }
+
+    @media (max-width: 720px) {
+      .topbar { flex-direction: column; align-items: flex-start; }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <div class="topbar">
+      <div>
+        <div class="brand">Festival - ORGA</div>
+        <div class="meta">Espace separe du parcours participant</div>
+      </div>
+      <div class="row">
+        <a class="btn" href="./index.html">Voir app participant</a>
+        <button id="refresh-btn" class="btn">Rafraichir</button>
+      </div>
+    </div>
+
+    <div class="tabs">
+      <button class="tab active" data-tab="active">Missions actives</button>
+      <button class="tab" data-tab="inactive">Missions inactives</button>
+      <button class="tab" data-tab="suggested">Propositions participants</button>
+      <button class="tab" data-tab="status">Statuts</button>
+      <button class="tab" data-tab="stats">Stats</button>
+      <button class="tab" data-tab="photos">Photos</button>
+    </div>
+
+    <div class="content">
+      <div id="sync-notice" class="notice">
+        Toutes les actions ici modifient les donnees locales utilisees par l'app (cles <strong>festival_missions</strong> et <strong>festival_mission_suggestions</strong>).
+      </div>
+
+      <div id="flash-banner" class="flash-banner" aria-live="polite"></div>
+
+      <div class="card" style="display:grid;gap:10px;">
+        <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;">
+          <strong>Lien participant</strong>
+          <span id="share-copy-msg" class="meta" style="color:#315439;"></span>
+        </div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;">
+          <input id="share-url-input" class="input" type="text" readonly value="https://zayamlzp-source.github.io/festival-missions/" style="flex:1;min-width:180px;font-size:0.9rem;">
+          <button id="copy-share-url-btn" class="btn btn-primary">Copier</button>
+        </div>
+        <img id="share-qr" src="https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=https%3A%2F%2Fzayamlzp-source.github.io%2Ffestival-missions%2F" alt="QR code lien participant" width="160" height="160" style="border-radius:10px;border:1px solid var(--line);">
+      </div>
+
+      <div class="card">
+        <div class="mission-head">
+          <strong>Configuration backend (V2)</strong>
+          <span id="backend-status" class="meta">Mode local</span>
+        </div>
+        <div class="config-grid">
+          <div>
+            <label class="meta" for="backend-mode">Mode donnees</label>
+            <select id="backend-mode" class="select">
+              <option value="local">Local (appareil)</option>
+              <option value="supabase">Supabase (central)</option>
+            </select>
+          </div>
+          <div>
+            <label class="meta" for="backend-url">Supabase URL</label>
+            <input id="backend-url" class="input" type="text" placeholder="https://xxxxx.supabase.co">
+          </div>
+          <div>
+            <label class="meta" for="backend-key">Supabase anon key</label>
+            <input id="backend-key" class="input" type="password" placeholder="eyJhbGci...">
+          </div>
+          <div>
+            <label class="meta" for="backend-row-id">State row id</label>
+            <input id="backend-row-id" class="input" type="text" value="global">
+          </div>
+        </div>
+        <div class="row">
+          <button id="save-backend-btn" class="btn btn-primary">Sauvegarder config</button>
+          <button id="pull-backend-btn" class="btn">Importer depuis backend</button>
+          <button id="push-backend-btn" class="btn">Publier vers backend</button>
+        </div>
+      </div>
+
+      <div id="stats" class="stats"></div>
+      <div id="list" class="list"></div>
+    </div>
+  </div>
+
+  <script>
+    const STORAGE_KEYS = {
+      missions: "festival_missions",
+      suggestions: "festival_mission_suggestions",
+      results: "festival_results",
+      backendConfig: "festival_backend_config"
+    };
+
+    const CATEGORY_OPTIONS = ["OSE", "ENTRAINE", "RESSENS", "LIEN", "JOUE", "BONUS"];
+
+    const state = {
+      tab: "active",
+      missions: [],
+      suggestions: [],
+      results: []
+    };
+
+    let remoteSyncTimer = null;
+    let flashBannerTimer = null;
+
+    function loadJSON(key, fallback) {
+      try {
+        const raw = localStorage.getItem(key);
+        return raw ? JSON.parse(raw) : fallback;
+      } catch {
+        return fallback;
+      }
+    }
+
+    function saveJSON(key, value) {
+      localStorage.setItem(key, JSON.stringify(value));
+      return value;
+    }
+
+    function getBackendConfig() {
+      const config = loadJSON(STORAGE_KEYS.backendConfig, null);
+      return {
+        mode: config?.mode || "local",
+        supabaseUrl: config?.supabaseUrl || "",
+        supabaseAnonKey: config?.supabaseAnonKey || "",
+        stateRowId: config?.stateRowId || "global"
+      };
+    }
+
+    function saveBackendConfig(config) {
+      return saveJSON(STORAGE_KEYS.backendConfig, config);
+    }
+
+    function isSupabaseEnabled(config = getBackendConfig()) {
+      return config.mode === "supabase" && !!config.supabaseUrl && !!config.supabaseAnonKey;
+    }
+
+    function supabaseHeaders(config = getBackendConfig()) {
+      return {
+        "Content-Type": "application/json",
+        apikey: config.supabaseAnonKey,
+        Authorization: `Bearer ${config.supabaseAnonKey}`
+      };
+    }
+
+    function updateBackendStatus(message, isError = false) {
+      const el = document.getElementById("backend-status");
+      el.textContent = message;
+      el.className = isError ? "meta status-error" : "meta status-ok";
+    }
+
+    function showFlashMessage(message, isError = false) {
+      const el = document.getElementById("flash-banner");
+      if (!el) return;
+
+      if (flashBannerTimer) {
+        clearTimeout(flashBannerTimer);
+        flashBannerTimer = null;
+      }
+
+      el.textContent = message;
+      el.className = `flash-banner is-visible ${isError ? "is-error" : "is-success"}`;
+
+      flashBannerTimer = setTimeout(() => {
+        el.textContent = "";
+        el.className = "flash-banner";
+        flashBannerTimer = null;
+      }, 2400);
+    }
+
+    function backendConfigFromInputs() {
+      return {
+        mode: document.getElementById("backend-mode").value,
+        supabaseUrl: document.getElementById("backend-url").value.trim(),
+        supabaseAnonKey: document.getElementById("backend-key").value.trim(),
+        stateRowId: document.getElementById("backend-row-id").value.trim() || "global"
+      };
+    }
+
+    function fillBackendInputs(config) {
+      document.getElementById("backend-mode").value = config.mode;
+      document.getElementById("backend-url").value = config.supabaseUrl;
+      document.getElementById("backend-key").value = config.supabaseAnonKey;
+      document.getElementById("backend-row-id").value = config.stateRowId;
+      if (isSupabaseEnabled(config)) {
+        updateBackendStatus("Supabase configure");
+      } else {
+        updateBackendStatus("Mode local", false);
+      }
+    }
+
+    async function pullRemoteStateIntoLocal() {
+      const config = getBackendConfig();
+      if (!isSupabaseEnabled(config)) {
+        updateBackendStatus("Mode local actif", false);
+        return false;
+      }
+
+      const url = `${config.supabaseUrl.replace(/\/$/, "")}/rest/v1/festival_state?id=eq.${encodeURIComponent(config.stateRowId)}&select=payload`;
+      const response = await fetch(url, {
+        method: "GET",
+        headers: supabaseHeaders(config)
+      });
+
+      if (!response.ok) {
+        throw new Error(`Import backend impossible (${response.status})`);
+      }
+
+      const rows = await response.json();
+      const payload = Array.isArray(rows) && rows[0] ? rows[0].payload : null;
+      if (!payload || typeof payload !== "object") {
+        updateBackendStatus("Aucune donnee distante", false);
+        return false;
+      }
+
+      if (Array.isArray(payload.missions)) {
+        localStorage.setItem(STORAGE_KEYS.missions, JSON.stringify(payload.missions));
+      }
+      if (Array.isArray(payload.suggestions)) {
+        localStorage.setItem(STORAGE_KEYS.suggestions, JSON.stringify(payload.suggestions));
+      }
+      if (Array.isArray(payload.results)) {
+        localStorage.setItem(STORAGE_KEYS.results, JSON.stringify(payload.results));
+      }
+
+      updateBackendStatus("Import backend reussi", false);
+      return true;
+    }
+
+    async function pushRemoteState() {
+      const config = getBackendConfig();
+      if (!isSupabaseEnabled(config)) return;
+
+      const payload = {
+        missions: loadJSON(STORAGE_KEYS.missions, []),
+        suggestions: loadJSON(STORAGE_KEYS.suggestions, []),
+        results: loadJSON(STORAGE_KEYS.results, []),
+        updatedAt: new Date().toISOString()
+      };
+
+      const url = `${config.supabaseUrl.replace(/\/$/, "")}/rest/v1/festival_state?on_conflict=id`;
+      const response = await fetch(url, {
+        method: "POST",
+        headers: {
+          ...supabaseHeaders(config),
+          Prefer: "resolution=merge-duplicates,return=minimal"
+        },
+        body: JSON.stringify([{ id: config.stateRowId, payload }])
+      });
+
+      if (!response.ok) {
+        throw new Error(`Publication backend impossible (${response.status})`);
+      }
+
+      updateBackendStatus("Publication backend reussie", false);
+    }
+
+    function queueRemotePush() {
+      if (remoteSyncTimer) clearTimeout(remoteSyncTimer);
+      remoteSyncTimer = setTimeout(() => {
+        pushRemoteState().catch(error => {
+          updateBackendStatus(error.message, true);
+        });
+      }, 400);
+    }
+
+    function normalizeLevel(level) {
+      const n = Number(level);
+      return Number.isFinite(n) ? Math.max(0, Math.min(8, n)) : 1;
+    }
+
+    function normalizeMissionRecord(mission) {
+      return {
+        id: Number(mission.id),
+        text: String(mission.text || "").trim(),
+        category: String(mission.category || "JOUE").toUpperCase(),
+        level: normalizeLevel(mission.level),
+        theme: mission.theme || "festival",
+        peopleMin: Number(mission.peopleMin) > 0 ? Number(mission.peopleMin) : 1,
+        place: Array.isArray(mission.place) && mission.place.length ? mission.place : ["general"],
+        photoOk: mission.photoOk !== false,
+        active: mission.active !== false,
+        bonus: !!mission.bonus,
+        tags: Array.isArray(mission.tags) ? mission.tags : [],
+        note: mission.note || ""
+      };
+    }
+
+    function normalizeSuggestionRecord(item) {
+      const allowedStatuses = new Set(["proposed", "validated", "rejected"]);
+      const normalizedStatus = allowedStatuses.has(item.status) ? item.status : "proposed";
+      return {
+        id: item.id,
+        text: String(item.text || "").trim(),
+        category: item.category ? String(item.category).toUpperCase() : "",
+        level: Number.isFinite(Number(item.level)) ? Number(item.level) : null,
+        displayName: item.displayName || "",
+        status: normalizedStatus,
+        createdAt: item.createdAt || new Date().toISOString()
+      };
+    }
+
+    function normalizeResultRecord(item) {
+      const hasPhoto = !!item?.photoUrl;
+      const visibility = item?.visibility || "private";
+      const hasModerationStatus = typeof item?.photoModerationStatus === "string";
+      let photoModerationStatus = "private";
+
+      if (hasPhoto && visibility === "participants") {
+        photoModerationStatus = hasModerationStatus
+          ? (["pending", "approved", "rejected"].includes(item.photoModerationStatus) ? item.photoModerationStatus : "pending")
+          : "approved";
+      }
+
+      return {
+        ...item,
+        visibility,
+        photoModerationStatus
+      };
+    }
+
+    function loadState() {
+      const missions = loadJSON(STORAGE_KEYS.missions, []);
+      const suggestions = loadJSON(STORAGE_KEYS.suggestions, []);
+      const results = loadJSON(STORAGE_KEYS.results, []);
+      state.missions = Array.isArray(missions) ? missions.map(normalizeMissionRecord) : [];
+      state.suggestions = Array.isArray(suggestions) ? suggestions.map(normalizeSuggestionRecord) : [];
+      state.results = Array.isArray(results) ? results.map(normalizeResultRecord) : [];
+    }
+
+    function persistMissions() {
+      saveJSON(STORAGE_KEYS.missions, state.missions.map(normalizeMissionRecord));
+      queueRemotePush();
+    }
+
+    function persistSuggestions() {
+      saveJSON(STORAGE_KEYS.suggestions, state.suggestions.map(normalizeSuggestionRecord));
+      queueRemotePush();
+    }
+
+    function persistResults() {
+      saveJSON(STORAGE_KEYS.results, state.results.map(normalizeResultRecord));
+      queueRemotePush();
+    }
+
+    function setTab(tab) {
+      state.tab = tab;
+      document.querySelectorAll(".tab").forEach(btn => {
+        btn.classList.toggle("active", btn.dataset.tab === tab);
+      });
+      render();
+    }
+
+    function renderStats() {
+      const activeCount = state.missions.filter(m => m.active && !m.bonus).length;
+      const inactiveCount = state.missions.filter(m => !m.active && !m.bonus).length;
+      const pendingSuggestions = state.suggestions.filter(s => s.status === "proposed").length;
+      const validatedSuggestions = state.suggestions.filter(s => s.status === "validated").length;
+      const rejectedSuggestions = state.suggestions.filter(s => s.status === "rejected").length;
+
+      const stats = [
+        { label: "Missions actives", value: activeCount },
+        { label: "Missions inactives", value: inactiveCount },
+        { label: "Propositions en attente", value: pendingSuggestions },
+        { label: "Propositions validees", value: validatedSuggestions },
+        { label: "Propositions refusees", value: rejectedSuggestions }
+      ];
+
+      const root = document.getElementById("stats");
+      root.innerHTML = "";
+      stats.forEach(item => {
+        const card = document.createElement("div");
+        card.className = "stat";
+        card.innerHTML = `<div class="meta">${item.label}</div><strong>${item.value}</strong>`;
+        root.appendChild(card);
+      });
+    }
+
+    function getMissionListForTab() {
+      const nonBonus = state.missions.filter(m => !m.bonus);
+      if (state.tab === "active") return nonBonus.filter(m => m.active);
+      if (state.tab === "inactive") return nonBonus.filter(m => !m.active);
+      return [];
+    }
+
+    function renderMissionEditor(mission) {
+      const card = document.createElement("div");
+      card.className = "card";
+
+      const badgeClass = mission.active ? "active" : "inactive";
+      const badgeText = mission.active ? "active" : "inactive";
+
+      const categoryOptions = CATEGORY_OPTIONS
+        .map(cat => `<option value="${cat}"${mission.category === cat ? " selected" : ""}>${cat}</option>`)
+        .join("");
+
+      card.innerHTML = `
+        <div class="mission-head">
+          <div>
+            <strong>#${mission.id}</strong>
+            <span class="badge ${badgeClass}">${badgeText}</span>
+          </div>
+          <div class="row">
+            <button class="btn ${mission.active ? "btn-danger" : "btn-primary"}" data-action="toggle" data-id="${mission.id}">${mission.active ? "Desactiver" : "Activer"}</button>
+          </div>
+        </div>
+
+        <label class="meta" for="text-${mission.id}">Texte mission</label>
+        <textarea id="text-${mission.id}" class="textarea">${escapeHtml(mission.text)}</textarea>
+
+        <div class="row">
+          <div style="flex:1 1 210px;">
+            <label class="meta" for="category-${mission.id}">Categorie</label>
+            <select id="category-${mission.id}" class="select">${categoryOptions}</select>
+          </div>
+          <div style="width:120px;">
+            <label class="meta" for="level-${mission.id}">Niveau</label>
+            <input id="level-${mission.id}" class="input" type="number" min="0" max="8" value="${mission.level}">
+          </div>
+          <div style="width:120px;">
+            <label class="meta" for="people-${mission.id}">Min pers.</label>
+            <input id="people-${mission.id}" class="input" type="number" min="1" max="20" value="${mission.peopleMin}">
+          </div>
+        </div>
+
+        <label class="meta" for="note-${mission.id}">Note orga (optionnel)</label>
+        <input id="note-${mission.id}" class="input" type="text" value="${escapeHtml(mission.note || "")}">
+
+        <div class="row">
+          <button class="btn btn-primary" data-action="save" data-id="${mission.id}">Modifier et sauvegarder</button>
+        </div>
+      `;
+
+      return card;
+    }
+
+    function renderSuggestionEditor(item) {
+      const card = document.createElement("div");
+      card.className = "card";
+
+      const isValidated = item.status === "validated";
+      const isRejected = item.status === "rejected";
+      const badgeText = isValidated ? "validee" : (isRejected ? "refusee" : "en attente");
+      const badgeClass = isValidated ? "active" : (isRejected ? "rejected" : "pending");
+
+      const categoryOptions = ["", ...CATEGORY_OPTIONS.filter(c => c !== "BONUS")]
+        .map(cat => {
+          const label = cat || "Choisir";
+          const selected = item.category === cat ? " selected" : "";
+          return `<option value="${cat}"${selected}>${label}</option>`;
+        })
+        .join("");
+
+      card.innerHTML = `
+        <div class="mission-head">
+          <div>
+            <strong>${escapeHtml(item.text || "(proposition vide)")}</strong>
+            <span class="badge ${badgeClass}">${badgeText}</span>
+          </div>
+          <div class="meta">${formatDate(item.createdAt)}${item.displayName ? " - " + escapeHtml(item.displayName) : ""}</div>
+        </div>
+
+        <label class="meta" for="suggest-text-${item.id}">Texte suggestion</label>
+        <textarea id="suggest-text-${item.id}" class="textarea">${escapeHtml(item.text)}</textarea>
+
+        <div class="row">
+          <div style="flex:1 1 180px;">
+            <label class="meta" for="suggest-category-${item.id}">Categorie</label>
+            <select id="suggest-category-${item.id}" class="select">${categoryOptions}</select>
+          </div>
+          <div style="width:120px;">
+            <label class="meta" for="suggest-level-${item.id}">Niveau</label>
+            <input id="suggest-level-${item.id}" class="input" type="number" min="1" max="8" value="${item.level || 1}">
+          </div>
+          <div style="width:140px; display:flex; align-items:flex-end;">
+            <button class="btn btn-warn" data-action="save-suggestion" data-id="${item.id}">Modifier</button>
+          </div>
+        </div>
+
+        <div class="row">
+          <button class="btn btn-primary" data-action="validate-suggestion" data-id="${item.id}" ${isValidated ? "disabled" : ""}>Valider -> mission</button>
+          <button class="btn btn-danger" data-action="reject-suggestion" data-id="${item.id}" ${isRejected ? "disabled" : ""}>Refuser</button>
+          <button class="btn" data-action="reset-suggestion" data-id="${item.id}" ${item.status === "proposed" ? "disabled" : ""}>Remettre en attente</button>
+        </div>
+      `;
+
+      return card;
+    }
+
+    function renderList() {
+      const root = document.getElementById("list");
+      root.innerHTML = "";
+
+      if (state.tab === "stats") {
+        renderOrgaView(root);
+        return;
+      }
+
+      if (state.tab === "status") {
+        renderStatusView(root);
+        return;
+      }
+
+      if (state.tab === "photos") {
+        renderPhotosModeration(root);
+        return;
+      }
+
+      if (state.tab === "suggested") {
+        const items = [...state.suggestions].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+        if (!items.length) {
+          root.innerHTML = '<div class="empty">Aucune proposition participant pour le moment.</div>';
+          return;
+        }
+        items.forEach(item => root.appendChild(renderSuggestionEditor(item)));
+        return;
+      }
+
+      const missions = getMissionListForTab().sort((a, b) => a.id - b.id);
+      if (!missions.length) {
+        root.innerHTML = `<div class="empty">Aucune mission ${state.tab === "active" ? "active" : "inactive"}.</div>`;
+        return;
+      }
+      missions.forEach(mission => root.appendChild(renderMissionEditor(mission)));
+    }
+
+    function sortMapDesc(map) {
+      return Object.entries(map).sort((a, b) => b[1] - a[1]);
+    }
+
+    function countDone(results) {
+      return results.filter(r => r.status === "done").length;
+    }
+
+    function countPhotos(results) {
+      return results.filter(r => !!r.photoUrl).length;
+    }
+
+    function countSharedPhotos(results) {
+      return results.filter(r => !!r.photoUrl && r.visibility === "participants" && r.photoModerationStatus === "approved").length;
+    }
+
+    function countPendingPhotos(results) {
+      return results.filter(r => !!r.photoUrl && r.visibility === "participants" && r.photoModerationStatus === "pending").length;
+    }
+
+    function countRejectedPhotos(results) {
+      return results.filter(r => !!r.photoUrl && r.visibility === "participants" && r.photoModerationStatus === "rejected").length;
+    }
+
+    function countOrgaMessages(results) {
+      return results.filter(r => (r.orgaMessage || "").trim()).length;
+    }
+
+    function countDoneByMission(results) {
+      const map = {};
+      results.forEach(result => {
+        if (result.status !== "done") return;
+        map[result.missionId] = (map[result.missionId] || 0) + 1;
+      });
+      return map;
+    }
+
+    function countMissionSequences(results) {
+      const map = {};
+      results.forEach(result => {
+        if (!result.previousMissionId || result.status !== "done") return;
+        const key = `${result.previousMissionId}->${result.missionId}`;
+        map[key] = (map[key] || 0) + 1;
+      });
+      return map;
+    }
+
+    function getAverageRatings(results) {
+      const sums = {};
+      const counts = {};
+      results.forEach(result => {
+        if (!result.rating) return;
+        sums[result.missionId] = (sums[result.missionId] || 0) + result.rating;
+        counts[result.missionId] = (counts[result.missionId] || 0) + 1;
+      });
+
+      const avg = {};
+      Object.keys(sums).forEach(missionId => {
+        avg[missionId] = sums[missionId] / counts[missionId];
+      });
+      return avg;
+    }
+
+    function missionLabelById(missionId) {
+      const mission = getMissionById(Number(missionId));
+      return mission ? mission.text : `Mission ${missionId}`;
+    }
+
+    function renderCardWithRows(title, rows) {
+      const card = document.createElement("div");
+      card.className = "card";
+      const heading = document.createElement("strong");
+      heading.textContent = title;
+      card.appendChild(heading);
+
+      if (!rows.length) {
+        const empty = document.createElement("div");
+        empty.className = "meta";
+        empty.textContent = "Pas encore de donnees.";
+        card.appendChild(empty);
+        return card;
+      }
+
+      rows.forEach(text => {
+        const line = document.createElement("div");
+        line.className = "meta";
+        line.textContent = text;
+        card.appendChild(line);
+      });
+
+      return card;
+    }
+
+    function renderOrgaView(root) {
+      const results = [...state.results].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+
+      const doneCount = countDone(results);
+      const photosCount = countPhotos(results);
+      const pendingPhotosCount = countPendingPhotos(results);
+      const sharedPhotosCount = countSharedPhotos(results);
+      const rejectedPhotosCount = countRejectedPhotos(results);
+      const messageCount = countOrgaMessages(results);
+      const suggestionCount = state.suggestions.length;
+
+      const summary = document.createElement("div");
+      summary.className = "card";
+      summary.innerHTML = `
+        <strong>Vue orga unifiee</strong>
+        <div class="meta">Missions validees: ${doneCount}</div>
+        <div class="meta">Photos: ${photosCount} (en attente: ${pendingPhotosCount}, validees: ${sharedPhotosCount}, refusees: ${rejectedPhotosCount})</div>
+        <div class="meta">Messages orga: ${messageCount}</div>
+        <div class="meta">Propositions participants: ${suggestionCount}</div>
+      `;
+      root.appendChild(summary);
+
+      const topMissions = sortMapDesc(countDoneByMission(results)).slice(0, 8).map(([missionId, count]) => {
+        return `${missionLabelById(missionId)} - ${count}`;
+      });
+      root.appendChild(renderCardWithRows("Top missions realisees", topMissions));
+
+      const topRated = sortMapDesc(getAverageRatings(results)).slice(0, 8).map(([missionId, avg]) => {
+        return `${missionLabelById(missionId)} - ${avg.toFixed(1)}/5`;
+      });
+      root.appendChild(renderCardWithRows("Missions les mieux notees", topRated));
+
+      const topSequences = sortMapDesc(countMissionSequences(results)).slice(0, 8).map(([key, count]) => {
+        const [fromId, toId] = key.split("->");
+        return `${missionLabelById(fromId)} -> ${missionLabelById(toId)} - ${count}`;
+      });
+      root.appendChild(renderCardWithRows("Enchainements frequents", topSequences));
+
+      const messagesCard = document.createElement("div");
+      messagesCard.className = "card";
+      const messagesTitle = document.createElement("strong");
+      messagesTitle.textContent = "Derniers messages orga";
+      messagesCard.appendChild(messagesTitle);
+      const messages = results.filter(r => (r.orgaMessage || "").trim()).slice(0, 10);
+      if (!messages.length) {
+        const empty = document.createElement("div");
+        empty.className = "meta";
+        empty.textContent = "Aucun message pour l'instant.";
+        messagesCard.appendChild(empty);
+      } else {
+        messages.forEach(item => {
+          const line = document.createElement("div");
+          line.className = "meta";
+          const author = item.displayName ? ` - ${item.displayName}` : "";
+          line.textContent = `${formatDate(item.createdAt)}${author}: ${item.orgaMessage}`;
+          messagesCard.appendChild(line);
+        });
+      }
+      root.appendChild(messagesCard);
+
+      const photosCard = document.createElement("div");
+      photosCard.className = "card";
+      const photosTitle = document.createElement("strong");
+      photosTitle.textContent = "Photos partagees";
+      photosCard.appendChild(photosTitle);
+
+      const sharedPhotos = results.filter(r => !!r.photoUrl && r.visibility === "participants" && r.photoModerationStatus === "approved").slice(0, 24);
+      if (!sharedPhotos.length) {
+        const empty = document.createElement("div");
+        empty.className = "meta";
+        empty.textContent = "Aucune photo partagee pour le moment.";
+        photosCard.appendChild(empty);
+      } else {
+        const grid = document.createElement("div");
+        grid.className = "shared-photos";
+        sharedPhotos.forEach(item => {
+          const block = document.createElement("div");
+          block.className = "shared-photo";
+
+          const img = document.createElement("img");
+          img.src = item.photoUrl;
+          img.alt = "Photo partagee";
+
+          const meta = document.createElement("div");
+          meta.className = "meta";
+          meta.textContent = `${missionLabelById(item.missionId)} - ${formatDate(item.createdAt)}`;
+
+          block.appendChild(img);
+          block.appendChild(meta);
+          grid.appendChild(block);
+        });
+        photosCard.appendChild(grid);
+      }
+      root.appendChild(photosCard);
+    }
+
+    function renderStatusView(root) {
+      const results = state.results;
+      const activeCount = state.missions.filter(m => m.active && !m.bonus).length;
+      const inactiveCount = state.missions.filter(m => !m.active && !m.bonus).length;
+      const pendingSuggestions = state.suggestions.filter(s => s.status === "proposed").length;
+      const validatedSuggestions = state.suggestions.filter(s => s.status === "validated").length;
+      const rejectedSuggestions = state.suggestions.filter(s => s.status === "rejected").length;
+
+      const cards = [
+        { label: "Missions actives", value: activeCount },
+        { label: "Missions inactives", value: inactiveCount },
+        { label: "Propositions en attente", value: pendingSuggestions },
+        { label: "Propositions validees", value: validatedSuggestions },
+        { label: "Propositions refusees", value: rejectedSuggestions },
+        { label: "Photos en attente", value: countPendingPhotos(results) },
+        { label: "Photos validees", value: countSharedPhotos(results) },
+        { label: "Photos refusees", value: countRejectedPhotos(results) }
+      ];
+
+      const grid = document.createElement("div");
+      grid.className = "stats";
+      cards.forEach(item => {
+        const block = document.createElement("div");
+        block.className = "stat";
+        block.innerHTML = `<div class="meta">${item.label}</div><strong>${item.value}</strong>`;
+        grid.appendChild(block);
+      });
+
+      root.appendChild(grid);
+    }
+
+    function setPhotoModerationStatus(resultId, nextStatus) {
+      const item = state.results.find(r => String(r.id) === String(resultId));
+      if (!item) return;
+      item.photoModerationStatus = nextStatus;
+      persistResults();
+      render();
+
+      if (nextStatus === "approved") {
+        showFlashMessage("Photo validee. Elle est maintenant visible dans la galerie participant.");
+      } else if (nextStatus === "rejected") {
+        showFlashMessage("Photo refusee. Elle reste conservee cote orga.");
+      } else if (nextStatus === "pending") {
+        showFlashMessage("Photo remise en attente de moderation.");
+      }
+    }
+
+    function deletePhotoFromResult(resultId) {
+      const item = state.results.find(r => String(r.id) === String(resultId));
+      if (!item) return;
+      item.photoUrl = "";
+      item.visibility = "private";
+      item.photoModerationStatus = "private";
+      persistResults();
+      render();
+      showFlashMessage("Photo refusee et effacee de la galerie orga.");
+    }
+
+    function renderPhotoModerationCard(item) {
+      const card = document.createElement("div");
+      card.className = "card";
+      const status = item.photoModerationStatus || "pending";
+      const badgeClass = status === "approved" ? "active" : (status === "rejected" ? "rejected" : "pending");
+      const badgeText = status === "approved" ? "validee" : (status === "rejected" ? "refusee" : "en attente");
+
+      card.innerHTML = `
+        <div class="mission-head">
+          <div>
+            <strong>${escapeHtml(missionLabelById(item.missionId))}</strong>
+            <span class="badge ${badgeClass}">${badgeText}</span>
+          </div>
+          <div class="meta">${formatDate(item.createdAt)}${item.displayName ? " - " + escapeHtml(item.displayName) : ""}</div>
+        </div>
+      `;
+
+      const img = document.createElement("img");
+      img.src = item.photoUrl;
+      img.alt = "Photo proposee";
+      img.style.width = "100%";
+      img.style.maxWidth = "340px";
+      img.style.borderRadius = "12px";
+      img.style.border = "1px solid var(--line)";
+      card.appendChild(img);
+
+      const actions = document.createElement("div");
+      actions.className = "row";
+
+      const approveBtn = document.createElement("button");
+      approveBtn.className = "btn btn-primary";
+      approveBtn.textContent = "Valider";
+      approveBtn.disabled = status === "approved";
+      approveBtn.addEventListener("click", () => setPhotoModerationStatus(item.id, "approved"));
+
+      const rejectBtn = document.createElement("button");
+      rejectBtn.className = "btn btn-danger";
+      rejectBtn.textContent = "Refuser (garder)";
+      rejectBtn.disabled = status === "rejected";
+      rejectBtn.addEventListener("click", () => setPhotoModerationStatus(item.id, "rejected"));
+
+      const rejectDeleteBtn = document.createElement("button");
+      rejectDeleteBtn.className = "btn btn-danger";
+      rejectDeleteBtn.textContent = "Refuser et effacer";
+      rejectDeleteBtn.addEventListener("click", () => {
+        const confirmed = window.confirm("Refuser et effacer cette photo ? Cette action retire la photo de l'historique visuel.");
+        if (!confirmed) return;
+        deletePhotoFromResult(item.id);
+      });
+
+      const pendingBtn = document.createElement("button");
+      pendingBtn.className = "btn";
+      pendingBtn.textContent = "Remettre en attente";
+      pendingBtn.disabled = status === "pending";
+      pendingBtn.addEventListener("click", () => setPhotoModerationStatus(item.id, "pending"));
+
+      actions.appendChild(approveBtn);
+      actions.appendChild(rejectBtn);
+      actions.appendChild(rejectDeleteBtn);
+      actions.appendChild(pendingBtn);
+      card.appendChild(actions);
+      return card;
+    }
+
+    function renderPhotosModeration(root) {
+      const items = [...state.results]
+        .filter(r => !!r.photoUrl && r.visibility === "participants")
+        .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+
+      if (!items.length) {
+        root.innerHTML = '<div class="empty">Aucune photo proposee pour le moment.</div>';
+        return;
+      }
+
+      const pendingItems = items.filter(item => (item.photoModerationStatus || "pending") === "pending");
+      const reviewedItems = items.filter(item => (item.photoModerationStatus || "pending") !== "pending");
+
+      if (pendingItems.length) {
+        const pendingTitle = document.createElement("div");
+        pendingTitle.className = "meta";
+        pendingTitle.textContent = `Photos en attente (${pendingItems.length})`;
+        root.appendChild(pendingTitle);
+        pendingItems.forEach(item => root.appendChild(renderPhotoModerationCard(item)));
+      } else {
+        const emptyPending = document.createElement("div");
+        emptyPending.className = "empty";
+        emptyPending.textContent = "Aucune photo en attente de validation.";
+        root.appendChild(emptyPending);
+      }
+
+      if (reviewedItems.length) {
+        const reviewedTitle = document.createElement("div");
+        reviewedTitle.className = "meta";
+        reviewedTitle.style.marginTop = "8px";
+        reviewedTitle.textContent = `Photos deja traitees (${reviewedItems.length})`;
+        root.appendChild(reviewedTitle);
+        reviewedItems.forEach(item => root.appendChild(renderPhotoModerationCard(item)));
+      }
+    }
+
+    function render() {
+      renderStats();
+      renderList();
+    }
+
+    function getMissionById(id) {
+      return state.missions.find(m => m.id === id) || null;
+    }
+
+    function getSuggestionById(id) {
+      return state.suggestions.find(s => String(s.id) === String(id)) || null;
+    }
+
+    function nextMissionId() {
+      return Math.max(0, ...state.missions.map(m => Number(m.id) || 0)) + 1;
+    }
+
+    function escapeHtml(str) {
+      return String(str)
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+    }
+
+    function formatDate(value) {
+      if (!value) return "";
+      const d = new Date(value);
+      if (Number.isNaN(d.getTime())) return "";
+      return new Intl.DateTimeFormat("fr-CH", {
+        day: "2-digit",
+        month: "2-digit",
+        hour: "2-digit",
+        minute: "2-digit"
+      }).format(d);
+    }
+
+    function saveMission(id) {
+      const mission = getMissionById(id);
+      if (!mission) return;
+
+      const text = document.getElementById(`text-${id}`).value.trim();
+      const category = document.getElementById(`category-${id}`).value;
+      const level = normalizeLevel(document.getElementById(`level-${id}`).value);
+      const peopleMinRaw = Number(document.getElementById(`people-${id}`).value);
+      const note = document.getElementById(`note-${id}`).value.trim();
+
+      if (!text) {
+        alert("Le texte de mission ne peut pas etre vide.");
+        return;
+      }
+
+      mission.text = text;
+      mission.category = category || mission.category;
+      mission.level = level;
+      mission.peopleMin = Number.isFinite(peopleMinRaw) && peopleMinRaw > 0 ? peopleMinRaw : 1;
+      mission.note = note;
+
+      persistMissions();
+      render();
+    }
+
+    function toggleMission(id) {
+      const mission = getMissionById(id);
+      if (!mission) return;
+      mission.active = !mission.active;
+      persistMissions();
+      render();
+    }
+
+    function saveSuggestion(id) {
+      const item = getSuggestionById(id);
+      if (!item) return;
+
+      const text = document.getElementById(`suggest-text-${id}`).value.trim();
+      const category = document.getElementById(`suggest-category-${id}`).value;
+      const levelRaw = Number(document.getElementById(`suggest-level-${id}`).value);
+
+      if (!text) {
+        alert("Le texte de suggestion ne peut pas etre vide.");
+        return;
+      }
+
+      item.text = text;
+      item.category = category;
+      item.level = Number.isFinite(levelRaw) ? normalizeLevel(levelRaw) : 1;
+      persistSuggestions();
+      render();
+    }
+
+    function setSuggestionStatus(id, status) {
+      const item = getSuggestionById(id);
+      if (!item) return;
+      item.status = status;
+      persistSuggestions();
+      render();
+    }
+
+    function validateSuggestion(id) {
+      const item = getSuggestionById(id);
+      if (!item) return;
+      saveSuggestion(id);
+
+      if (item.status === "validated") {
+        alert("Cette suggestion est deja validee.");
+        return;
+      }
+
+      const mission = normalizeMissionRecord({
+        id: nextMissionId(),
+        text: item.text,
+        category: item.category || "JOUE",
+        level: item.level || 1,
+        active: true,
+        bonus: false,
+        tags: ["participant"],
+        place: ["general"],
+        note: "issue suggestion participant"
+      });
+
+      state.missions.push(mission);
+      item.status = "validated";
+
+      persistMissions();
+      persistSuggestions();
+      render();
+    }
+
+    function onListClick(event) {
+      const target = event.target;
+      if (!(target instanceof HTMLElement)) return;
+
+      const action = target.dataset.action;
+      const id = target.dataset.id;
+      if (!action || !id) return;
+
+      if (action === "save") saveMission(Number(id));
+      if (action === "toggle") toggleMission(Number(id));
+      if (action === "save-suggestion") saveSuggestion(id);
+      if (action === "validate-suggestion") validateSuggestion(id);
+      if (action === "reject-suggestion") setSuggestionStatus(id, "rejected");
+      if (action === "reset-suggestion") setSuggestionStatus(id, "proposed");
+    }
+
+    async function refreshDashboard() {
+      loadState();
+      render();
+
+      const config = getBackendConfig();
+      if (!isSupabaseEnabled(config)) {
+        updateBackendStatus("Rafraichi (local)", false);
+        return;
+      }
+
+      try {
+        await pullRemoteStateIntoLocal();
+        loadState();
+        render();
+        updateBackendStatus("Rafraichi (backend)", false);
+      } catch (error) {
+        updateBackendStatus(error.message, true);
+      }
+    }
+
+    function initEvents() {
+      document.querySelectorAll(".tab").forEach(btn => {
+        btn.addEventListener("click", () => setTab(btn.dataset.tab));
+      });
+      document.getElementById("refresh-btn").addEventListener("click", refreshDashboard);
+
+      document.getElementById("copy-share-url-btn").addEventListener("click", () => {
+        const input = document.getElementById("share-url-input");
+        const msg = document.getElementById("share-copy-msg");
+        navigator.clipboard.writeText(input.value).then(() => {
+          msg.textContent = "Lien copie !";
+          setTimeout(() => { msg.textContent = ""; }, 2500);
+        }).catch(() => {
+          input.select();
+          document.execCommand("copy");
+          msg.textContent = "Lien copie !";
+          setTimeout(() => { msg.textContent = ""; }, 2500);
+        });
+      });
+
+      document.getElementById("save-backend-btn").addEventListener("click", () => {
+        const config = backendConfigFromInputs();
+        saveBackendConfig(config);
+        fillBackendInputs(config);
+      });
+
+      document.getElementById("pull-backend-btn").addEventListener("click", async () => {
+        try {
+          await pullRemoteStateIntoLocal();
+          loadState();
+          render();
+        } catch (error) {
+          updateBackendStatus(error.message, true);
+        }
+      });
+
+      document.getElementById("push-backend-btn").addEventListener("click", async () => {
+        try {
+          await pushRemoteState();
+        } catch (error) {
+          updateBackendStatus(error.message, true);
+        }
+      });
+
+      document.getElementById("list").addEventListener("click", onListClick);
+      window.addEventListener("storage", () => {
+        loadState();
+        render();
+      });
+    }
+
+    async function init() {
+      loadState();
+      fillBackendInputs(getBackendConfig());
+      try {
+        await pullRemoteStateIntoLocal();
+        loadState();
+      } catch (error) {
+        updateBackendStatus(error.message, true);
+      }
+      initEvents();
+      render();
+    }
+
+    init();
+  </script>
+</body>
+</html>
