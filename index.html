@@ -144,6 +144,39 @@
           text-align: center;
           margin: 18px 0 10px;
           color: #2a2a22;
+          transition: color 0.2s;
+        }
+
+        .mission-text.is-scrambling {
+          color: #b4ac9f;
+        }
+
+        @keyframes missionWordSnap {
+          0%   { opacity: 0.2; transform: translateY(-7px) scale(0.9); }
+          60%  { opacity: 1;   transform: translateY(2px)  scale(1.05); }
+          100% { opacity: 1;   transform: translateY(0)    scale(1); }
+        }
+
+        @keyframes missionWordReveal {
+          from { opacity: 0; transform: translateY(5px); }
+          to   { opacity: 1; transform: translateY(0); }
+        }
+
+        .w-locked {
+          color: #3d5c35;
+          font-weight: 700;
+        }
+
+        .w-snap {
+          color: #3d5c35;
+          font-weight: 700;
+          display: inline-block;
+          animation: missionWordSnap 0.32s cubic-bezier(0.22,1,0.36,1) forwards;
+        }
+
+        .w-fade {
+          display: inline;
+          animation: missionWordReveal 0.22s ease forwards;
         }
 
         .micro {
@@ -1527,13 +1560,52 @@
     }
 
     // ===== Simu upload locale =====
-    function fileToLocalDataUrl(file) {
+    function readFileAsDataUrl(file) {
       return new Promise((resolve, reject) => {
         const reader = new FileReader();
         reader.onload = () => resolve(reader.result);
         reader.onerror = reject;
         reader.readAsDataURL(file);
       });
+    }
+
+    function loadImageFromDataUrl(dataUrl) {
+      return new Promise((resolve, reject) => {
+        const img = new Image();
+        img.onload = () => resolve(img);
+        img.onerror = reject;
+        img.src = dataUrl;
+      });
+    }
+
+    async function fileToLocalDataUrl(file) {
+      const sourceDataUrl = await readFileAsDataUrl(file);
+      const image = await loadImageFromDataUrl(sourceDataUrl);
+
+      const maxSide = 1600;
+      const scale = Math.min(1, maxSide / Math.max(image.width || 1, image.height || 1));
+      const width = Math.max(1, Math.round((image.width || 1) * scale));
+      const height = Math.max(1, Math.round((image.height || 1) * scale));
+
+      const canvas = document.createElement("canvas");
+      canvas.width = width;
+      canvas.height = height;
+
+      const context = canvas.getContext("2d");
+      if (!context) return sourceDataUrl;
+
+      context.drawImage(image, 0, 0, width, height);
+
+      let quality = 0.82;
+      let output = canvas.toDataURL("image/jpeg", quality);
+      const maxLength = 1_600_000;
+
+      while (output.length > maxLength && quality > 0.45) {
+        quality -= 0.08;
+        output = canvas.toDataURL("image/jpeg", quality);
+      }
+
+      return output;
     }
 
     // ===== État UI =====
@@ -1693,54 +1765,83 @@
 
     async function animateMissionDrawReveal(mission) {
       const animationToken = ++missionAnimationToken;
-      const safeSetMissionText = value => {
-        if (animationToken !== missionAnimationToken) return false;
-        missionText.textContent = value;
-        return true;
-      };
+      const isAlive = () => animationToken === missionAnimationToken;
 
       const { verb, target, complement } = splitMissionIntoBlocks(mission.text);
       const wordPool = getMissionWordPool();
+      const complementWords = complement ? complement.split(/\s+/).filter(Boolean) : [];
 
-      const fullPhraseDuration = 1300;
-      const verbLockDuration = 650;
-      const targetLockDuration = 550;
+      // Reset: two sub-spans — locked words stay stable, scramble updates each tick
+      missionText.innerHTML = "";
+      missionText.className = "mission-text is-scrambling";
 
-      const fullPhraseStart = Date.now();
-      while (Date.now() - fullPhraseStart < fullPhraseDuration) {
-        if (!safeSetMissionText(pickRandomWords(wordPool, 3, 9))) return;
+      const lockedEl = document.createElement("span");
+      const scrambleEl = document.createElement("span");
+      missionText.appendChild(lockedEl);
+      missionText.appendChild(scrambleEl);
+
+      // Phase 1 — full scramble (1200ms)
+      const p1End = Date.now() + 1200;
+      while (Date.now() < p1End) {
+        if (!isAlive()) return;
+        scrambleEl.textContent = pickRandomWords(wordPool, 3, 8);
+        await wait(80);
+      }
+
+      // Phase 2 — verb snaps in, tail still scrambles (600ms)
+      if (!isAlive()) return;
+      lockedEl.innerHTML = "";
+      const verbSnap = document.createElement("span");
+      verbSnap.className = "w-snap";
+      verbSnap.textContent = verb;
+      lockedEl.appendChild(verbSnap);
+      lockedEl.appendChild(document.createTextNode(" "));
+
+      const p2End = Date.now() + 600;
+      while (Date.now() < p2End) {
+        if (!isAlive()) return;
+        scrambleEl.textContent = pickRandomWords(wordPool, 2, 6);
         await wait(85);
       }
+      verbSnap.className = "w-locked";
 
-      const verbLockStart = Date.now();
-      while (Date.now() - verbLockStart < verbLockDuration) {
-        const tail = pickRandomWords(wordPool, 1, 6);
-        const phrase = [verb, tail].filter(Boolean).join(" ");
-        if (!safeSetMissionText(phrase)) return;
-        await wait(90);
+      // Phase 3 — target snaps in, tail still scrambles (500ms)
+      if (!isAlive()) return;
+      if (target) {
+        const targetSnap = document.createElement("span");
+        targetSnap.className = "w-snap";
+        targetSnap.textContent = target;
+        lockedEl.appendChild(targetSnap);
+        lockedEl.appendChild(document.createTextNode(" "));
+
+        const p3End = Date.now() + 500;
+        while (Date.now() < p3End) {
+          if (!isAlive()) return;
+          scrambleEl.textContent = pickRandomWords(wordPool, 1, 4);
+          await wait(90);
+        }
+        targetSnap.className = "w-locked";
       }
 
-      const fixedPrefix = [verb, target].filter(Boolean).join(" ");
-      const targetLockStart = Date.now();
-      while (Date.now() - targetLockStart < targetLockDuration) {
-        const tail = pickRandomWords(wordPool, 1, 4);
-        const phrase = [fixedPrefix, tail].filter(Boolean).join(" ");
-        if (!safeSetMissionText(phrase)) return;
-        await wait(95);
-      }
-
-      let progressiveText = fixedPrefix;
-      if (!safeSetMissionText(progressiveText)) return;
-
-      const complementWords = complement ? complement.split(/\s+/).filter(Boolean) : [];
+      // Phase 4 — scramble clears, complement reveals word by word
+      if (!isAlive()) return;
+      scrambleEl.textContent = "";
       for (const word of complementWords) {
+        if (!isAlive()) return;
         await wait(115);
-        progressiveText = [progressiveText, word].filter(Boolean).join(" ");
-        if (!safeSetMissionText(progressiveText)) return;
+        const wordSpan = document.createElement("span");
+        wordSpan.className = "w-fade";
+        wordSpan.textContent = word;
+        lockedEl.appendChild(wordSpan);
+        lockedEl.appendChild(document.createTextNode(" "));
       }
 
-      await wait(160);
-      safeSetMissionText(mission.text);
+      await wait(200);
+      if (!isAlive()) return;
+
+      // Final clean state
+      missionText.className = "mission-text";
+      missionText.textContent = mission.text;
     }
 
     // ===== Mission =====
@@ -1827,8 +1928,9 @@
         visibilityWrap.style.display = "grid";
       } catch (error) {
         console.error("Erreur lors du chargement de la photo:", error);
-        Toast.error("Erreur lors du chargement de la photo");
+        Toast.error("Impossible de preparer cette photo. Essaie une image plus legere ou plus simple.");
         STATE.currentPhotoDataUrl = "";
+        photoPreview.src = "";
         photoPreviewWrap.style.display = "none";
         visibilityWrap.style.display = "none";
         fileNameDisplay.textContent = "";
