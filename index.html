@@ -2048,10 +2048,10 @@
         if (!lockedSet.has(i)) {
           lockedSet.add(i);
           setReelChar(charSlots[i].reel, charSlots[i].finalChar, "w-locking");
-          await wait(50);
+          await wait(30);
 
           // Keep other letters rolling briefly between each lock
-          const lingerEnd = Date.now() + 120;
+          const lingerEnd = Date.now() + 60;
           while (Date.now() < lingerEnd) {
             if (!isAlive()) return;
             charSlots.forEach((slot, j) => {
@@ -2059,13 +2059,13 @@
                 setReelChar(slot.reel, getRandomSpinChar(1), "w-spinning");
               }
             });
-            await wait(120);
+            await wait(60);
           }
         }
       }
 
       // Settle then restore plain text node
-      await wait(100);
+      await wait(50);
       if (!isAlive()) return;
 
       missionText.className = "mission-text";
