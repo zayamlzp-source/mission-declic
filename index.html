@@ -151,6 +151,8 @@
           display: inline-block;
           overflow: hidden;
           height: 1.28em;
+          width: 0.72ch;
+          text-align: center;
           vertical-align: middle;
         }
 
@@ -173,7 +175,7 @@
 
         .w-spinning {
           color: #a8a09a;
-          animation: slotSpin 0.1s linear;
+          animation: slotSpin 0.16s linear;
         }
 
         .w-locking {
@@ -1770,34 +1772,52 @@
       const animationToken = ++missionAnimationToken;
       const isAlive = () => animationToken === missionAnimationToken;
 
-      const { verb, target, complement } = splitMissionIntoBlocks(mission.text);
-      const wordPool = getMissionWordPool();
-      const finalWords = [verb, target, ...complement.split(/\s+/).filter(Boolean)].filter(Boolean);
-
-      if (!finalWords.length) {
+      const finalText = String(mission.text || "");
+      if (!finalText.trim()) {
         missionText.textContent = mission.text || "";
         return;
       }
 
-      // Build one slot-reel <span> per word / block
+      const missionSource = getMissionWordPool().join("");
+      const charPool = [...missionSource.replace(/\s+/g, "")].filter(Boolean);
+      const fallbackChars = [..."ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789?!"];
+      const spinPool = charPool.length ? charPool : fallbackChars;
+
+      // Build one slot-reel <span> per character
       missionText.innerHTML = "";
       missionText.className = "mission-text";
 
-      const reelEls = finalWords.map((_, i) => {
+      const charSlots = [];
+
+      for (const character of [...finalText]) {
+        if (character === " ") {
+          missionText.appendChild(document.createTextNode(" "));
+          continue;
+        }
+
         const reel = document.createElement("span");
         reel.className = "slot-reel";
         missionText.appendChild(reel);
-        if (i < finalWords.length - 1) {
-          missionText.appendChild(document.createTextNode(" "));
-        }
-        return reel;
-      });
+        charSlots.push({
+          reel,
+          finalChar: character
+        });
+      }
 
-      // Replace the word in a reel — new DOM element always restarts the CSS animation
-      function setReelWord(reel, text, wordClass) {
+      if (!charSlots.length) {
+        missionText.textContent = finalText;
+        return;
+      }
+
+      function randomSpinChar() {
+        return spinPool[randomInt(0, spinPool.length - 1)];
+      }
+
+      // Replace the char in a reel — new DOM element always restarts the CSS animation
+      function setReelChar(reel, value, charClass) {
         const span = document.createElement("span");
-        span.className = "slot-word " + wordClass;
-        span.textContent = text;
+        span.className = "slot-word " + charClass;
+        span.textContent = value;
         if (reel.firstChild) {
           reel.replaceChild(span, reel.firstChild);
         } else {
@@ -1805,59 +1825,59 @@
         }
       }
 
-      // Seed all reels with a random word
-      reelEls.forEach(reel => {
-        setReelWord(reel, wordPool[randomInt(0, wordPool.length - 1)], "w-spinning");
+      // Seed all reels with random chars
+      charSlots.forEach(slot => {
+        setReelChar(slot.reel, randomSpinChar(), "w-spinning");
       });
 
       const lockedSet = new Set();
 
-      // Phase 1 – all reels spin at full speed (~950 ms, 70 ms/tick)
-      const p1End = Date.now() + 950;
+      // Phase 1 – all reels spin at full speed (~1300 ms, 78 ms/tick)
+      const p1End = Date.now() + 1300;
       while (Date.now() < p1End) {
         if (!isAlive()) return;
-        reelEls.forEach((reel, i) => {
+        charSlots.forEach((slot, i) => {
           if (!lockedSet.has(i)) {
-            setReelWord(reel, wordPool[randomInt(0, wordPool.length - 1)], "w-spinning");
+            setReelChar(slot.reel, randomSpinChar(), "w-spinning");
           }
         });
-        await wait(70);
+        await wait(78);
       }
 
-      // Phase 2 – decelerate while all still spin (~580 ms, 70 → 200 ms)
+      // Phase 2 – decelerate while all still spin (~980 ms, 90 → 280 ms)
       const p2Start = Date.now();
       let p2Elapsed = 0;
-      while (p2Elapsed < 580) {
+      while (p2Elapsed < 980) {
         if (!isAlive()) return;
-        const prog = p2Elapsed / 580;
-        const interval = Math.round(70 + prog * 130);
-        reelEls.forEach((reel, i) => {
+        const prog = p2Elapsed / 980;
+        const interval = Math.round(90 + prog * 190);
+        charSlots.forEach((slot, i) => {
           if (!lockedSet.has(i)) {
-            setReelWord(reel, wordPool[randomInt(0, wordPool.length - 1)], "w-spinning");
+            setReelChar(slot.reel, randomSpinChar(), "w-spinning");
           }
         });
         await wait(interval);
         p2Elapsed = Date.now() - p2Start;
       }
 
-      // Phase 3 – lock one reel at a time, others keep spinning briefly after each lock
-      for (let lockI = 0; lockI < finalWords.length; lockI++) {
+      // Phase 3 – strict letter-by-letter locking, left to right
+      for (let i = 0; i < charSlots.length; i += 1) {
         if (!isAlive()) return;
+        if (!lockedSet.has(i)) {
+          lockedSet.add(i);
+          setReelChar(charSlots[i].reel, charSlots[i].finalChar, "w-locking");
 
-        lockedSet.add(lockI);
-        setReelWord(reelEls[lockI], finalWords[lockI], "w-locking");
-
-        const pauseMs = lockI === 0 ? 260 : lockI < 3 ? 230 : 190;
-        const lockEnd = Date.now() + pauseMs;
-        let spinInterval = 210;
-        while (Date.now() < lockEnd) {
-          if (!isAlive()) return;
-          reelEls.forEach((reel, j) => {
-            if (!lockedSet.has(j)) {
-              setReelWord(reel, wordPool[randomInt(0, wordPool.length - 1)], "w-spinning");
-            }
-          });
-          await wait(spinInterval);
+          // Keep other letters rolling a bit between each lock
+          const lingerEnd = Date.now() + 120;
+          while (Date.now() < lingerEnd) {
+            if (!isAlive()) return;
+            charSlots.forEach((slot, j) => {
+              if (!lockedSet.has(j)) {
+                setReelChar(slot.reel, randomSpinChar(), "w-spinning");
+              }
+            });
+            await wait(210);
+          }
         }
       }
 
