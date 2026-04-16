@@ -284,16 +284,6 @@
       <button class="tab" data-tab="orga-view">Vue orga</button>
     </div>
 
-    <div class="progress-gauge">
-      <div class="progress-label">
-        <span>Progression globale</span>
-        <span id="progress-text">0 / 75</span>
-      </div>
-      <div class="progress-bar">
-        <div class="progress-bar-fill" id="progress-fill" style="width: 0%;"></div>
-      </div>
-    </div>
-
     <div class="content">
       <div id="sync-notice" class="notice">
         Toutes les actions ici modifient les donnees locales utilisees par l'app (cles <strong>festival_missions</strong> et <strong>festival_mission_suggestions</strong>).
@@ -910,7 +900,6 @@
 
     function render() {
       renderStats();
-      updateProgressGauge();
       renderList();
     }
 
