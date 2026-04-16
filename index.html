@@ -565,7 +565,7 @@
         </div>
 
         <div class="hint-box">
-          Les photos peuvent rester <strong>juste pour toi</strong> ou être <strong>partagées avec les participants</strong> qui ont le lien du festival. Rien n'est partagé automatiquement.
+          Les photos peuvent rester <strong>juste pour toi</strong> ou être <strong>proposées à la galerie collective</strong>. Rien n'est publié sans validation orga.
         </div>
       </div>
     </section>
@@ -616,8 +616,8 @@
               <label class="radio-option" for="photo-visibility-participants">
                 <input id="photo-visibility-participants" type="radio" name="photo-visibility" value="participants" />
                 <span>
-                  <strong>Partager a tout le monde</strong><br>
-                  <span class="micro">Visible dans la galerie du lien festival.</span>
+                  <strong>Proposer a la galerie collective</strong><br>
+                  <span class="micro">Visible seulement après validation orga.</span>
                 </span>
               </label>
             </div>
@@ -653,7 +653,7 @@
       <div class="stack">
         <div>
           <h2>Photos du festival</h2>
-          <p class="sub">Ici, tu vois seulement les photos que les participants ont choisi de partager avec le lien du festival.</p>
+          <p class="sub">Ici, tu vois seulement les photos validées par les orgas pour la galerie collective.</p>
         </div>
         <div id="photos-grid" class="grid-photos"></div>
       </div>
@@ -1300,6 +1300,7 @@
       status = "done",
       photoUrl = "",
       visibility = "private",
+      photoModerationStatus = "private",
       orgaMessage = "",
       rating = null,
       displayName = "",
@@ -1313,6 +1314,7 @@
         status,
         photoUrl,
         visibility,
+        photoModerationStatus,
         orgaMessage,
         rating,
         displayName,
@@ -1341,6 +1343,13 @@
       const item = results.find(r => r.id === resultId);
       if (!item) return null;
       item.visibility = visibility;
+      if (!item.photoUrl) {
+        item.photoModerationStatus = "private";
+      } else if (visibility === "participants") {
+        item.photoModerationStatus = "pending";
+      } else {
+        item.photoModerationStatus = "private";
+      }
       saveResults(results);
       return item;
     }
@@ -1449,7 +1458,7 @@
     }
 
     function countSharedPhotos(results) {
-      return results.filter(r => !!r.photoUrl && r.visibility === "participants").length;
+      return results.filter(r => !!r.photoUrl && r.visibility === "participants" && r.photoModerationStatus === "approved").length;
     }
 
     function countOrgaMessages(results) {
@@ -1682,6 +1691,11 @@
 
       const visibilityRadio = document.querySelector('input[name="photo-visibility"]:checked');
       const visibility = STATE.currentPhotoDataUrl ? (visibilityRadio?.value || "private") : "private";
+      const photoModerationStatus = !STATE.currentPhotoDataUrl
+        ? "private"
+        : visibility === "participants"
+          ? "pending"
+          : "private";
 
       saveResult(
         createMissionResult({
@@ -1691,6 +1705,7 @@
           status: "done",
           photoUrl: STATE.currentPhotoDataUrl || "",
           visibility,
+          photoModerationStatus,
           orgaMessage: orgaMessageInput.value.trim(),
           displayName: profile.displayName || ""
         })
@@ -1790,7 +1805,7 @@
           const shareBtn = document.createElement("button");
           shareBtn.className = "btn btn-primary";
           shareBtn.type = "button";
-          shareBtn.textContent = "Partager la photo";
+          shareBtn.textContent = "Proposer a la galerie";
           shareBtn.addEventListener("click", () => {
             const updated = updateResultVisibility(result.id, "participants");
             if (!updated) {
@@ -1800,16 +1815,44 @@
             renderJournal();
             renderPhotos();
             renderOrga();
-            Toast.success("Photo partagée avec les participants.");
+            Toast.success("Photo envoyée aux orgas pour validation.");
           });
           row.appendChild(shareBtn);
         }
 
         if (result.photoUrl && result.visibility === "participants") {
-          const sharedTag = document.createElement("div");
-          sharedTag.className = "micro";
-          sharedTag.textContent = "Photo partagée";
-          row.appendChild(sharedTag);
+          const moderationTag = document.createElement("div");
+          moderationTag.className = "micro";
+
+          const moderationState = result.photoModerationStatus || "pending";
+          if (moderationState === "approved") {
+            moderationTag.textContent = "Photo validée par les orgas";
+          } else if (moderationState === "rejected") {
+            moderationTag.textContent = "Photo refusée par les orgas";
+          } else {
+            moderationTag.textContent = "Photo en attente de validation orga";
+          }
+
+          row.appendChild(moderationTag);
+
+          if (moderationState === "rejected") {
+            const retryBtn = document.createElement("button");
+            retryBtn.className = "btn btn-secondary";
+            retryBtn.type = "button";
+            retryBtn.textContent = "Reproposer";
+            retryBtn.addEventListener("click", () => {
+              const updated = updateResultVisibility(result.id, "participants");
+              if (!updated) {
+                Toast.error("Impossible de reproposer cette photo.");
+                return;
+              }
+              renderJournal();
+              renderPhotos();
+              renderOrga();
+              Toast.success("Photo reproposée aux orgas.");
+            });
+            row.appendChild(retryBtn);
+          }
         }
 
         main.appendChild(title);
@@ -1827,7 +1870,7 @@
     // ===== Photos =====
     function getSharedPhotos() {
       return getResults()
-        .filter(r => !!r.photoUrl && r.visibility === "participants")
+        .filter(r => !!r.photoUrl && r.visibility === "participants" && r.photoModerationStatus === "approved")
         .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
     }
 

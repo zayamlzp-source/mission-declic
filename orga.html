@@ -144,6 +144,7 @@
     .badge.active { border-color: #9bc2a1; color: #315439; }
     .badge.inactive { border-color: #d9b5a8; color: #7b3f2f; }
     .badge.pending { border-color: #d6c29d; color: #735b30; }
+    .badge.rejected { border-color: #d9b5a8; color: #7b3f2f; }
 
     .btn {
       border: 1px solid rgba(0,0,0,0.08);
@@ -251,7 +252,9 @@
       <button class="tab active" data-tab="active">Missions actives</button>
       <button class="tab" data-tab="inactive">Missions inactives</button>
       <button class="tab" data-tab="suggested">Propositions participants</button>
-      <button class="tab" data-tab="orga-view">Vue orga</button>
+      <button class="tab" data-tab="status">Statuts</button>
+      <button class="tab" data-tab="stats">Stats</button>
+      <button class="tab" data-tab="photos">Photos</button>
     </div>
 
     <div class="content">
@@ -481,14 +484,33 @@
     }
 
     function normalizeSuggestionRecord(item) {
+      const allowedStatuses = new Set(["proposed", "validated", "rejected"]);
+      const normalizedStatus = allowedStatuses.has(item.status) ? item.status : "proposed";
       return {
         id: item.id,
         text: String(item.text || "").trim(),
         category: item.category ? String(item.category).toUpperCase() : "",
         level: Number.isFinite(Number(item.level)) ? Number(item.level) : null,
         displayName: item.displayName || "",
-        status: item.status || "proposed",
+        status: normalizedStatus,
         createdAt: item.createdAt || new Date().toISOString()
+      };
+    }
+
+    function normalizeResultRecord(item) {
+      const hasPhoto = !!item?.photoUrl;
+      const visibility = item?.visibility || "private";
+      const rawStatus = item?.photoModerationStatus;
+      let photoModerationStatus = "private";
+
+      if (hasPhoto && visibility === "participants") {
+        photoModerationStatus = ["pending", "approved", "rejected"].includes(rawStatus) ? rawStatus : "pending";
+      }
+
+      return {
+        ...item,
+        visibility,
+        photoModerationStatus
       };
     }
 
@@ -498,7 +520,7 @@
       const results = loadJSON(STORAGE_KEYS.results, []);
       state.missions = Array.isArray(missions) ? missions.map(normalizeMissionRecord) : [];
       state.suggestions = Array.isArray(suggestions) ? suggestions.map(normalizeSuggestionRecord) : [];
-      state.results = Array.isArray(results) ? results : [];
+      state.results = Array.isArray(results) ? results.map(normalizeResultRecord) : [];
     }
 
     function persistMissions() {
@@ -508,6 +530,11 @@
 
     function persistSuggestions() {
       saveJSON(STORAGE_KEYS.suggestions, state.suggestions.map(normalizeSuggestionRecord));
+      queueRemotePush();
+    }
+
+    function persistResults() {
+      saveJSON(STORAGE_KEYS.results, state.results.map(normalizeResultRecord));
       queueRemotePush();
     }
 
@@ -522,14 +549,16 @@
     function renderStats() {
       const activeCount = state.missions.filter(m => m.active && !m.bonus).length;
       const inactiveCount = state.missions.filter(m => !m.active && !m.bonus).length;
-      const pendingSuggestions = state.suggestions.filter(s => s.status !== "validated").length;
+      const pendingSuggestions = state.suggestions.filter(s => s.status === "proposed").length;
       const validatedSuggestions = state.suggestions.filter(s => s.status === "validated").length;
+      const rejectedSuggestions = state.suggestions.filter(s => s.status === "rejected").length;
 
       const stats = [
         { label: "Missions actives", value: activeCount },
         { label: "Missions inactives", value: inactiveCount },
         { label: "Propositions en attente", value: pendingSuggestions },
-        { label: "Propositions validees", value: validatedSuggestions }
+        { label: "Propositions validees", value: validatedSuggestions },
+        { label: "Propositions refusees", value: rejectedSuggestions }
       ];
 
       const root = document.getElementById("stats");
@@ -605,8 +634,9 @@
       card.className = "card";
 
       const isValidated = item.status === "validated";
-      const badgeText = isValidated ? "validee" : "en attente";
-      const badgeClass = isValidated ? "active" : "pending";
+      const isRejected = item.status === "rejected";
+      const badgeText = isValidated ? "validee" : (isRejected ? "refusee" : "en attente");
+      const badgeClass = isValidated ? "active" : (isRejected ? "rejected" : "pending");
 
       const categoryOptions = ["", ...CATEGORY_OPTIONS.filter(c => c !== "BONUS")]
         .map(cat => {
@@ -644,7 +674,8 @@
 
         <div class="row">
           <button class="btn btn-primary" data-action="validate-suggestion" data-id="${item.id}" ${isValidated ? "disabled" : ""}>Valider -> mission</button>
-          <button class="btn ${isValidated ? "" : "btn-danger"}" data-action="toggle-suggestion-status" data-id="${item.id}">${isValidated ? "Remettre en attente" : "Marquer validee"}</button>
+          <button class="btn btn-danger" data-action="reject-suggestion" data-id="${item.id}" ${isRejected ? "disabled" : ""}>Refuser</button>
+          <button class="btn" data-action="reset-suggestion" data-id="${item.id}" ${item.status === "proposed" ? "disabled" : ""}>Remettre en attente</button>
         </div>
       `;
 
@@ -655,8 +686,18 @@
       const root = document.getElementById("list");
       root.innerHTML = "";
 
-      if (state.tab === "orga-view") {
+      if (state.tab === "stats") {
         renderOrgaView(root);
+        return;
+      }
+
+      if (state.tab === "status") {
+        renderStatusView(root);
+        return;
+      }
+
+      if (state.tab === "photos") {
+        renderPhotosModeration(root);
         return;
       }
 
@@ -691,7 +732,15 @@
     }
 
     function countSharedPhotos(results) {
-      return results.filter(r => !!r.photoUrl && r.visibility === "participants").length;
+      return results.filter(r => !!r.photoUrl && r.visibility === "participants" && r.photoModerationStatus === "approved").length;
+    }
+
+    function countPendingPhotos(results) {
+      return results.filter(r => !!r.photoUrl && r.visibility === "participants" && r.photoModerationStatus === "pending").length;
+    }
+
+    function countRejectedPhotos(results) {
+      return results.filter(r => !!r.photoUrl && r.visibility === "participants" && r.photoModerationStatus === "rejected").length;
     }
 
     function countOrgaMessages(results) {
@@ -768,7 +817,9 @@
 
       const doneCount = countDone(results);
       const photosCount = countPhotos(results);
+      const pendingPhotosCount = countPendingPhotos(results);
       const sharedPhotosCount = countSharedPhotos(results);
+      const rejectedPhotosCount = countRejectedPhotos(results);
       const messageCount = countOrgaMessages(results);
       const suggestionCount = state.suggestions.length;
 
@@ -777,7 +828,7 @@
       summary.innerHTML = `
         <strong>Vue orga unifiee</strong>
         <div class="meta">Missions validees: ${doneCount}</div>
-        <div class="meta">Photos: ${photosCount} (partagees: ${sharedPhotosCount})</div>
+        <div class="meta">Photos: ${photosCount} (en attente: ${pendingPhotosCount}, validees: ${sharedPhotosCount}, refusees: ${rejectedPhotosCount})</div>
         <div class="meta">Messages orga: ${messageCount}</div>
         <div class="meta">Propositions participants: ${suggestionCount}</div>
       `;
@@ -827,7 +878,7 @@
       photosTitle.textContent = "Photos partagees";
       photosCard.appendChild(photosTitle);
 
-      const sharedPhotos = results.filter(r => !!r.photoUrl && r.visibility === "participants").slice(0, 24);
+      const sharedPhotos = results.filter(r => !!r.photoUrl && r.visibility === "participants" && r.photoModerationStatus === "approved").slice(0, 24);
       if (!sharedPhotos.length) {
         const empty = document.createElement("div");
         empty.className = "meta";
@@ -855,6 +906,110 @@
         photosCard.appendChild(grid);
       }
       root.appendChild(photosCard);
+    }
+
+    function renderStatusView(root) {
+      const results = state.results;
+      const activeCount = state.missions.filter(m => m.active && !m.bonus).length;
+      const inactiveCount = state.missions.filter(m => !m.active && !m.bonus).length;
+      const pendingSuggestions = state.suggestions.filter(s => s.status === "proposed").length;
+      const validatedSuggestions = state.suggestions.filter(s => s.status === "validated").length;
+      const rejectedSuggestions = state.suggestions.filter(s => s.status === "rejected").length;
+
+      const cards = [
+        { label: "Missions actives", value: activeCount },
+        { label: "Missions inactives", value: inactiveCount },
+        { label: "Propositions en attente", value: pendingSuggestions },
+        { label: "Propositions validees", value: validatedSuggestions },
+        { label: "Propositions refusees", value: rejectedSuggestions },
+        { label: "Photos en attente", value: countPendingPhotos(results) },
+        { label: "Photos validees", value: countSharedPhotos(results) },
+        { label: "Photos refusees", value: countRejectedPhotos(results) }
+      ];
+
+      const grid = document.createElement("div");
+      grid.className = "stats";
+      cards.forEach(item => {
+        const block = document.createElement("div");
+        block.className = "stat";
+        block.innerHTML = `<div class="meta">${item.label}</div><strong>${item.value}</strong>`;
+        grid.appendChild(block);
+      });
+
+      root.appendChild(grid);
+    }
+
+    function setPhotoModerationStatus(resultId, nextStatus) {
+      const item = state.results.find(r => String(r.id) === String(resultId));
+      if (!item) return;
+      item.photoModerationStatus = nextStatus;
+      persistResults();
+      render();
+    }
+
+    function renderPhotosModeration(root) {
+      const items = [...state.results]
+        .filter(r => !!r.photoUrl && r.visibility === "participants")
+        .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+
+      if (!items.length) {
+        root.innerHTML = '<div class="empty">Aucune photo proposee pour le moment.</div>';
+        return;
+      }
+
+      items.forEach(item => {
+        const card = document.createElement("div");
+        card.className = "card";
+        const status = item.photoModerationStatus || "pending";
+        const badgeClass = status === "approved" ? "active" : (status === "rejected" ? "rejected" : "pending");
+        const badgeText = status === "approved" ? "validee" : (status === "rejected" ? "refusee" : "en attente");
+
+        card.innerHTML = `
+          <div class="mission-head">
+            <div>
+              <strong>${escapeHtml(missionLabelById(item.missionId))}</strong>
+              <span class="badge ${badgeClass}">${badgeText}</span>
+            </div>
+            <div class="meta">${formatDate(item.createdAt)}${item.displayName ? " - " + escapeHtml(item.displayName) : ""}</div>
+          </div>
+        `;
+
+        const img = document.createElement("img");
+        img.src = item.photoUrl;
+        img.alt = "Photo proposee";
+        img.style.width = "100%";
+        img.style.maxWidth = "340px";
+        img.style.borderRadius = "12px";
+        img.style.border = "1px solid var(--line)";
+        card.appendChild(img);
+
+        const actions = document.createElement("div");
+        actions.className = "row";
+
+        const approveBtn = document.createElement("button");
+        approveBtn.className = "btn btn-primary";
+        approveBtn.textContent = "Valider";
+        approveBtn.disabled = status === "approved";
+        approveBtn.addEventListener("click", () => setPhotoModerationStatus(item.id, "approved"));
+
+        const rejectBtn = document.createElement("button");
+        rejectBtn.className = "btn btn-danger";
+        rejectBtn.textContent = "Refuser";
+        rejectBtn.disabled = status === "rejected";
+        rejectBtn.addEventListener("click", () => setPhotoModerationStatus(item.id, "rejected"));
+
+        const pendingBtn = document.createElement("button");
+        pendingBtn.className = "btn";
+        pendingBtn.textContent = "Remettre en attente";
+        pendingBtn.disabled = status === "pending";
+        pendingBtn.addEventListener("click", () => setPhotoModerationStatus(item.id, "pending"));
+
+        actions.appendChild(approveBtn);
+        actions.appendChild(rejectBtn);
+        actions.appendChild(pendingBtn);
+        card.appendChild(actions);
+        root.appendChild(card);
+      });
     }
 
     function render() {
@@ -948,10 +1103,10 @@
       render();
     }
 
-    function toggleSuggestionStatus(id) {
+    function setSuggestionStatus(id, status) {
       const item = getSuggestionById(id);
       if (!item) return;
-      item.status = item.status === "validated" ? "proposed" : "validated";
+      item.status = status;
       persistSuggestions();
       render();
     }
@@ -998,7 +1153,8 @@
       if (action === "toggle") toggleMission(Number(id));
       if (action === "save-suggestion") saveSuggestion(id);
       if (action === "validate-suggestion") validateSuggestion(id);
-      if (action === "toggle-suggestion-status") toggleSuggestionStatus(id);
+      if (action === "reject-suggestion") setSuggestionStatus(id, "rejected");
+      if (action === "reset-suggestion") setSuggestionStatus(id, "proposed");
     }
 
     async function refreshDashboard() {
