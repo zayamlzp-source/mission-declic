@@ -175,7 +175,7 @@
 
         .w-spinning {
           color: #a8a09a;
-          animation: slotSpin 0.16s linear;
+          animation: slotSpin 0.22s linear;
         }
 
         .w-locking {
@@ -1832,8 +1832,8 @@
 
       const lockedSet = new Set();
 
-      // Phase 1 – all reels spin at full speed (~1300 ms, 78 ms/tick)
-      const p1End = Date.now() + 1300;
+      // Phase 1 – all reels spin at full speed (~1700 ms, 110 ms/tick)
+      const p1End = Date.now() + 1700;
       while (Date.now() < p1End) {
         if (!isAlive()) return;
         charSlots.forEach((slot, i) => {
@@ -1841,16 +1841,16 @@
             setReelChar(slot.reel, randomSpinChar(), "w-spinning");
           }
         });
-        await wait(78);
+        await wait(110);
       }
 
-      // Phase 2 – decelerate while all still spin (~980 ms, 90 → 280 ms)
+      // Phase 2 – decelerate while all still spin (~1400 ms, 140 → 400 ms)
       const p2Start = Date.now();
       let p2Elapsed = 0;
-      while (p2Elapsed < 980) {
+      while (p2Elapsed < 1400) {
         if (!isAlive()) return;
-        const prog = p2Elapsed / 980;
-        const interval = Math.round(90 + prog * 190);
+        const prog = p2Elapsed / 1400;
+        const interval = Math.round(140 + prog * 260);
         charSlots.forEach((slot, i) => {
           if (!lockedSet.has(i)) {
             setReelChar(slot.reel, randomSpinChar(), "w-spinning");
@@ -1866,9 +1866,10 @@
         if (!lockedSet.has(i)) {
           lockedSet.add(i);
           setReelChar(charSlots[i].reel, charSlots[i].finalChar, "w-locking");
+          await wait(85);
 
           // Keep other letters rolling a bit between each lock
-          const lingerEnd = Date.now() + 120;
+          const lingerEnd = Date.now() + 240;
           while (Date.now() < lingerEnd) {
             if (!isAlive()) return;
             charSlots.forEach((slot, j) => {
@@ -1876,7 +1877,7 @@
                 setReelChar(slot.reel, randomSpinChar(), "w-spinning");
               }
             });
-            await wait(210);
+            await wait(240);
           }
         }
       }
