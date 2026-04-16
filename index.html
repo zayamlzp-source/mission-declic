@@ -486,6 +486,11 @@
           text-align: center;
         }
 
+        .progress-bar-wrapper {
+          display: grid;
+          gap: 6px;
+        }
+
         @media (max-width: 560px) {
           .topbar {
             align-items: flex-start;
@@ -525,8 +530,14 @@
 <div id="toast-container" class="toast-container"></div>
 <div class="app">
     <div class="topbar">
-      <div>
+      <div style="flex: 1;">
         <div class="brand">Festival — Missions</div>
+        <div class="progress-bar-wrapper" style="margin-top: 8px;">
+          <div class="progress-bar">
+            <div class="progress-bar-fill" id="progress-fill" style="width: 0%;"></div>
+          </div>
+          <div class="progress-text" id="progress-text">0 / 75</div>
+        </div>
       </div>
       <div class="top-actions">
         <button class="btn btn-link" data-go="home">Accueil</button>
@@ -1569,6 +1580,12 @@
       const done = state.doneMissionIds.length;
       const percent = totalMissions ? Math.round((done / totalMissions) * 100) : 0;
       const level = computeInternalLevel(done);
+
+      // Update topbar progress
+      const fillEl = document.getElementById("progress-fill");
+      const textEl = document.getElementById("progress-text");
+      if (fillEl) fillEl.style.width = `${percent}%`;
+      if (textEl) textEl.textContent = `${done} / ${totalMissions}`;
 
       progressGauges.forEach(gauge => {
         const label = gauge.querySelector("[data-progress-label]");
