@@ -205,6 +205,60 @@
     .status-ok { color: #315439; }
     .status-error { color: #7b3f2f; }
 
+    .shared-photos {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+      gap: 10px;
+    }
+
+    .shared-photo {
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 8px;
+      background: #fff;
+      display: grid;
+      gap: 6px;
+    }
+
+    .shared-photo img {
+      width: 100%;
+      aspect-ratio: 1 / 1;
+      object-fit: cover;
+      border-radius: 10px;
+      border: 1px solid var(--line);
+      background: #f7f3eb;
+    }
+
+    .progress-gauge {
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--line);
+      background: rgba(255,255,255,0.7);
+      display: grid;
+      gap: 8px;
+    }
+
+    .progress-bar {
+      width: 100%;
+      height: 6px;
+      background: rgba(0,0,0,0.08);
+      border-radius: 999px;
+      overflow: hidden;
+    }
+
+    .progress-bar-fill {
+      height: 100%;
+      background: var(--accent);
+      transition: width 0.4s ease;
+    }
+
+    .progress-label {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      font-size: 0.9rem;
+      color: var(--muted);
+    }
+
     @media (max-width: 720px) {
       .topbar { flex-direction: column; align-items: flex-start; }
     }
@@ -227,6 +281,17 @@
       <button class="tab active" data-tab="active">Missions actives</button>
       <button class="tab" data-tab="inactive">Missions inactives</button>
       <button class="tab" data-tab="suggested">Propositions participants</button>
+      <button class="tab" data-tab="orga-view">Vue orga</button>
+    </div>
+
+    <div class="progress-gauge">
+      <div class="progress-label">
+        <span>Progression globale</span>
+        <span id="progress-text">0 / 75</span>
+      </div>
+      <div class="progress-bar">
+        <div class="progress-bar-fill" id="progress-fill" style="width: 0%;"></div>
+      </div>
     </div>
 
     <div class="content">
@@ -285,7 +350,8 @@
     const state = {
       tab: "active",
       missions: [],
-      suggestions: []
+      suggestions: [],
+      results: []
     };
 
     let remoteSyncTimer = null;
@@ -469,8 +535,10 @@
     function loadState() {
       const missions = loadJSON(STORAGE_KEYS.missions, []);
       const suggestions = loadJSON(STORAGE_KEYS.suggestions, []);
+      const results = loadJSON(STORAGE_KEYS.results, []);
       state.missions = Array.isArray(missions) ? missions.map(normalizeMissionRecord) : [];
       state.suggestions = Array.isArray(suggestions) ? suggestions.map(normalizeSuggestionRecord) : [];
+      state.results = Array.isArray(results) ? results : [];
     }
 
     function persistMissions() {
@@ -512,6 +580,17 @@
         card.innerHTML = `<div class="meta">${item.label}</div><strong>${item.value}</strong>`;
         root.appendChild(card);
       });
+    }
+
+    function updateProgressGauge() {
+      const totalMissions = state.missions.filter(m => m.active && !m.bonus).length;
+      const doneCount = state.results.filter(r => r.status === "done").length;
+      const percent = totalMissions ? Math.round((doneCount / totalMissions) * 100) : 0;
+
+      const fill = document.getElementById("progress-fill");
+      const text = document.getElementById("progress-text");
+      if (fill) fill.style.width = `${percent}%`;
+      if (text) text.textContent = `${doneCount} / ${totalMissions}`;
     }
 
     function getMissionListForTab() {
@@ -627,6 +706,11 @@
       const root = document.getElementById("list");
       root.innerHTML = "";
 
+      if (state.tab === "orga-view") {
+        renderOrgaView(root);
+        return;
+      }
+
       if (state.tab === "suggested") {
         const items = [...state.suggestions].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
         if (!items.length) {
@@ -645,8 +729,188 @@
       missions.forEach(mission => root.appendChild(renderMissionEditor(mission)));
     }
 
+    function sortMapDesc(map) {
+      return Object.entries(map).sort((a, b) => b[1] - a[1]);
+    }
+
+    function countDone(results) {
+      return results.filter(r => r.status === "done").length;
+    }
+
+    function countPhotos(results) {
+      return results.filter(r => !!r.photoUrl).length;
+    }
+
+    function countSharedPhotos(results) {
+      return results.filter(r => !!r.photoUrl && r.visibility === "participants").length;
+    }
+
+    function countOrgaMessages(results) {
+      return results.filter(r => (r.orgaMessage || "").trim()).length;
+    }
+
+    function countDoneByMission(results) {
+      const map = {};
+      results.forEach(result => {
+        if (result.status !== "done") return;
+        map[result.missionId] = (map[result.missionId] || 0) + 1;
+      });
+      return map;
+    }
+
+    function countMissionSequences(results) {
+      const map = {};
+      results.forEach(result => {
+        if (!result.previousMissionId || result.status !== "done") return;
+        const key = `${result.previousMissionId}->${result.missionId}`;
+        map[key] = (map[key] || 0) + 1;
+      });
+      return map;
+    }
+
+    function getAverageRatings(results) {
+      const sums = {};
+      const counts = {};
+      results.forEach(result => {
+        if (!result.rating) return;
+        sums[result.missionId] = (sums[result.missionId] || 0) + result.rating;
+        counts[result.missionId] = (counts[result.missionId] || 0) + 1;
+      });
+
+      const avg = {};
+      Object.keys(sums).forEach(missionId => {
+        avg[missionId] = sums[missionId] / counts[missionId];
+      });
+      return avg;
+    }
+
+    function missionLabelById(missionId) {
+      const mission = getMissionById(Number(missionId));
+      return mission ? mission.text : `Mission ${missionId}`;
+    }
+
+    function renderCardWithRows(title, rows) {
+      const card = document.createElement("div");
+      card.className = "card";
+      const heading = document.createElement("strong");
+      heading.textContent = title;
+      card.appendChild(heading);
+
+      if (!rows.length) {
+        const empty = document.createElement("div");
+        empty.className = "meta";
+        empty.textContent = "Pas encore de donnees.";
+        card.appendChild(empty);
+        return card;
+      }
+
+      rows.forEach(text => {
+        const line = document.createElement("div");
+        line.className = "meta";
+        line.textContent = text;
+        card.appendChild(line);
+      });
+
+      return card;
+    }
+
+    function renderOrgaView(root) {
+      const results = [...state.results].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+
+      const doneCount = countDone(results);
+      const photosCount = countPhotos(results);
+      const sharedPhotosCount = countSharedPhotos(results);
+      const messageCount = countOrgaMessages(results);
+      const suggestionCount = state.suggestions.length;
+
+      const summary = document.createElement("div");
+      summary.className = "card";
+      summary.innerHTML = `
+        <strong>Vue orga unifiee</strong>
+        <div class="meta">Missions validees: ${doneCount}</div>
+        <div class="meta">Photos: ${photosCount} (partagees: ${sharedPhotosCount})</div>
+        <div class="meta">Messages orga: ${messageCount}</div>
+        <div class="meta">Propositions participants: ${suggestionCount}</div>
+      `;
+      root.appendChild(summary);
+
+      const topMissions = sortMapDesc(countDoneByMission(results)).slice(0, 8).map(([missionId, count]) => {
+        return `${missionLabelById(missionId)} - ${count}`;
+      });
+      root.appendChild(renderCardWithRows("Top missions realisees", topMissions));
+
+      const topRated = sortMapDesc(getAverageRatings(results)).slice(0, 8).map(([missionId, avg]) => {
+        return `${missionLabelById(missionId)} - ${avg.toFixed(1)}/5`;
+      });
+      root.appendChild(renderCardWithRows("Missions les mieux notees", topRated));
+
+      const topSequences = sortMapDesc(countMissionSequences(results)).slice(0, 8).map(([key, count]) => {
+        const [fromId, toId] = key.split("->");
+        return `${missionLabelById(fromId)} -> ${missionLabelById(toId)} - ${count}`;
+      });
+      root.appendChild(renderCardWithRows("Enchainements frequents", topSequences));
+
+      const messagesCard = document.createElement("div");
+      messagesCard.className = "card";
+      const messagesTitle = document.createElement("strong");
+      messagesTitle.textContent = "Derniers messages orga";
+      messagesCard.appendChild(messagesTitle);
+      const messages = results.filter(r => (r.orgaMessage || "").trim()).slice(0, 10);
+      if (!messages.length) {
+        const empty = document.createElement("div");
+        empty.className = "meta";
+        empty.textContent = "Aucun message pour l'instant.";
+        messagesCard.appendChild(empty);
+      } else {
+        messages.forEach(item => {
+          const line = document.createElement("div");
+          line.className = "meta";
+          const author = item.displayName ? ` - ${item.displayName}` : "";
+          line.textContent = `${formatDate(item.createdAt)}${author}: ${item.orgaMessage}`;
+          messagesCard.appendChild(line);
+        });
+      }
+      root.appendChild(messagesCard);
+
+      const photosCard = document.createElement("div");
+      photosCard.className = "card";
+      const photosTitle = document.createElement("strong");
+      photosTitle.textContent = "Photos partagees";
+      photosCard.appendChild(photosTitle);
+
+      const sharedPhotos = results.filter(r => !!r.photoUrl && r.visibility === "participants").slice(0, 24);
+      if (!sharedPhotos.length) {
+        const empty = document.createElement("div");
+        empty.className = "meta";
+        empty.textContent = "Aucune photo partagee pour le moment.";
+        photosCard.appendChild(empty);
+      } else {
+        const grid = document.createElement("div");
+        grid.className = "shared-photos";
+        sharedPhotos.forEach(item => {
+          const block = document.createElement("div");
+          block.className = "shared-photo";
+
+          const img = document.createElement("img");
+          img.src = item.photoUrl;
+          img.alt = "Photo partagee";
+
+          const meta = document.createElement("div");
+          meta.className = "meta";
+          meta.textContent = `${missionLabelById(item.missionId)} - ${formatDate(item.createdAt)}`;
+
+          block.appendChild(img);
+          block.appendChild(meta);
+          grid.appendChild(block);
+        });
+        photosCard.appendChild(grid);
+      }
+      root.appendChild(photosCard);
+    }
+
     function render() {
       renderStats();
+      updateProgressGauge();
       renderList();
     }
 
@@ -789,19 +1053,31 @@
       if (action === "toggle-suggestion-status") toggleSuggestionStatus(id);
     }
 
+    async function refreshDashboard() {
+      loadState();
+      render();
+
+      const config = getBackendConfig();
+      if (!isSupabaseEnabled(config)) {
+        updateBackendStatus("Rafraichi (local)", false);
+        return;
+      }
+
+      try {
+        await pullRemoteStateIntoLocal();
+        loadState();
+        render();
+        updateBackendStatus("Rafraichi (backend)", false);
+      } catch (error) {
+        updateBackendStatus(error.message, true);
+      }
+    }
+
     function initEvents() {
       document.querySelectorAll(".tab").forEach(btn => {
         btn.addEventListener("click", () => setTab(btn.dataset.tab));
       });
-      document.getElementById("refresh-btn").addEventListener("click", async () => {
-        try {
-          await pullRemoteStateIntoLocal();
-        } catch (error) {
-          updateBackendStatus(error.message, true);
-        }
-        loadState();
-        render();
-      });
+      document.getElementById("refresh-btn").addEventListener("click", refreshDashboard);
 
       document.getElementById("save-backend-btn").addEventListener("click", () => {
         const config = backendConfigFromInputs();
