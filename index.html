@@ -561,6 +561,58 @@
           margin-top: 4px;
           color: var(--muted);
         }
+
+        .slider {
+          width: 100%;
+          height: 6px;
+          border-radius: 3px;
+          background: linear-gradient(to right, var(--line), var(--accent));
+          outline: none;
+          -webkit-appearance: none;
+          appearance: none;
+        }
+
+        .slider::-webkit-slider-thumb {
+          -webkit-appearance: none;
+          appearance: none;
+          width: 20px;
+          height: 20px;
+          border-radius: 50%;
+          background: var(--accent);
+          cursor: pointer;
+          box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+          transition: transform 0.15s ease;
+        }
+
+        .slider::-webkit-slider-thumb:hover {
+          transform: scale(1.15);
+        }
+
+        .slider::-moz-range-thumb {
+          width: 20px;
+          height: 20px;
+          border-radius: 50%;
+          background: var(--accent);
+          cursor: pointer;
+          border: none;
+          box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+          transition: transform 0.15s ease;
+        }
+
+        .slider::-moz-range-thumb:hover {
+          transform: scale(1.15);
+        }
+
+        .slider::-moz-range-track {
+          background: transparent;
+          border: none;
+        }
+
+        .slider::-moz-range-progress {
+          background: var(--accent);
+          height: 6px;
+          border-radius: 3px;
+        }
     </style>
 </head>
 <body>
@@ -580,6 +632,7 @@
         <button class="btn btn-link" data-go="home">Accueil</button>
         <button class="btn btn-link" data-go="photos">Photos</button>
         <button class="btn btn-link" data-go="suggest">Proposer</button>
+        <button class="btn btn-link" data-go="settings">⚙</button>
       </div>
     </div>
 
@@ -746,6 +799,53 @@
           <summary>Voir les propositions déjà stockées sur cet appareil</summary>
           <div id="suggestions-list" class="list" style="margin-top: 14px;"></div>
         </details>
+      </div>
+    </section>
+
+    <section id="screen-settings" class="screen">
+      <div class="stack">
+        <div>
+          <h2>Réglages</h2>
+          <p class="sub">Personnalise l'animation de la roulette.</p>
+        </div>
+
+        <div class="card stack">
+          <div>
+            <label class="label" for="spin-speed-slider">
+              Vitesse de rotation
+            </label>
+            <p class="micro" style="margin-bottom: 8px; color: var(--muted);">
+              Plus bas = plus rapide (tick en ms)
+            </p>
+            <input 
+              id="spin-speed-slider" 
+              type="range" 
+              min="30" 
+              max="150" 
+              step="10" 
+              value="100"
+              class="slider"
+            />
+            <div style="display: flex; justify-content: space-between; margin-top: 8px; font-size: 12px; color: var(--muted);">
+              <span>Rapide</span>
+              <span id="spin-speed-value">100 ms</span>
+              <span>Lent</span>
+            </div>
+          </div>
+
+          <div style="border-top: 1px solid var(--line); padding-top: 16px; margin-top: 16px;">
+            <div class="label">Alphabets dans la roulette</div>
+            <p class="micro" style="margin: 8px 0;">
+              <strong>Au début :</strong> très mélangés (grec, hébreu, cyrillique, runique, ougaritique, phénicien, arabe)
+            </p>
+            <p class="micro" style="margin: 8px 0;">
+              <strong>À la fin :</strong> convergence vers le latin / français
+            </p>
+            <p class="micro" style="color: var(--accent);">
+              ✓ Testé en direct sur chaque nouvelle mission
+            </p>
+          </div>
+        </div>
       </div>
     </section>
 
@@ -1627,6 +1727,7 @@
       missions: document.getElementById("screen-missions"),
       photos: document.getElementById("screen-photos"),
       suggest: document.getElementById("screen-suggest"),
+      settings: document.getElementById("screen-settings"),
       orga: document.getElementById("screen-orga")
     };
 
@@ -1708,6 +1809,39 @@
     // ===== Animation tirage mission =====
     let missionAnimationToken = 0;
 
+    // Alphabets pour la roulette multi-langue
+    const CHARSETS = {
+      latin: "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz",
+      latinAccent: "ÀÂÄÆÇÉÈÊËÎÏÔÖÙÛÜŸàâäæçéèêëîïôöùûüÿ",
+      greek: "ΑΒΓΔΕΖΗΘΙΚΛΜΝΞΟΠΡΣΤΥΦΧΨΩαβγδεζηθικλμνξοπρστυφχψω",
+      hebrew: "אבגדהוזחטיכלמנסעפצקרשת",
+      cyrillic: "АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯабвгдеёжзийклмнопрстуфхцчшщъыьэюя",
+      runic: "ᚠᚢᚦᚨᚱᚲᚷᚹᚺᚾᛁᛃᛇᛈᛉᛊᛏᛒᛖᛗᛚᛜᛞᛟ",
+      ugaritic: "𐎀𐎁𐎂𐎃𐎄𐎅𐎆𐎇𐎈𐎉𐎊𐎋𐎌𐎍𐎎𐎏𐎐𐎑𐎒𐎓𐎔𐎕𐎖𐎗𐎘𐎙𐎚𐎛𐎜𐎝",
+      phoenician: "𐤀𐤁𐤂𐤃𐤄𐤅𐤆𐤇𐤈𐤉𐤊𐤋𐤌𐤍𐤎𐤏𐤐𐤑𐤒𐤓𐤔𐤕",
+      arabic: "ابتثجحخدذرزسشصضطظعغفقكلمنهوي"
+    };
+
+    const animationConfig = {
+      spinIntervalMs: 100,
+      nonLatinStartWeight: 0.88,
+      nonLatinEndWeight: 0.15
+    };
+
+    // Setup slider for spin speed
+    const spinSpeedSlider = document.getElementById("spin-speed-slider");
+    const spinSpeedValue = document.getElementById("spin-speed-value");
+    
+    if (spinSpeedSlider) {
+      spinSpeedSlider.addEventListener("input", (e) => {
+        const newValue = Number(e.target.value);
+        animationConfig.spinIntervalMs = newValue;
+        spinSpeedValue.textContent = newValue + " ms";
+      });
+      // Set initial display value
+      spinSpeedValue.textContent = animationConfig.spinIntervalMs + " ms";
+    }
+
     function wait(ms) {
       return new Promise(resolve => setTimeout(resolve, ms));
     }
@@ -1777,20 +1911,11 @@
         return;
       }
 
-      // Rich alphabet pool: Latin + accented + Greek + Cyrillic + Runic
-      const spinPool = [...("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz" +
-        "ÀÂÄÉÈÊËÎÏÔÙÛÜÇàâäéèêëîïôùûüç" +         // French
-        "ÑñÁáÍíÓóÚúÄäÖöÜüßÅåØøÆæ" +               // Spanish / German / Nordic
-        "ΑΒΓΔΕΖΗΘΙΚΛΜΝΞΟΠΡΣΤΥΦΧΨΩαβγδεζηθικλμνξοπρστυφχψω" + // Greek
-        "АБВГДЕЖЗИКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯабвгдежзиклмнопрстуфхцчшщъыьэюя" + // Cyrillic
-        "ᚠᚢᚦᚨᚱᚲᚷᚹᚺᚾᛁᛃᛇᛈᛉᛊᛏᛒᛖᛗᛚᛜᛞᛟ")];
-
       // Build one slot-reel <span> per character
       missionText.innerHTML = "";
       missionText.className = "mission-text";
 
-      // Measure the rendered width of each character before building reels,
-      // so every reel has a fixed pixel width and the phrase never shifts horizontally.
+      // Measure the rendered width of each character before building reels
       const measureEl = document.createElement("span");
       measureEl.style.cssText = "position:absolute;visibility:hidden;white-space:nowrap;font:inherit;font-size:1.72rem;";
       document.body.appendChild(measureEl);
@@ -1829,11 +1954,27 @@
         return;
       }
 
-      function randomSpinChar() {
-        return spinPool[randomInt(0, spinPool.length - 1)];
+      // Get a random character, with probability to use non-Latin alphabets
+      function getRandomSpinChar(progressRatio) {
+        // progressRatio: 0 at start, 1 at end
+        const nonLatinWeight = (1 - progressRatio) * 
+          (animationConfig.nonLatinStartWeight - animationConfig.nonLatinEndWeight) + 
+          animationConfig.nonLatinEndWeight;
+
+        if (Math.random() < nonLatinWeight) {
+          // Pick a random non-Latin alphabet
+          const nonLatinKeys = ["greek", "hebrew", "cyrillic", "runic", "ugaritic", "phoenician", "arabic"];
+          const key = nonLatinKeys[randomInt(0, nonLatinKeys.length - 1)];
+          const charset = CHARSETS[key];
+          return charset[randomInt(0, charset.length - 1)];
+        } else {
+          // Pick Latin or accented Latin
+          const latinPool = CHARSETS.latin + CHARSETS.latinAccent;
+          return latinPool[randomInt(0, latinPool.length - 1)];
+        }
       }
 
-      // Replace the char in a reel — new DOM element always restarts the CSS animation
+      // Replace the char in a reel
       function setReelChar(reel, value, charClass) {
         const span = document.createElement("span");
         span.className = "slot-word " + charClass;
@@ -1845,21 +1986,25 @@
         }
       }
 
-      // Seed all reels immediately — layout is already stable, letters spin in place
+      // Seed all reels immediately
       charSlots.forEach(slot => {
-        setReelChar(slot.reel, randomSpinChar(), "w-spinning");
+        setReelChar(slot.reel, getRandomSpinChar(0), "w-spinning");
       });
 
       const lockedSet = new Set();
+      const animationStartTime = Date.now();
+      const totalAnimationTime = 2600; // 1400 + 1200 ms total spin time
 
-      // Phase 1 – all reels spin at full speed (1400 ms, 100 ms/tick)
+      // Phase 1 – all reels spin at full speed (1400 ms)
       const p1End = Date.now() + 1400;
       while (Date.now() < p1End) {
         if (!isAlive()) return;
+        const elapsed = Date.now() - animationStartTime;
+        const progressRatio = Math.min(elapsed / totalAnimationTime, 1);
         charSlots.forEach((slot, i) => {
-          if (!lockedSet.has(i)) setReelChar(slot.reel, randomSpinChar(), "w-spinning");
+          if (!lockedSet.has(i)) setReelChar(slot.reel, getRandomSpinChar(progressRatio), "w-spinning");
         });
-        await wait(100);
+        await wait(animationConfig.spinIntervalMs);
       }
 
       // Phase 2 – decelerate (1200 ms, 120 → 380 ms)
@@ -1867,10 +2012,12 @@
       let p2Elapsed = 0;
       while (p2Elapsed < 1200) {
         if (!isAlive()) return;
+        const elapsed = Date.now() - animationStartTime;
+        const progressRatio = Math.min(elapsed / totalAnimationTime, 1);
         const prog = p2Elapsed / 1200;
         const interval = Math.round(120 + prog * 260);
         charSlots.forEach((slot, i) => {
-          if (!lockedSet.has(i)) setReelChar(slot.reel, randomSpinChar(), "w-spinning");
+          if (!lockedSet.has(i)) setReelChar(slot.reel, getRandomSpinChar(progressRatio), "w-spinning");
         });
         await wait(interval);
         p2Elapsed = Date.now() - p2Start;
@@ -1890,7 +2037,7 @@
             if (!isAlive()) return;
             charSlots.forEach((slot, j) => {
               if (!lockedSet.has(j)) {
-                setReelChar(slot.reel, randomSpinChar(), "w-spinning");
+                setReelChar(slot.reel, getRandomSpinChar(1), "w-spinning");
               }
             });
             await wait(240);
