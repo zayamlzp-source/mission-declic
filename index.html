@@ -632,7 +632,6 @@
         <button class="btn btn-link" data-go="home">Accueil</button>
         <button class="btn btn-link" data-go="photos">Photos</button>
         <button class="btn btn-link" data-go="suggest">Proposer</button>
-        <button class="btn btn-link" data-go="settings">⚙</button>
       </div>
     </div>
 
@@ -667,6 +666,26 @@
           <span class="pill">Mission du moment</span>
           <div id="mission-text" class="mission-text">…</div>
           <div class="footer-note">Tu peux essayer, passer, ou revenir plus tard.</div>
+        </div>
+
+        <div class="card stack" style="padding: 14px; background: rgba(122, 143, 111, 0.06);">
+          <label class="label" for="spin-speed-slider" style="font-size: 13px;">
+            Vitesse de rotation
+          </label>
+          <input 
+            id="spin-speed-slider" 
+            type="range" 
+            min="30" 
+            max="150" 
+            step="10" 
+            value="100"
+            class="slider"
+          />
+          <div style="display: flex; justify-content: space-between; margin-top: 8px; font-size: 11px; color: var(--muted);">
+            <span>Rapide</span>
+            <span id="spin-speed-value">100 ms</span>
+            <span>Lent</span>
+          </div>
         </div>
 
         <div class="row">
@@ -1993,10 +2012,10 @@
 
       const lockedSet = new Set();
       const animationStartTime = Date.now();
-      const totalAnimationTime = 2600; // 1400 + 1200 ms total spin time
+      const totalAnimationTime = 1500; // 900 + 600 ms total spin time
 
-      // Phase 1 – all reels spin at full speed (1400 ms)
-      const p1End = Date.now() + 1400;
+      // Phase 1 – all reels spin at full speed (900 ms)
+      const p1End = Date.now() + 900;
       while (Date.now() < p1End) {
         if (!isAlive()) return;
         const elapsed = Date.now() - animationStartTime;
@@ -2007,15 +2026,15 @@
         await wait(animationConfig.spinIntervalMs);
       }
 
-      // Phase 2 – decelerate (1200 ms, 120 → 380 ms)
+      // Phase 2 – decelerate (600 ms, 100 → 280 ms)
       const p2Start = Date.now();
       let p2Elapsed = 0;
-      while (p2Elapsed < 1200) {
+      while (p2Elapsed < 600) {
         if (!isAlive()) return;
         const elapsed = Date.now() - animationStartTime;
         const progressRatio = Math.min(elapsed / totalAnimationTime, 1);
-        const prog = p2Elapsed / 1200;
-        const interval = Math.round(120 + prog * 260);
+        const prog = p2Elapsed / 600;
+        const interval = Math.round(100 + prog * 180);
         charSlots.forEach((slot, i) => {
           if (!lockedSet.has(i)) setReelChar(slot.reel, getRandomSpinChar(progressRatio), "w-spinning");
         });
@@ -2029,10 +2048,10 @@
         if (!lockedSet.has(i)) {
           lockedSet.add(i);
           setReelChar(charSlots[i].reel, charSlots[i].finalChar, "w-locking");
-          await wait(85);
+          await wait(50);
 
-          // Keep other letters rolling a bit between each lock
-          const lingerEnd = Date.now() + 240;
+          // Keep other letters rolling briefly between each lock
+          const lingerEnd = Date.now() + 120;
           while (Date.now() < lingerEnd) {
             if (!isAlive()) return;
             charSlots.forEach((slot, j) => {
@@ -2040,13 +2059,13 @@
                 setReelChar(slot.reel, getRandomSpinChar(1), "w-spinning");
               }
             });
-            await wait(240);
+            await wait(120);
           }
         }
       }
 
       // Settle then restore plain text node
-      await wait(260);
+      await wait(100);
       if (!isAlive()) return;
 
       missionText.className = "mission-text";
