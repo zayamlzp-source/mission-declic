@@ -547,6 +547,16 @@
             <input id="display-name-input" class="input" type="text" placeholder="Ex. Léo" maxlength="40" />
           </div>
 
+          <div class="progress-section" data-progress-gauge aria-label="Avancement des missions">
+            <div class="row" style="justify-content: space-between; align-items: baseline; gap: 8px;">
+              <div class="micro" data-progress-label>Progression</div>
+              <div class="micro" data-progress-meta>0 / 0</div>
+            </div>
+            <div class="progress-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+              <div class="progress-bar-fill" data-progress-fill style="width: 0%;"></div>
+            </div>
+          </div>
+
           <div class="home-actions">
             <button id="start-btn" class="btn btn-primary">Je joue</button>
             <button id="journal-btn" class="btn btn-secondary">Mon journal</button>
@@ -563,6 +573,15 @@
       <div class="stack">
         <div class="card mission-card stack">
           <span class="pill">Mission du moment</span>
+          <div class="progress-section" data-progress-gauge aria-label="Avancement des missions">
+            <div class="row" style="justify-content: space-between; align-items: baseline; gap: 8px;">
+              <div class="micro" data-progress-label>Progression</div>
+              <div class="micro" data-progress-meta>0 / 0</div>
+            </div>
+            <div class="progress-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+              <div class="progress-bar-fill" data-progress-fill style="width: 0%;"></div>
+            </div>
+          </div>
           <div id="mission-text" class="mission-text">…</div>
           <div class="footer-note">Tu peux essayer, passer, ou revenir plus tard.</div>
         </div>
@@ -591,6 +610,26 @@
           <div id="photo-preview-wrap" class="stack" style="display:none;">
             <img id="photo-preview" alt="Aperçu" class="thumb" style="width:120px;height:120px;" />
           </div>
+
+          <div id="visibility-wrap" class="stack" style="display:none;">
+            <div class="label" style="margin-bottom: 0;">Visibilité de la photo</div>
+            <div class="radio-group">
+              <label class="radio-option" for="photo-visibility-private">
+                <input id="photo-visibility-private" type="radio" name="photo-visibility" value="private" checked />
+                <span>
+                  <strong>Garder pour moi</strong><br>
+                  <span class="micro">Visible uniquement sur ton appareil.</span>
+                </span>
+              </label>
+              <label class="radio-option" for="photo-visibility-participants">
+                <input id="photo-visibility-participants" type="radio" name="photo-visibility" value="participants" />
+                <span>
+                  <strong>Partager a tout le monde</strong><br>
+                  <span class="micro">Visible dans la galerie du lien festival.</span>
+                </span>
+              </label>
+            </div>
+          </div>
         </div>
 
         <div class="card stack">
@@ -607,7 +646,7 @@
       </div>
     </section>
 
-    <section id="screen-missions" class="screen" style="display: none;"></section>
+    <section id="screen-missions" class="screen"></section>
     <section id="screen-journal" class="screen">
       <div class="stack">
         <div>
@@ -618,7 +657,7 @@
       </div>
     </section>
 
-    <section id="screen-photos" class="screen" style="display: none;">
+    <section id="screen-photos" class="screen">
       <div class="stack">
         <div>
           <h2>Photos du festival</h2>
@@ -974,8 +1013,49 @@
       };
     }
 
+    function normalizeMissionIdList(value) {
+      if (!Array.isArray(value)) return [];
+
+      const ids = [];
+      const seen = new Set();
+      value.forEach(item => {
+        const missionId = Number(item);
+        if (!Number.isInteger(missionId) || missionId <= 0 || seen.has(missionId)) return;
+        seen.add(missionId);
+        ids.push(missionId);
+      });
+
+      return ids;
+    }
+
+    function normalizeMissionId(value) {
+      const missionId = Number(value);
+      return Number.isInteger(missionId) && missionId > 0 ? missionId : null;
+    }
+
+    function normalizeProgressState(rawState) {
+      const doneMissionIds = normalizeMissionIdList(rawState?.doneMissionIds);
+
+      return {
+        ...getDefaultProgressState(),
+        shownMissionIds: normalizeMissionIdList(rawState?.shownMissionIds),
+        doneMissionIds,
+        skippedMissionIds: normalizeMissionIdList(rawState?.skippedMissionIds),
+        currentMissionId: normalizeMissionId(rawState?.currentMissionId),
+        lastMissionId: normalizeMissionId(rawState?.lastMissionId),
+        internalLevel: computeInternalLevel(doneMissionIds.length)
+      };
+    }
+
     function getProgressState() {
-      return loadJSON(STORAGE_KEYS.progress, getDefaultProgressState());
+      const rawState = loadJSON(STORAGE_KEYS.progress, getDefaultProgressState());
+      const normalizedState = normalizeProgressState(rawState);
+
+      if (JSON.stringify(rawState) !== JSON.stringify(normalizedState)) {
+        saveJSON(STORAGE_KEYS.progress, normalizedState);
+      }
+
+      return normalizedState;
     }
 
     function saveProgressState(state) {
@@ -1439,9 +1519,11 @@
 
     const displayNameInput = document.getElementById("display-name-input");
     const missionText = document.getElementById("mission-text");
+    const progressGauges = Array.from(document.querySelectorAll("[data-progress-gauge]"));
     const photoInput = document.getElementById("photo-input");
     const photoPreviewWrap = document.getElementById("photo-preview-wrap");
     const photoPreview = document.getElementById("photo-preview");
+    const visibilityWrap = document.getElementById("visibility-wrap");
     const orgaMessageInput = document.getElementById("orga-message-input");
     const fileNameDisplay = document.getElementById("file-name-display");
     const journalList = document.getElementById("journal-list");
@@ -1473,7 +1555,7 @@
       if (name === "photos") renderPhotos();
       if (name === "suggest") renderSuggestions();
       if (name === "orga") renderOrga();
-      if (name === "home") updateProgressBar();
+      updateProgressBar();
     }
 
     document.querySelectorAll("[data-go]").forEach(btn => {
@@ -1481,12 +1563,32 @@
     });
 
     function updateProgressBar() {
-      // Progression masquée à l'utilisateur, mais logique interne conservée
       const state = getProgressState();
-      const totalMissions = MISSIONS.filter(m => m.active && !m.bonus).length;
+      const missionSource = MISSIONS.length ? MISSIONS : DEFAULT_MISSIONS;
+      const totalMissions = missionSource.filter(m => m.active !== false && !m.bonus).length;
       const done = state.doneMissionIds.length;
       const percent = totalMissions ? Math.round((done / totalMissions) * 100) : 0;
-      // Éléments DOM supprimés pour interface simplifiée
+      const level = computeInternalLevel(done);
+
+      progressGauges.forEach(gauge => {
+        const label = gauge.querySelector("[data-progress-label]");
+        const meta = gauge.querySelector("[data-progress-meta]");
+        const fill = gauge.querySelector("[data-progress-fill]");
+        const progressBar = gauge.querySelector(".progress-bar");
+
+        if (label) {
+          label.textContent = `Niveau ${level} · ${percent}%`;
+        }
+        if (meta) {
+          meta.textContent = `${done} / ${totalMissions} missions validées`;
+        }
+        if (fill) {
+          fill.style.width = `${percent}%`;
+        }
+        if (progressBar) {
+          progressBar.setAttribute("aria-valuenow", String(percent));
+        }
+      });
     }
 
     // ===== Profil =====
@@ -1542,6 +1644,11 @@
       STATE.currentPhotoDataUrl = "";
       photoPreview.src = "";
       photoPreviewWrap.style.display = "none";
+      visibilityWrap.style.display = "none";
+      const radios = document.querySelectorAll('input[name="photo-visibility"]');
+      radios.forEach(radio => {
+        radio.checked = radio.value === "private";
+      });
     }
 
     function openValidation() {
@@ -1555,6 +1662,7 @@
       if (!file) {
         STATE.currentPhotoDataUrl = "";
         photoPreviewWrap.style.display = "none";
+        visibilityWrap.style.display = "none";
         fileNameDisplay.textContent = "";
         return;
       }
@@ -1565,11 +1673,13 @@
         STATE.currentPhotoDataUrl = dataUrl;
         photoPreview.src = dataUrl;
         photoPreviewWrap.style.display = "grid";
+        visibilityWrap.style.display = "grid";
       } catch (error) {
         console.error("Erreur lors du chargement de la photo:", error);
         Toast.error("Erreur lors du chargement de la photo");
         STATE.currentPhotoDataUrl = "";
         photoPreviewWrap.style.display = "none";
+        visibilityWrap.style.display = "none";
         fileNameDisplay.textContent = "";
       }
     }
@@ -1584,7 +1694,8 @@
         ? progress.doneMissionIds[progress.doneMissionIds.length - 1]
         : null;
 
-      const visibility = STATE.currentPhotoDataUrl ? "private" : "private";
+      const visibilityRadio = document.querySelector('input[name="photo-visibility"]:checked');
+      const visibility = STATE.currentPhotoDataUrl ? (visibilityRadio?.value || "private") : "private";
 
       saveResult(
         createMissionResult({
@@ -1853,6 +1964,12 @@
 
     // ===== Initialisation =====
     async function init() {
+      if (location.hash === "#orga") {
+        const search = location.search || "";
+        location.replace(`./orga.html${search}`);
+        return;
+      }
+
       getOrCreateSessionId();
       await bootstrapRemoteState();
       loadMissions();
@@ -1862,9 +1979,6 @@
       renderPhotos();
       updateProgressBar();
 
-      if (location.hash === "#orga") {
-        showScreen("orga");
-      }
       if (location.hash === "#missions") {
         showScreen("missions");
       }
