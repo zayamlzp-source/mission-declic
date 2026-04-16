@@ -582,9 +582,12 @@
             <select id="mission-mode-select" class="select">
               <option value="festival">Mission festi</option>
               <option value="daily">Vie quotidienne</option>
-              <option value="health">Santé (mix sport + mental)</option>
+              <option value="health">Santé (mix)</option>
               <option value="health_sport">Santé sport</option>
               <option value="health_mental">Santé mental</option>
+              <option value="health_wellness">Bien-être</option>
+              <option value="health_breathing">Respiration</option>
+              <option value="health_yoga">Yoga</option>
               <option value="all">Mix complet</option>
             </select>
           </div>
@@ -764,6 +767,9 @@
             <label class="check-row"><input id="admin-theme-daily" type="checkbox" /> Vie quotidienne</label>
             <label class="check-row"><input id="admin-theme-health-sport" type="checkbox" /> Santé sport</label>
             <label class="check-row"><input id="admin-theme-health-mental" type="checkbox" /> Santé mental</label>
+            <label class="check-row"><input id="admin-theme-health-wellness" type="checkbox" /> Bien-être</label>
+            <label class="check-row"><input id="admin-theme-health-breathing" type="checkbox" /> Respiration</label>
+            <label class="check-row"><input id="admin-theme-health-yoga" type="checkbox" /> Yoga</label>
           </div>
 
           <div>
@@ -857,7 +863,7 @@
     ]);
     let remoteSyncTimer = null;
 
-    const THEME_KEYS = ["festival", "daily", "health_sport", "health_mental"];
+    const THEME_KEYS = ["festival", "daily", "health_sport", "health_mental", "health_wellness", "health_breathing", "health_yoga"];
 
     function getDefaultAdminSettings() {
       return {
@@ -866,7 +872,10 @@
           festival: true,
           daily: true,
           health_sport: true,
-          health_mental: true
+          health_mental: true,
+          health_wellness: true,
+          health_breathing: true,
+          health_yoga: true
         }
       };
     }
@@ -880,7 +889,10 @@
           festival: raw.enabledThemes?.festival ?? defaults.enabledThemes.festival,
           daily: raw.enabledThemes?.daily ?? defaults.enabledThemes.daily,
           health_sport: raw.enabledThemes?.health_sport ?? defaults.enabledThemes.health_sport,
-          health_mental: raw.enabledThemes?.health_mental ?? defaults.enabledThemes.health_mental
+          health_mental: raw.enabledThemes?.health_mental ?? defaults.enabledThemes.health_mental,
+          health_wellness: raw.enabledThemes?.health_wellness ?? defaults.enabledThemes.health_wellness,
+          health_breathing: raw.enabledThemes?.health_breathing ?? defaults.enabledThemes.health_breathing,
+          health_yoga: raw.enabledThemes?.health_yoga ?? defaults.enabledThemes.health_yoga
         }
       };
     }
@@ -899,7 +911,7 @@
 
     function getMissionMode() {
       const mode = localStorage.getItem(STORAGE_KEYS.missionMode) || "festival";
-      return ["festival", "daily", "health", "health_sport", "health_mental", "all"].includes(mode)
+      return ["festival", "daily", "health", "health_sport", "health_mental", "health_wellness", "health_breathing", "health_yoga", "all"].includes(mode)
         ? mode
         : "festival";
     }
@@ -911,7 +923,7 @@
     function missionMatchesSelectedMode(mission, mode) {
       const theme = mission.theme || "festival";
       if (mode === "all") return true;
-      if (mode === "health") return theme === "health_sport" || theme === "health_mental";
+      if (mode === "health") return theme === "health_sport" || theme === "health_mental" || theme === "health_wellness" || theme === "health_breathing" || theme === "health_yoga";
       return theme === mode;
     }
 
@@ -1140,7 +1152,7 @@
 
     function computeInternalLevel(doneCount) {
       const level = 1 + Math.floor(doneCount / 2);
-      return Math.min(level, 8);
+      return Math.min(level, 10);
     }
 
     function getMissionById(missionId) {
@@ -1162,7 +1174,7 @@
 
     function getMissionPoolForProgression(state) {
       const level = state.internalLevel;
-      const allowedLevels = [level, level - 1, level + 1].filter(n => n >= 1 && n <= 8);
+      const allowedLevels = [level, level - 1, level + 1].filter(n => n >= 1 && n <= 10);
       const mode = getMissionMode();
       const adminSettings = getAdminSettings();
 
@@ -1216,6 +1228,127 @@
         tags,
         note
       };
+    }
+
+    function buildHealthMissionBank(startId = 89) {
+      let nextId = startId;
+      const missions = [];
+
+      const sportTemplates = [
+        level => `Marche ${5 + level * 5} minutes à rythme soutenu.`,
+        level => `Fais ${8 + level * 4} squats contrôlés.`,
+        level => `Fais ${6 + level * 3} pompes (ou variante adaptée).`,
+        level => `Fais ${8 + level * 3} fentes alternées.`,
+        level => `Tiens ${15 + level * 10} secondes en gainage.`,
+        level => `Fais ${10 + level * 6} jumping jacks.`,
+        level => `Monte ${Math.max(1, Math.floor(level * 2))} étages à pied.`,
+        level => `Fais ${10 + level * 5} mountain climbers.`,
+        level => `Danse ${2 + level} minutes sans pause.`,
+        level => `Ajoute ${500 * level} pas à ta journée.`,
+        level => `Fais ${5 + level * 3} relevés de mollets par jambe.`,
+        level => `Tiens ${10 + level * 8} secondes en chaise contre un mur.`,
+        level => `Fais ${4 + level * 2} burpees à ton rythme.`,
+        level => `Fais ${6 + level * 3} montées de genoux par jambe.`,
+        level => `Fais ${3 + level} minutes de corde imaginaire.`,
+        level => `Cours ou trottine ${Math.max(2, level * 3)} minutes.`,
+        level => `Fais ${8 + level * 2} crunchs lents et propres.`,
+        level => `Fais ${8 + level * 2} ponts fessiers.`,
+        level => `Fais ${2 + level} blocs de 1 minute d'effort / 1 minute calme.`,
+        level => `Termine par ${2 + level} minutes de récupération active.`
+      ];
+
+      const wellnessTemplates = [
+        level => `Prends ${2 + level} minutes de pause sans écran.`,
+        level => `Bois ${1 + Math.floor(level / 2)} verres d'eau en conscience.`,
+        level => `Range un espace pendant ${3 + level} minutes.`,
+        level => `Fais ${2 + level} minutes d'étirements doux.`,
+        level => `Écris ${Math.max(1, level - 1)} choses positives de la journée.`,
+        level => `Prends l'air ${3 + level * 2} minutes.`,
+        level => `Relâche nuque et épaules pendant ${1 + level} minutes.`,
+        level => `Mange un repas sans écran et plus lentement.`,
+        level => `Fais ${2 + level} minutes de silence volontaire.`,
+        level => `Prépare une ambiance calme avant le sommeil.`,
+        level => `Coupe les écrans ${10 + level * 5} minutes avant de dormir.`,
+        level => `Observe ton niveau d'énergie ${Math.max(1, Math.floor(level / 2)) + 1} fois aujourd'hui.`,
+        level => `Prends ${3 + level} respirations profondes avant une tâche stressante.`,
+        level => `Note ce qui t'épuise et une action pour alléger.`,
+        level => `Fais un automassage mains/visage ${1 + level} minutes.`,
+        level => `Planifie ${5 + level * 2} minutes de récupération réelle.`,
+        level => `Garde un moment de lenteur volontaire dans la journée.`,
+        level => `Prépare une boisson chaude en pleine conscience.`,
+        level => `Transforme une pause en vrai moment de récupération.`,
+        level => `Fais un check-in corporel complet en ${2 + level} minutes.`
+      ];
+
+      const breathingTemplates = [
+        level => `Fais ${3 + level} respirations lentes (nez -> expire longue).`,
+        level => `Pratique ${1 + level} minutes de respiration calme.`,
+        level => `Inspire 4s / expire ${4 + level}s pendant ${Math.max(4, level + 2)} cycles.`,
+        level => `Respire avec une main sur le ventre pendant ${1 + level} minutes.`,
+        level => `Fais ${5 + level} expirations longues pour relâcher les tensions.`,
+        level => `Pratique une respiration cohérente ${4 + level} minutes.`,
+        level => `Observe ton souffle sans le corriger pendant ${1 + level} minutes.`,
+        level => `Fais une pause respiration avant et après une tâche importante.`,
+        level => `Réalise ${10 + level * 2} cycles respiratoires réguliers.`,
+        level => `Respire en posture assise stable ${2 + level} minutes.`,
+        level => `Ralentis volontairement ta respiration pendant ${1 + level} minutes.`,
+        level => `Ajoute ${Math.max(1, Math.floor(level / 2)) + 1} mini-pauses souffle dans la journée.`,
+        level => `Pratique la respiration avant de dormir ${2 + level} minutes.`,
+        level => `Pratique la respiration au réveil ${2 + level} minutes.`,
+        level => `Respire en marchant lentement pendant ${2 + level} minutes.`,
+        level => `Garde l'expiration plus longue que l'inspiration sur ${8 + level} cycles.`,
+        level => `Utilise le souffle pour relâcher mâchoire et épaules ${1 + level} minutes.`,
+        level => `Pratique en silence complet ${1 + level} minutes.`,
+        level => `Fais une session allongée de respiration ${2 + level} minutes.`,
+        level => `Note en une phrase ton état avant/après la session souffle.`
+      ];
+
+      const yogaTemplates = [
+        level => `Tiens la posture montagne ${20 + level * 10} secondes.`,
+        level => `Fais ${3 + level} cycles chat-vache lents.`,
+        level => `Fais ${2 + level} salutations au soleil adaptées.`,
+        level => `Tiens la posture de l'enfant ${20 + level * 10} secondes.`,
+        level => `Tiens le chien tête en bas ${15 + level * 8} secondes.`,
+        level => `Tiens la planche ${10 + level * 8} secondes.`,
+        level => `Tiens la posture chaise ${10 + level * 8} secondes.`,
+        level => `Fais une torsion assise de chaque côté ${10 + level * 6} secondes.`,
+        level => `Tiens l'arbre ${10 + level * 8} secondes par jambe.`,
+        level => `Fais une pince assise ${15 + level * 8} secondes.`,
+        level => `Tiens une fente haute ${12 + level * 6} secondes par côté.`,
+        level => `Fais un triangle de chaque côté ${10 + level * 6} secondes.`,
+        level => `Tiens le pont ${12 + level * 7} secondes.`,
+        level => `Fais une ouverture de hanches douce ${20 + level * 8} secondes.`,
+        level => `Fais une torsion couchée ${15 + level * 8} secondes par côté.`,
+        level => `Pratique ${5 + level * 2} minutes de yoga continu.`,
+        level => `Ajoute ${1 + Math.floor(level / 2)} minute de respiration finale.`,
+        level => `Ralentis les transitions pendant toute la séance.`,
+        level => `Maintiens l'attention sur l'alignement ${4 + level} minutes.`,
+        level => `Termine par ${2 + Math.floor(level / 2)} minutes d'immobilité.`
+      ];
+
+      function pushTheme(theme, category, tags, templates) {
+        for (let level = 1; level <= 10; level++) {
+          for (let i = 0; i < 20; i++) {
+            missions.push(
+              createMission({
+                id: nextId++,
+                text: `[N${level}] ${templates[i](level)}`,
+                category,
+                level,
+                theme,
+                tags
+              })
+            );
+          }
+        }
+      }
+
+      pushTheme("health_sport", "ENTRAÎNE", ["santé", "sport"], sportTemplates);
+      pushTheme("health_wellness", "RESSENS", ["santé", "bien-être"], wellnessTemplates);
+      pushTheme("health_breathing", "RESSENS", ["santé", "respiration"], breathingTemplates);
+      pushTheme("health_yoga", "JOUE", ["santé", "yoga"], yogaTemplates);
+
+      return missions;
     }
 
     const DEFAULT_MISSIONS = [
@@ -1316,7 +1449,9 @@
       createMission({ id: 85, text: "Prends 2 minutes de respiration lente (4 sec in / 6 sec out)", category: "RESSENS", level: 1, theme: "health_mental", tags: ["santé", "mental"] }),
       createMission({ id: 86, text: "Note 3 choses positives de ta journée", category: "RESSENS", level: 1, theme: "health_mental", tags: ["santé", "mental"] }),
       createMission({ id: 87, text: "Fais 5 minutes sans écran et observe simplement", category: "OSE", level: 2, theme: "health_mental", tags: ["santé", "mental"] }),
-      createMission({ id: 88, text: "Écris une intention simple pour la suite de ta journée", category: "LIEN", level: 1, theme: "health_mental", tags: ["santé", "mental"] })
+      createMission({ id: 88, text: "Écris une intention simple pour la suite de ta journée", category: "LIEN", level: 1, theme: "health_mental", tags: ["santé", "mental"] }),
+
+      ...buildHealthMissionBank(89)
     ];
 
     let MISSIONS = [];
@@ -1674,6 +1809,9 @@
     const adminThemeDaily = document.getElementById("admin-theme-daily");
     const adminThemeHealthSport = document.getElementById("admin-theme-health-sport");
     const adminThemeHealthMental = document.getElementById("admin-theme-health-mental");
+    const adminThemeHealthWellness = document.getElementById("admin-theme-health-wellness");
+    const adminThemeHealthBreathing = document.getElementById("admin-theme-health-breathing");
+    const adminThemeHealthYoga = document.getElementById("admin-theme-health-yoga");
     const adminPinInput = document.getElementById("admin-pin-input");
 
     // ===== Navigation =====
@@ -1759,6 +1897,9 @@
       adminThemeDaily.checked = !!settings.enabledThemes.daily;
       adminThemeHealthSport.checked = !!settings.enabledThemes.health_sport;
       adminThemeHealthMental.checked = !!settings.enabledThemes.health_mental;
+      adminThemeHealthWellness.checked = !!settings.enabledThemes.health_wellness;
+      adminThemeHealthBreathing.checked = !!settings.enabledThemes.health_breathing;
+      adminThemeHealthYoga.checked = !!settings.enabledThemes.health_yoga;
       adminPinInput.value = "";
     }
 
@@ -1767,7 +1908,10 @@
         festival: !!adminThemeFestival.checked,
         daily: !!adminThemeDaily.checked,
         health_sport: !!adminThemeHealthSport.checked,
-        health_mental: !!adminThemeHealthMental.checked
+        health_mental: !!adminThemeHealthMental.checked,
+        health_wellness: !!adminThemeHealthWellness.checked,
+        health_breathing: !!adminThemeHealthBreathing.checked,
+        health_yoga: !!adminThemeHealthYoga.checked
       };
 
       if (!Object.values(enabledThemes).some(Boolean)) {
