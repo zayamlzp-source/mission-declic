@@ -1,79 +1,104 @@
-# V2 Backend Setup (Supabase)
+# Setup Supabase — Festival Missions
 
-Ce projet supporte maintenant 2 modes:
+## Modes disponibles
 
-- `local`: stockage localStorage (par appareil)
-- `supabase`: source de donnees centrale partagee
+| Mode | Stockage | Partage |
+|---|---|---|
+| `local` | localStorage (par appareil) | Non |
+| `supabase` | Base centralisee | Oui |
 
-## 1) Creer la table `festival_state`
+---
 
-Executer ce SQL dans Supabase SQL Editor:
+## 1. Creer la table `festival_state`
+
+Coller ce SQL dans **Supabase > SQL Editor** et executer:
 
 ```sql
+-- Table principale
 create table if not exists public.festival_state (
-  id text primary key,
-  payload jsonb not null default '{}'::jsonb,
+  id        text        primary key,
+  payload   jsonb       not null default '{}'::jsonb,
   updated_at timestamptz not null default now()
 );
 
 alter table public.festival_state enable row level security;
 
--- Politique simple V1 (anon peut lire/ecrire)
--- A renforcer ensuite avec auth si besoin.
-create policy if not exists "festival_state_select"
-on public.festival_state
-for select
-using (true);
+-- Les participants peuvent LIRE l'etat global
+create policy "state_select_public"
+  on public.festival_state for select
+  using (true);
 
-create policy if not exists "festival_state_insert"
-on public.festival_state
-for insert
-with check (true);
+-- Pour un festival interne : ecriture ouverte (pratique, acceptable)
+create policy "state_write_anon"
+  on public.festival_state for insert
+  with check (true);
 
-create policy if not exists "festival_state_update"
-on public.festival_state
-for update
-using (true)
-with check (true);
+create policy "state_update_anon"
+  on public.festival_state for update
+  using (true) with check (true);
 ```
 
-## 2) Recuperer les informations Supabase
+> **Production durcie** : remplacer les 2 dernieres policies par celles-ci
+> pour que seul un backend serveur (service_role) puisse ecrire :
+>
+> ```sql
+> create policy "state_insert_service"
+>   on public.festival_state for insert
+>   with check (auth.role() = 'service_role');
+>
+> create policy "state_update_service"
+>   on public.festival_state for update
+>   using  (auth.role() = 'service_role')
+>   with check (auth.role() = 'service_role');
+> ```
 
-Dans Supabase -> Project Settings -> API:
+---
 
-- Project URL
-- anon public key
+## 2. Recuperer les cles
 
-## 3) Configurer ORGA
+**Supabase > Project Settings > API** :
 
-Ouvrir `orga.html` puis dans le panneau `Configuration backend (V2)`:
+- **Project URL** : `https://xxxxxxxx.supabase.co`
+- **anon public key** : `eyJhbGci...`
 
-- Mode donnees: `Supabase (central)`
-- Supabase URL: `https://xxxx.supabase.co`
-- Supabase anon key: `eyJ...`
-- State row id: `global` (ou autre identifiant de lot)
+---
 
-Cliquer:
+## 3. Configurer orga.html
 
-- `Sauvegarder config`
-- `Publier vers backend` (premiere publication)
+1. Ouvrir `orga.html` sur votre appareil orga.
+2. Onglet **Configuration backend (V2)**.
+3. Remplir :
+   - Mode : `Supabase (central)`
+   - URL : votre URL Supabase
+   - Anon key : votre cle anon
+   - State row id : `global` (ou nom de votre edition)
+4. **Sauvegarder config** → **Publier vers backend**.
 
-## 4) Cote participant (`index.html`)
+---
 
-L'app lit automatiquement la meme config `festival_backend_config` dans localStorage.
-Au demarrage, elle tente un import depuis Supabase puis continue normalement.
+## 4. Cote participant (index.html)
 
-## 5) Donnees synchronisees
+Au demarrage, `index.html` lit la config depuis `localStorage` et importe automatiquement missions/resultats depuis Supabase. Les participants ne configurent rien.
 
-La V2 synchronise ce payload:
+---
 
-- `missions`
-- `suggestions`
-- `results`
+## 5. Payload synchronise
 
-Le profil, la session et la progression interne restent locaux.
+| Cle | Contenu |
+|---|---|
+| `missions` | Missions actives |
+| `suggestions` | Propositions participants |
+| `results` | Validations de toutes les sessions |
+| `updatedAt` | Timestamp derniere publication |
 
-## 6) Limites V1
+Restent **toujours locaux** : profil, session ID, progression interne.
 
-- Cle anon + politiques ouvertes = pratique pour test, pas securise production.
-- Pour production, ajouter auth ORGA et policies strictes.
+---
+
+## 6. Reset entre editions
+
+```sql
+delete from public.festival_state where id = 'global';
+```
+
+Puis depuis orga.html : **Publier vers backend** pour reinitialiser.

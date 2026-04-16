@@ -288,6 +288,18 @@
 
       <div id="flash-banner" class="flash-banner" aria-live="polite"></div>
 
+      <div class="card" style="display:grid;gap:10px;">
+        <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;">
+          <strong>Lien participant</strong>
+          <span id="share-copy-msg" class="meta" style="color:#315439;"></span>
+        </div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;">
+          <input id="share-url-input" class="input" type="text" readonly value="https://zayamlzp-source.github.io/festival-missions/" style="flex:1;min-width:180px;font-size:0.9rem;">
+          <button id="copy-share-url-btn" class="btn btn-primary">Copier</button>
+        </div>
+        <img id="share-qr" src="https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=https%3A%2F%2Fzayamlzp-source.github.io%2Ffestival-missions%2F" alt="QR code lien participant" width="160" height="160" style="border-radius:10px;border:1px solid var(--line);">
+      </div>
+
       <div class="card">
         <div class="mission-head">
           <strong>Configuration backend (V2)</strong>
@@ -1284,6 +1296,20 @@
         btn.addEventListener("click", () => setTab(btn.dataset.tab));
       });
       document.getElementById("refresh-btn").addEventListener("click", refreshDashboard);
+
+      document.getElementById("copy-share-url-btn").addEventListener("click", () => {
+        const input = document.getElementById("share-url-input");
+        const msg = document.getElementById("share-copy-msg");
+        navigator.clipboard.writeText(input.value).then(() => {
+          msg.textContent = "Lien copie !";
+          setTimeout(() => { msg.textContent = ""; }, 2500);
+        }).catch(() => {
+          input.select();
+          document.execCommand("copy");
+          msg.textContent = "Lien copie !";
+          setTimeout(() => { msg.textContent = ""; }, 2500);
+        });
+      });
 
       document.getElementById("save-backend-btn").addEventListener("click", () => {
         const config = backendConfigFromInputs();

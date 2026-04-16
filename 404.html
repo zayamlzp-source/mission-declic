@@ -11,6 +11,14 @@
     <link rel="icon" href="./assets/icons/icon-192.svg" type="image/svg+xml">
     <link rel="apple-touch-icon" href="./assets/icons/icon-192.svg">
     <title>Festival — Missions</title>
+    <meta property="og:title" content="Festival — Missions">
+    <meta property="og:description" content="Laisse-toi surprendre par des missions. Ose, ressens, joue, crée des liens.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://zayamlzp-source.github.io/festival-missions/">
+    <meta property="og:image" content="https://zayamlzp-source.github.io/festival-missions/assets/icons/icon-512.svg">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Festival — Missions">
+    <meta name="twitter:description" content="Laisse-toi surprendre par des missions au festival.">
     <style>
         * { box-sizing: border-box; }
 
@@ -533,6 +541,7 @@
         <div class="brand">Festival — Missions</div>
       </div>
       <div class="top-actions">
+        <button id="install-btn" class="btn btn-secondary" style="display:none;">Installer l'app</button>
         <button class="btn btn-link" data-go="home">Accueil</button>
         <button class="btn btn-link" data-go="suggest">Proposer</button>
       </div>
@@ -1413,13 +1422,38 @@
       return avg;
     }
 
-    // ===== Simu upload locale =====
+    // ===== Photo upload + compression =====
     function fileToLocalDataUrl(file) {
       return new Promise((resolve, reject) => {
         const reader = new FileReader();
         reader.onload = () => resolve(reader.result);
         reader.onerror = reject;
         reader.readAsDataURL(file);
+      });
+    }
+
+    async function compressPhoto(file, maxDim = 900, quality = 0.78) {
+      const dataUrl = await fileToLocalDataUrl(file);
+      return new Promise((resolve) => {
+        const img = new Image();
+        img.onload = () => {
+          let { width, height } = img;
+          if (width <= maxDim && height <= maxDim) {
+            resolve(dataUrl);
+            return;
+          }
+          const ratio = Math.min(maxDim / width, maxDim / height);
+          width = Math.round(width * ratio);
+          height = Math.round(height * ratio);
+          const canvas = document.createElement("canvas");
+          canvas.width = width;
+          canvas.height = height;
+          const ctx = canvas.getContext("2d");
+          ctx.drawImage(img, 0, 0, width, height);
+          resolve(canvas.toDataURL("image/jpeg", quality));
+        };
+        img.onerror = () => resolve(dataUrl);
+        img.src = dataUrl;
       });
     }
 
@@ -1565,7 +1599,7 @@
 
       try {
         fileNameDisplay.textContent = file.name;
-        const dataUrl = await fileToLocalDataUrl(file);
+        const dataUrl = await compressPhoto(file);
         STATE.currentPhotoDataUrl = dataUrl;
         photoPreview.src = dataUrl;
         photoPreviewWrap.style.display = "grid";
@@ -1886,6 +1920,36 @@
         });
       });
     }
+
+    // ===== PWA install prompt =====
+    let _deferredInstallPrompt = null;
+    window.addEventListener("beforeinstallprompt", (e) => {
+      e.preventDefault();
+      _deferredInstallPrompt = e;
+      const btn = document.getElementById("install-btn");
+      if (btn) btn.style.display = "";
+    });
+    document.getElementById("install-btn").addEventListener("click", async () => {
+      if (!_deferredInstallPrompt) return;
+      _deferredInstallPrompt.prompt();
+      const { outcome } = await _deferredInstallPrompt.userChoice;
+      _deferredInstallPrompt = null;
+      if (outcome === "accepted") {
+        document.getElementById("install-btn").style.display = "none";
+      }
+    });
+    window.addEventListener("appinstalled", () => {
+      document.getElementById("install-btn").style.display = "none";
+      _deferredInstallPrompt = null;
+    });
+
+    // ===== Offline / Online detection =====
+    window.addEventListener("offline", () => {
+      Toast.warning("Hors ligne — l'app continue de fonctionner normalement.", 4000);
+    });
+    window.addEventListener("online", () => {
+      Toast.success("Connexion rétablie.", 3000);
+    });
 </script>
 
 </body>
