@@ -1233,6 +1233,7 @@
     function buildHealthMissionBank(startId = 89) {
       let nextId = startId;
       const missions = [];
+      const missionsPerLevel = 10;
 
       const sportTemplates = [
         level => `Marche ${5 + level * 5} minutes à rythme soutenu.`,
@@ -1328,7 +1329,7 @@
 
       function pushTheme(theme, category, tags, templates) {
         for (let level = 1; level <= 10; level++) {
-          for (let i = 0; i < 20; i++) {
+          for (let i = 0; i < missionsPerLevel; i++) {
             missions.push(
               createMission({
                 id: nextId++,
