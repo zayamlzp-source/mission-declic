@@ -947,6 +947,16 @@
       render();
     }
 
+    function deletePhotoFromResult(resultId) {
+      const item = state.results.find(r => String(r.id) === String(resultId));
+      if (!item) return;
+      item.photoUrl = "";
+      item.visibility = "private";
+      item.photoModerationStatus = "private";
+      persistResults();
+      render();
+    }
+
     function renderPhotosModeration(root) {
       const items = [...state.results]
         .filter(r => !!r.photoUrl && r.visibility === "participants")
@@ -994,9 +1004,18 @@
 
         const rejectBtn = document.createElement("button");
         rejectBtn.className = "btn btn-danger";
-        rejectBtn.textContent = "Refuser";
+        rejectBtn.textContent = "Refuser (garder)";
         rejectBtn.disabled = status === "rejected";
         rejectBtn.addEventListener("click", () => setPhotoModerationStatus(item.id, "rejected"));
+
+        const rejectDeleteBtn = document.createElement("button");
+        rejectDeleteBtn.className = "btn btn-danger";
+        rejectDeleteBtn.textContent = "Refuser et effacer";
+        rejectDeleteBtn.addEventListener("click", () => {
+          const confirmed = window.confirm("Refuser et effacer cette photo ? Cette action retire la photo de l'historique visuel.");
+          if (!confirmed) return;
+          deletePhotoFromResult(item.id);
+        });
 
         const pendingBtn = document.createElement("button");
         pendingBtn.className = "btn";
@@ -1006,6 +1025,7 @@
 
         actions.appendChild(approveBtn);
         actions.appendChild(rejectBtn);
+        actions.appendChild(rejectDeleteBtn);
         actions.appendChild(pendingBtn);
         card.appendChild(actions);
         root.appendChild(card);
