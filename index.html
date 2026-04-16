@@ -144,39 +144,42 @@
           text-align: center;
           margin: 18px 0 10px;
           color: #2a2a22;
-          transition: color 0.2s;
         }
 
-        .mission-text.is-scrambling {
-          color: #b4ac9f;
-        }
-
-        @keyframes missionWordSnap {
-          0%   { opacity: 0.2; transform: translateY(-7px) scale(0.9); }
-          60%  { opacity: 1;   transform: translateY(2px)  scale(1.05); }
-          100% { opacity: 1;   transform: translateY(0)    scale(1); }
-        }
-
-        @keyframes missionWordReveal {
-          from { opacity: 0; transform: translateY(5px); }
-          to   { opacity: 1; transform: translateY(0); }
-        }
-
-        .w-locked {
-          color: #3d5c35;
-          font-weight: 700;
-        }
-
-        .w-snap {
-          color: #3d5c35;
-          font-weight: 700;
+        /* ── Slot-reel animation ── */
+        .slot-reel {
           display: inline-block;
-          animation: missionWordSnap 0.32s cubic-bezier(0.22,1,0.36,1) forwards;
+          overflow: hidden;
+          height: 1.28em;
+          vertical-align: middle;
         }
 
-        .w-fade {
-          display: inline;
-          animation: missionWordReveal 0.22s ease forwards;
+        .slot-word {
+          display: block;
+          line-height: 1.28;
+          white-space: nowrap;
+        }
+
+        @keyframes slotSpin {
+          from { transform: translateY(-110%); }
+          to   { transform: translateY(0); }
+        }
+
+        @keyframes slotLock {
+          0%   { transform: translateY(-55%); opacity: 0.4; }
+          55%  { transform: translateY(5%);   opacity: 1; }
+          100% { transform: translateY(0);    opacity: 1; }
+        }
+
+        .w-spinning {
+          color: #a8a09a;
+          animation: slotSpin 0.1s linear;
+        }
+
+        .w-locking {
+          color: #3d5c35;
+          font-weight: 700;
+          animation: slotLock 0.38s cubic-bezier(0.22, 1, 0.36, 1) forwards;
         }
 
         .micro {
@@ -1769,77 +1772,99 @@
 
       const { verb, target, complement } = splitMissionIntoBlocks(mission.text);
       const wordPool = getMissionWordPool();
-      const complementWords = complement ? complement.split(/\s+/).filter(Boolean) : [];
+      const finalWords = [verb, target, ...complement.split(/\s+/).filter(Boolean)].filter(Boolean);
 
-      // Reset: two sub-spans — locked words stay stable, scramble updates each tick
+      if (!finalWords.length) {
+        missionText.textContent = mission.text || "";
+        return;
+      }
+
+      // Build one slot-reel <span> per word / block
       missionText.innerHTML = "";
-      missionText.className = "mission-text is-scrambling";
+      missionText.className = "mission-text";
 
-      const lockedEl = document.createElement("span");
-      const scrambleEl = document.createElement("span");
-      missionText.appendChild(lockedEl);
-      missionText.appendChild(scrambleEl);
+      const reelEls = finalWords.map((_, i) => {
+        const reel = document.createElement("span");
+        reel.className = "slot-reel";
+        missionText.appendChild(reel);
+        if (i < finalWords.length - 1) {
+          missionText.appendChild(document.createTextNode(" "));
+        }
+        return reel;
+      });
 
-      // Phase 1 — full scramble (1200ms)
-      const p1End = Date.now() + 1200;
+      // Replace the word in a reel — new DOM element always restarts the CSS animation
+      function setReelWord(reel, text, wordClass) {
+        const span = document.createElement("span");
+        span.className = "slot-word " + wordClass;
+        span.textContent = text;
+        if (reel.firstChild) {
+          reel.replaceChild(span, reel.firstChild);
+        } else {
+          reel.appendChild(span);
+        }
+      }
+
+      // Seed all reels with a random word
+      reelEls.forEach(reel => {
+        setReelWord(reel, wordPool[randomInt(0, wordPool.length - 1)], "w-spinning");
+      });
+
+      const lockedSet = new Set();
+
+      // Phase 1 – all reels spin at full speed (~950 ms, 70 ms/tick)
+      const p1End = Date.now() + 950;
       while (Date.now() < p1End) {
         if (!isAlive()) return;
-        scrambleEl.textContent = pickRandomWords(wordPool, 3, 8);
-        await wait(80);
+        reelEls.forEach((reel, i) => {
+          if (!lockedSet.has(i)) {
+            setReelWord(reel, wordPool[randomInt(0, wordPool.length - 1)], "w-spinning");
+          }
+        });
+        await wait(70);
       }
 
-      // Phase 2 — verb snaps in, tail still scrambles (600ms)
-      if (!isAlive()) return;
-      lockedEl.innerHTML = "";
-      const verbSnap = document.createElement("span");
-      verbSnap.className = "w-snap";
-      verbSnap.textContent = verb;
-      lockedEl.appendChild(verbSnap);
-      lockedEl.appendChild(document.createTextNode(" "));
-
-      const p2End = Date.now() + 600;
-      while (Date.now() < p2End) {
+      // Phase 2 – decelerate while all still spin (~580 ms, 70 → 200 ms)
+      const p2Start = Date.now();
+      let p2Elapsed = 0;
+      while (p2Elapsed < 580) {
         if (!isAlive()) return;
-        scrambleEl.textContent = pickRandomWords(wordPool, 2, 6);
-        await wait(85);
+        const prog = p2Elapsed / 580;
+        const interval = Math.round(70 + prog * 130);
+        reelEls.forEach((reel, i) => {
+          if (!lockedSet.has(i)) {
+            setReelWord(reel, wordPool[randomInt(0, wordPool.length - 1)], "w-spinning");
+          }
+        });
+        await wait(interval);
+        p2Elapsed = Date.now() - p2Start;
       }
-      verbSnap.className = "w-locked";
 
-      // Phase 3 — target snaps in, tail still scrambles (500ms)
-      if (!isAlive()) return;
-      if (target) {
-        const targetSnap = document.createElement("span");
-        targetSnap.className = "w-snap";
-        targetSnap.textContent = target;
-        lockedEl.appendChild(targetSnap);
-        lockedEl.appendChild(document.createTextNode(" "));
+      // Phase 3 – lock one reel at a time, others keep spinning briefly after each lock
+      for (let lockI = 0; lockI < finalWords.length; lockI++) {
+        if (!isAlive()) return;
 
-        const p3End = Date.now() + 500;
-        while (Date.now() < p3End) {
+        lockedSet.add(lockI);
+        setReelWord(reelEls[lockI], finalWords[lockI], "w-locking");
+
+        const pauseMs = lockI === 0 ? 260 : lockI < 3 ? 230 : 190;
+        const lockEnd = Date.now() + pauseMs;
+        let spinInterval = 210;
+        while (Date.now() < lockEnd) {
           if (!isAlive()) return;
-          scrambleEl.textContent = pickRandomWords(wordPool, 1, 4);
-          await wait(90);
+          reelEls.forEach((reel, j) => {
+            if (!lockedSet.has(j)) {
+              setReelWord(reel, wordPool[randomInt(0, wordPool.length - 1)], "w-spinning");
+            }
+          });
+          await wait(spinInterval);
         }
-        targetSnap.className = "w-locked";
       }
 
-      // Phase 4 — scramble clears, complement reveals word by word
-      if (!isAlive()) return;
-      scrambleEl.textContent = "";
-      for (const word of complementWords) {
-        if (!isAlive()) return;
-        await wait(115);
-        const wordSpan = document.createElement("span");
-        wordSpan.className = "w-fade";
-        wordSpan.textContent = word;
-        lockedEl.appendChild(wordSpan);
-        lockedEl.appendChild(document.createTextNode(" "));
-      }
-
-      await wait(200);
+      // Settle then restore plain text node
+      await wait(260);
       if (!isAlive()) return;
 
-      // Final clean state
       missionText.className = "mission-text";
       missionText.textContent = mission.text;
     }
