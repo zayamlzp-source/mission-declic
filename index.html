@@ -151,7 +151,6 @@
           display: inline-block;
           overflow: hidden;
           height: 1.28em;
-          width: 0.72ch;
           text-align: center;
           vertical-align: middle;
         }
@@ -1778,25 +1777,45 @@
         return;
       }
 
-      const missionSource = getMissionWordPool().join("");
-      const charPool = [...missionSource.replace(/\s+/g, "")].filter(Boolean);
-      const fallbackChars = [..."ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789?!"];
-      const spinPool = charPool.length ? charPool : fallbackChars;
+      // Rich alphabet pool: FR + accented + a few other-language chars for visual variety
+      const spinPool = [...("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz" +
+        "ÀÂÄÉÈÊËÎÏÔÙÛÜÇàâäéèêëîïôùûüç" +   // French
+        "ÑñÁáÍíÓóÚú" +                        // Spanish
+        "ÄäÖöÜüß" +                            // German
+        "ÅåØøÆæ")];
 
       // Build one slot-reel <span> per character
       missionText.innerHTML = "";
       missionText.className = "mission-text";
 
-      const charSlots = [];
+      // Measure the rendered width of each character before building reels,
+      // so every reel has a fixed pixel width and the phrase never shifts horizontally.
+      const measureEl = document.createElement("span");
+      measureEl.style.cssText = "position:absolute;visibility:hidden;white-space:nowrap;font:inherit;font-size:1.72rem;";
+      document.body.appendChild(measureEl);
 
-      for (const character of [...finalText]) {
+      const finalChars = [...finalText];
+      const measuredWidths = finalChars.map(ch => {
+        measureEl.textContent = ch === " " ? "\u00A0" : ch;
+        return measureEl.getBoundingClientRect().width;
+      });
+      document.body.removeChild(measureEl);
+
+      const charSlots = [];
+      let measuredIdx = 0;
+
+      for (const character of finalChars) {
+        const px = measuredWidths[measuredIdx++] ?? 10;
         if (character === " ") {
-          missionText.appendChild(document.createTextNode(" "));
+          const spacer = document.createElement("span");
+          spacer.style.cssText = `display:inline-block;width:${px}px;`;
+          missionText.appendChild(spacer);
           continue;
         }
 
         const reel = document.createElement("span");
         reel.className = "slot-reel";
+        reel.style.width = px + "px";
         missionText.appendChild(reel);
         charSlots.push({
           reel,
@@ -1825,36 +1844,32 @@
         }
       }
 
-      // Seed all reels with random chars
+      // Seed all reels immediately — layout is already stable, letters spin in place
       charSlots.forEach(slot => {
         setReelChar(slot.reel, randomSpinChar(), "w-spinning");
       });
 
       const lockedSet = new Set();
 
-      // Phase 1 – all reels spin at full speed (~1700 ms, 110 ms/tick)
-      const p1End = Date.now() + 1700;
+      // Phase 1 – all reels spin at full speed (1400 ms, 100 ms/tick)
+      const p1End = Date.now() + 1400;
       while (Date.now() < p1End) {
         if (!isAlive()) return;
         charSlots.forEach((slot, i) => {
-          if (!lockedSet.has(i)) {
-            setReelChar(slot.reel, randomSpinChar(), "w-spinning");
-          }
+          if (!lockedSet.has(i)) setReelChar(slot.reel, randomSpinChar(), "w-spinning");
         });
-        await wait(110);
+        await wait(100);
       }
 
-      // Phase 2 – decelerate while all still spin (~1400 ms, 140 → 400 ms)
+      // Phase 2 – decelerate (1200 ms, 120 → 380 ms)
       const p2Start = Date.now();
       let p2Elapsed = 0;
-      while (p2Elapsed < 1400) {
+      while (p2Elapsed < 1200) {
         if (!isAlive()) return;
-        const prog = p2Elapsed / 1400;
-        const interval = Math.round(140 + prog * 260);
+        const prog = p2Elapsed / 1200;
+        const interval = Math.round(120 + prog * 260);
         charSlots.forEach((slot, i) => {
-          if (!lockedSet.has(i)) {
-            setReelChar(slot.reel, randomSpinChar(), "w-spinning");
-          }
+          if (!lockedSet.has(i)) setReelChar(slot.reel, randomSpinChar(), "w-spinning");
         });
         await wait(interval);
         p2Elapsed = Date.now() - p2Start;
