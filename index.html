@@ -159,6 +159,7 @@
           display: block;
           line-height: 1.28;
           white-space: nowrap;
+          opacity: 0;
         }
 
         @keyframes slotSpin {
@@ -167,7 +168,7 @@
         }
 
         @keyframes slotLock {
-          0%   { transform: translateY(-55%); opacity: 0.4; }
+          0%   { transform: translateY(-55%); opacity: 0.25; }
           55%  { transform: translateY(5%);   opacity: 1; }
           100% { transform: translateY(0);    opacity: 1; }
         }
@@ -1994,10 +1995,11 @@
       }
 
       // Replace the char in a reel
-      function setReelChar(reel, value, charClass) {
+      function setReelChar(reel, value, charClass, alpha = 1) {
         const span = document.createElement("span");
         span.className = "slot-word " + charClass;
         span.textContent = value;
+        span.style.opacity = String(Math.max(0, Math.min(1, alpha)));
         if (reel.firstChild) {
           reel.replaceChild(span, reel.firstChild);
         } else {
@@ -2007,7 +2009,7 @@
 
       // Seed all reels immediately
       charSlots.forEach(slot => {
-        setReelChar(slot.reel, getRandomSpinChar(0), "w-spinning");
+        setReelChar(slot.reel, getRandomSpinChar(0), "w-spinning", 0.08);
       });
 
       const lockedSet = new Set();
@@ -2020,8 +2022,9 @@
         if (!isAlive()) return;
         const elapsed = Date.now() - animationStartTime;
         const progressRatio = Math.min(elapsed / totalAnimationTime, 1);
+        const alpha = 0.08 + progressRatio * 0.74;
         charSlots.forEach((slot, i) => {
-          if (!lockedSet.has(i)) setReelChar(slot.reel, getRandomSpinChar(progressRatio), "w-spinning");
+          if (!lockedSet.has(i)) setReelChar(slot.reel, getRandomSpinChar(progressRatio), "w-spinning", alpha);
         });
         await wait(animationConfig.spinIntervalMs);
       }
@@ -2033,10 +2036,11 @@
         if (!isAlive()) return;
         const elapsed = Date.now() - animationStartTime;
         const progressRatio = Math.min(elapsed / totalAnimationTime, 1);
+        const alpha = 0.08 + progressRatio * 0.74;
         const prog = p2Elapsed / 600;
         const interval = Math.round(100 + prog * 180);
         charSlots.forEach((slot, i) => {
-          if (!lockedSet.has(i)) setReelChar(slot.reel, getRandomSpinChar(progressRatio), "w-spinning");
+          if (!lockedSet.has(i)) setReelChar(slot.reel, getRandomSpinChar(progressRatio), "w-spinning", alpha);
         });
         await wait(interval);
         p2Elapsed = Date.now() - p2Start;
@@ -2047,7 +2051,7 @@
         if (!isAlive()) return;
         if (!lockedSet.has(i)) {
           lockedSet.add(i);
-          setReelChar(charSlots[i].reel, charSlots[i].finalChar, "w-locking");
+          setReelChar(charSlots[i].reel, charSlots[i].finalChar, "w-locking", 1);
           await wait(30);
 
           // Keep other letters rolling briefly between each lock
@@ -2056,7 +2060,7 @@
             if (!isAlive()) return;
             charSlots.forEach((slot, j) => {
               if (!lockedSet.has(j)) {
-                setReelChar(slot.reel, getRandomSpinChar(1), "w-spinning");
+                setReelChar(slot.reel, getRandomSpinChar(1), "w-spinning", 0.92);
               }
             });
             await wait(60);
