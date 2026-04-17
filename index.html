@@ -2838,14 +2838,9 @@
     function renderThemePicker() {
       const list = document.getElementById("theme-list");
       if (!list) return;
-      const available = getAvailableThemesForDraw();
-      const uniqueAvailable = [...new Map(available.map(t => [t.id, t])).values()];
-      if (STATE.selectedTheme && !uniqueAvailable.some(theme => theme.id === STATE.selectedTheme)) {
-        STATE.selectedTheme = null;
-      }
       list.innerHTML = "";
 
-      uniqueAvailable.forEach(theme => {
+      DRAW_THEMES.forEach(theme => {
         const btn = document.createElement("button");
         btn.type = "button";
         btn.className = "theme-btn" + (STATE.selectedTheme === theme.id ? " active" : "");
