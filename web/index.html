@@ -679,15 +679,6 @@
             <button id="journal-btn" class="btn btn-secondary">Mon journal</button>
           </div>
 
-          <!-- Sélecteur de thème (caché par défaut) -->
-          <div id="theme-picker-box" class="draw-hidden">
-            <h3 style="font-size:0.95rem;font-weight:600;margin:0 0 8px 0;">Choisis un thème</h3>
-            <div id="theme-list" class="theme-list"></div>
-            <button id="btn-launch-themed-draw" class="btn btn-primary" style="margin-top:4px;">Lancer le tirage</button>
-            <button id="btn-random-theme-direct" class="btn btn-secondary" style="margin-top:6px;">Surprends-moi 🎲</button>
-            <button id="btn-cancel-theme-pick" class="btn btn-link" style="margin-top:2px;">← Retour</button>
-          </div>
-
           <div class="progress-section">
             <div class="micro">Ta jauge progression</div>
             <div class="progress-bar">
@@ -2790,52 +2781,8 @@
     // ===== Événements =====
     document.getElementById("admin-access-btn").addEventListener("click", openAdminAccess);
 
-    // "Je joue" ouvre le choix du mode de tirage
-    document.getElementById("start-btn").addEventListener("click", showDrawModeBox);
-
-    // Compat: anciens boutons éventuels (si présents)
-    const btnChooseTheme = document.getElementById("btn-choose-theme");
-    if (btnChooseTheme) {
-      btnChooseTheme.addEventListener("click", () => {
-        STATE.drawMode = "choose-theme";
-        STATE.selectedTheme = null;
-        renderThemePicker();
-      });
-    }
-
-    const btnRandomTheme = document.getElementById("btn-random-theme");
-    if (btnRandomTheme) {
-      btnRandomTheme.addEventListener("click", () => {
-        STATE.drawMode = "random-theme";
-        STATE.selectedTheme = null;
-        launchMissionDraw();
-      });
-    }
-
-    const btnRandomThemeDirect = document.getElementById("btn-random-theme-direct");
-    if (btnRandomThemeDirect) {
-      btnRandomThemeDirect.addEventListener("click", () => {
-        STATE.drawMode = "random-theme";
-        STATE.selectedTheme = null;
-        launchMissionDraw();
-      });
-    }
-
-    // "Lancer le tirage" après choix du thème
-    document.getElementById("btn-launch-themed-draw").addEventListener("click", () => {
-      if (!STATE.selectedTheme) {
-        Toast.warning("Choisis d'abord un thème.");
-        return;
-      }
-      launchMissionDraw();
-    });
-
-    // "← Retour" dans le picker de thème
-    document.getElementById("btn-cancel-theme-pick").addEventListener("click", () => {
-      document.getElementById("theme-picker-box").classList.add("draw-hidden");
-      STATE.drawMode = null;
-      STATE.selectedTheme = null;
-    });
+    // "Je joue" lance directement une mission
+    document.getElementById("start-btn").addEventListener("click", startGame);
 
     document.getElementById("journal-btn").addEventListener("click", () => showScreen("journal"));
     document.getElementById("validate-mission-btn").addEventListener("click", openValidation);
