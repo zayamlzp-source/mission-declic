@@ -2160,6 +2160,20 @@
     const adminThemeHealthYoga = document.getElementById("admin-theme-health-yoga");
     const adminPinInput = document.getElementById("admin-pin-input");
 
+    function dedupeMissionModeOptions() {
+      if (!missionModeSelect) return;
+      const seen = new Set();
+      [...missionModeSelect.options].forEach(opt => {
+        const key = (opt.value || "").trim();
+        if (!key) return;
+        if (seen.has(key)) {
+          opt.remove();
+          return;
+        }
+        seen.add(key);
+      });
+    }
+
     // ===== Navigation =====
     function openAdminAccess() {
       const entered = window.prompt("Code admin:");
@@ -2301,9 +2315,10 @@
     function renderThemePicker() {
       const list = document.getElementById("theme-list");
       const available = getAvailableThemesForDraw();
+      const uniqueAvailable = [...new Map(available.map(t => [t.id, t])).values()];
       list.innerHTML = "";
 
-      available.forEach(theme => {
+      uniqueAvailable.forEach(theme => {
         const btn = document.createElement("button");
         btn.className = "theme-btn" + (STATE.selectedTheme === theme.id ? " active" : "");
         btn.innerHTML = `<span class="theme-icon">${theme.icon}</span><span class="theme-label">${theme.label}</span>`;
@@ -2854,6 +2869,7 @@
       await bootstrapRemoteState();
       loadMissions();
       hydrateProfile();
+      dedupeMissionModeOptions();
       hydrateMissionMode();
       hydrateAdminSettingsForm();
       renderJournal();
