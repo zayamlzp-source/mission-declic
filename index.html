@@ -668,9 +668,15 @@
         .admin-tabs-nav {
           display: flex;
           gap: 0;
+          flex-wrap: nowrap;
           border-bottom: 2px solid var(--line);
           overflow-x: auto;
+          overflow-y: hidden;
+          position: sticky;
+          top: 64px;
+          z-index: 4;
           background: #f7f3eb;
+          box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
           padding: 0;
           margin: 0;
         }
@@ -870,6 +876,10 @@
             padding-right: 2px;
           }
 
+          .admin-tabs-nav {
+            top: 56px;
+          }
+
           .admin-theme-header {
             align-items: flex-start;
             flex-direction: column;
@@ -900,6 +910,10 @@
           .admin-toolbar {
             padding: 8px;
             margin-bottom: 8px;
+          }
+
+          .admin-tabs-nav {
+            top: 52px;
           }
 
           .admin-form-grid {
@@ -1336,29 +1350,29 @@
               <h3>Statistiques</h3>
               <div id="orga-summary" class="muted-list"></div>
             </div>
+
+            <div id="orga-stats" class="orga-grid"></div>
+
+            <div class="card stack">
+              <h3>Top missions</h3>
+              <div id="top-missions" class="muted-list"></div>
+            </div>
+
+            <div class="card stack">
+              <h3>Missions les mieux notées</h3>
+              <div id="top-rated" class="muted-list"></div>
+            </div>
+
+            <div class="card stack">
+              <h3>Enchaînements les plus fréquents</h3>
+              <div id="top-sequences" class="muted-list"></div>
+            </div>
+
+            <div class="card stack">
+              <h3>Messages orgas</h3>
+              <div id="orga-messages" class="muted-list"></div>
+            </div>
           </div>
-        </div>
-
-        <div id="orga-stats" class="orga-grid"></div>
-
-        <div class="card stack">
-          <h3>Top missions</h3>
-          <div id="top-missions" class="muted-list"></div>
-        </div>
-
-        <div class="card stack">
-          <h3>Missions les mieux notées</h3>
-          <div id="top-rated" class="muted-list"></div>
-        </div>
-
-        <div class="card stack">
-          <h3>Enchaînements les plus fréquents</h3>
-          <div id="top-sequences" class="muted-list"></div>
-        </div>
-
-        <div class="card stack">
-          <h3>Messages orgas</h3>
-          <div id="orga-messages" class="muted-list"></div>
         </div>
       </div>
     </section>
