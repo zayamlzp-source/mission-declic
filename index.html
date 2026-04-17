@@ -2269,6 +2269,40 @@
       }));
     }
 
+    function buildPoolMissions(startId) {
+      const raw = [
+        { c: "JOUE", l: 1, t: "Fais 2 longueurs tranquillement, focus sur la technique.", d: "Cherche la fluidité plutôt que la vitesse.", s: "Échauffe les épaules avant d'entrer dans l'eau.", a: "Observe ton souffle à la fin." },
+        { c: "RESSENS", l: 1, t: "Fais 1 minute de flottaison calme (sur le dos si possible).", d: "Laisse l'eau te porter et relâche les épaules.", s: "Choisis une zone calme du bassin.", a: "Note le niveau de détente ressenti." },
+        { c: "ENTRAÎNE", l: 2, t: "Propose à quelqu'un un mini défi aquatique de 2 minutes.", d: "Exemple: aller-retour en douceur, sans pression.", s: "Demande d'abord si la personne est partante.", a: "Garde un ton fun et bienveillant." },
+        { c: "JOUE", l: 2, t: "Traverse le bassin avec un style inventé.", d: "Ajoute une touche créative, sans te mettre en danger.", s: "Vérifie que l'espace est libre.", a: "Partage ton style avec un sourire." },
+        { c: "OSE", l: 3, t: "Demande à un inconnu son meilleur conseil nage.", d: "Lance un échange simple et respectueux.", s: "Choisis quelqu'un qui semble dispo.", a: "Teste son conseil sur 1 longueur." },
+        { c: "ENTRAÎNE", l: 3, t: "Fais 4 longueurs en rythme constant.", d: "Reste régulier du début à la fin.", s: "Trouve ton rythme avant de démarrer.", a: "Observe si la 4e longueur reste propre." },
+        { c: "JOUE", l: 4, t: "Crée une choré aquatique à 2 (20 secondes).", d: "Synchronisez 2 ou 3 mouvements simples.", s: "Choisissez des gestes faciles à répéter.", a: "Refaites-la une 2e fois plus fluide." },
+        { c: "RESSENS", l: 4, t: "Fais 3 cycles respiration: 4 secondes inspire / 6 secondes expire dans l'eau.", d: "Garde le contrôle, sans forcer l'apnée.", s: "Position stable au bord du bassin.", a: "Observe ton calme après l'exercice." },
+        { c: "LIEN", l: 4, t: "Apprends un mouvement de nage à quelqu'un (ou l'inverse).", d: "Transmission courte, claire, et positive.", s: "Concentrez-vous sur un seul point technique.", a: "Faites 1 essai immédiat." },
+        { c: "JOUE", l: 5, t: "Fais un relais improvisé avec 2 personnes.", d: "Une distance courte suffit, le but est l'énergie collective.", s: "Fixez une règle simple avant de partir.", a: "Célébrez la fin ensemble." },
+        { c: "ENTRAÎNE", l: 5, t: "Fais 6 longueurs avec 20 secondes de récupération max.", d: "Reste stable et gère ton effort.", s: "Commence modéré sur les 2 premières longueurs.", a: "Observe ta récupération cardiaque." },
+        { c: "OSE", l: 6, t: "Teste 1 longueur plus rapide que ton rythme habituel.", d: "Accélère proprement sans casser la technique.", s: "Garde de la marge sur la respiration.", a: "Compare avec ton rythme normal." },
+        { c: "JOUE", l: 6, t: "Fais une photo d'équipe aquatique originale.", d: "Position créative, sécurité d'abord.", s: "Vérifie que tout le monde est d'accord.", a: "Rejouez la meilleure pose." },
+        { c: "ENTRAÎNE", l: 7, t: "Enchaîne 8 longueurs avec allure progressive.", d: "Commence facile, finis plus tonique.", s: "Planifie ton intensité avant de partir.", a: "Note ta meilleure partie de série." },
+        { c: "OSE", l: 8, t: "Organise un mini challenge collectif piscine (3 min).", d: "Règle simple, fun, inclusive, sans pression.", s: "Annonce clairement début/fin et sécurité.", a: "Félicite tout le groupe à la fin." }
+      ];
+
+      return raw.map((r, i) => createMission({
+        id: startId + i,
+        text: r.t,
+        category: r.c,
+        level: r.l,
+        theme: "pool",
+        place: ["pool"],
+        tags: ["piscine", "aquatique"],
+        note: "piscine",
+        details: r.d,
+        setup: r.s,
+        after: r.a
+      }));
+    }
+
     const DEFAULT_MISSIONS = [
       createMission({ id: 1, text: "Va parler à quelqu'un que tu n'aurais pas abordé… et reste un vrai moment avec lui", category: "OSE", level: 3, tags: ["rencontre"] }),
       createMission({ id: 2, text: "Regarde quelqu'un dans les yeux et souris", category: "OSE", level: 1, tags: ["simple", "regard"] }),
@@ -2369,7 +2403,8 @@
       createMission({ id: 87, text: "Fais 5 minutes sans écran et observe simplement", category: "OSE", level: 2, theme: "health_mental", tags: ["santé", "mental"] }),
       createMission({ id: 88, text: "Écris une intention simple pour la suite de ta journée", category: "LIEN", level: 1, theme: "health_mental", tags: ["santé", "mental"] }),
       ...buildHealthMissions(89),
-      ...buildCommunityMissions(289)
+      ...buildCommunityMissions(289),
+      ...buildPoolMissions(500)
     ];
 
     let MISSIONS = [];
