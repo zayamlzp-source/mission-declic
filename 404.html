@@ -253,6 +253,28 @@
           margin-top: 8px;
         }
 
+        .home-admin-access {
+          display: flex;
+          justify-content: center;
+          margin-top: 8px;
+          opacity: 0.82;
+        }
+
+        .home-admin-access .btn {
+          font-size: 0.82rem;
+          padding: 8px 12px;
+          font-weight: 600;
+          background: rgba(255, 255, 255, 0.65);
+          border-color: rgba(0, 0, 0, 0.06);
+          box-shadow: none;
+          color: var(--muted);
+        }
+
+        .home-admin-access .btn:hover {
+          color: var(--text);
+          opacity: 1;
+        }
+
         .pill {
           display: inline-block;
           font-size: 0.8rem;
@@ -1061,8 +1083,6 @@
       </div>
       <div class="top-actions">
         <button id="install-btn" class="btn btn-secondary" style="display:none;">Installer l'app</button>
-        <button id="admin-access-btn" class="btn btn-secondary">Admin</button>
-        <button id="admin-recover-btn" class="btn btn-link">Code oublié ?</button>
         <button class="btn btn-link" data-go="home">Accueil</button>
         <button class="btn btn-link" data-go="suggest">Proposer</button>
       </div>
@@ -1070,6 +1090,14 @@
 
     <section id="screen-home" class="screen active">
       <div class="stack">
+        <div class="progress-section">
+          <div class="micro">Ta jauge progression</div>
+          <div class="progress-bar">
+            <div id="progress-bar-fill" class="progress-bar-fill" style="width: 0%;"></div>
+          </div>
+          <div id="progress-text" class="progress-text">0 mission validée</div>
+        </div>
+
         <div class="home-hero">
           <h1>Commence simplement. Le reste suivra.</h1>
           <p class="sub">Laisse-toi surprendre.</p>
@@ -1094,18 +1122,14 @@
             <button id="start-btn" class="btn btn-primary">Je joue</button>
             <button id="journal-btn" class="btn btn-secondary">Mon journal</button>
           </div>
-
-          <div class="progress-section">
-            <div class="micro">Ta jauge progression</div>
-            <div class="progress-bar">
-              <div id="progress-bar-fill" class="progress-bar-fill" style="width: 0%;"></div>
-            </div>
-            <div id="progress-text" class="progress-text">0 mission validée</div>
-          </div>
         </div>
 
         <div class="hint-box">
           Les photos peuvent rester <strong>juste pour toi</strong> ou être <strong>partagées avec les participants</strong> qui ont le lien du festival. Rien n'est partagé automatiquement.
+        </div>
+
+        <div class="home-admin-access">
+          <button id="admin-access-btn" class="btn btn-link" type="button">Espace admin</button>
         </div>
       </div>
     </section>
@@ -2841,9 +2865,15 @@
     // ===== Navigation =====
     function openAdminAccess() {
       const entered = window.prompt("Code admin:");
-      if (!entered) return;
+      if (!entered) {
+        const wantsRecovery = window.confirm("Code oublié ? Cliquer sur OK pour lancer la récupération par e-mail.");
+        if (wantsRecovery) recoverAdminPinByEmail();
+        return;
+      }
       if (entered !== getAdminPin()) {
         Toast.error("Code admin incorrect.");
+        const wantsRecovery = window.confirm("Code oublié ? Cliquer sur OK pour lancer la récupération par e-mail.");
+        if (wantsRecovery) recoverAdminPinByEmail();
         return;
       }
       hydrateAdminSettingsForm();
@@ -4044,7 +4074,6 @@
 
     // ===== Événements =====
     document.getElementById("admin-access-btn").addEventListener("click", openAdminAccess);
-    document.getElementById("admin-recover-btn").addEventListener("click", recoverAdminPinByEmail);
     if (clearThemeBtn) {
       clearThemeBtn.addEventListener("click", () => {
         STATE.selectedTheme = null;
