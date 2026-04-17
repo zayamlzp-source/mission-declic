@@ -1279,6 +1279,7 @@
 
               <div class="admin-grid">
                 <label class="check-row"><input id="admin-theme-festival" type="checkbox" /> Mission festi</label>
+                <label class="check-row"><input id="admin-theme-pool" type="checkbox" /> Piscine</label>
                 <label class="check-row"><input id="admin-theme-daily" type="checkbox" /> Vie quotidienne</label>
                 <label class="check-row"><input id="admin-theme-health-sport" type="checkbox" /> Santé sport</label>
                 <label class="check-row"><input id="admin-theme-health-mental" type="checkbox" /> Santé mental</label>
@@ -1341,6 +1342,7 @@
                   <label class="label" for="admin-mission-theme">Thème</label>
                   <select id="admin-mission-theme" class="select">
                     <option value="festival">Festival</option>
+                    <option value="pool">Piscine</option>
                     <option value="daily">Quotidien</option>
                     <option value="health_sport">Santé sport</option>
                     <option value="health_mental">Santé mental</option>
@@ -1478,11 +1480,12 @@
     ]);
     let remoteSyncTimer = null;
 
-    const THEME_KEYS = ["festival", "daily", "health_sport", "health_mental", "health_wellness", "health_breathing", "health_yoga"];
+    const THEME_KEYS = ["festival", "pool", "daily", "health_sport", "health_mental", "health_wellness", "health_breathing", "health_yoga"];
 
     // Thèmes affichés dans le sélecteur de tirage
     const DRAW_THEMES = [
       { id: "festival",         label: "Festival",    icon: "🎪" },
+      { id: "pool",             label: "Piscine",     icon: "🏊" },
       { id: "daily",            label: "Quotidien",   icon: "☀️" },
       { id: "health_sport",     label: "Sport",       icon: "💪" },
       { id: "health_mental",    label: "Mental",      icon: "🧠" },
@@ -1496,6 +1499,7 @@
         allowCommunityShare: true,
         enabledThemes: {
           festival: true,
+          pool: true,
           daily: true,
           health_sport: true,
           health_mental: true,
@@ -1513,6 +1517,7 @@
         allowCommunityShare: raw.allowCommunityShare !== false,
         enabledThemes: {
           festival: raw.enabledThemes?.festival ?? defaults.enabledThemes.festival,
+          pool: raw.enabledThemes?.pool ?? defaults.enabledThemes.pool,
           daily: raw.enabledThemes?.daily ?? defaults.enabledThemes.daily,
           health_sport: raw.enabledThemes?.health_sport ?? defaults.enabledThemes.health_sport,
           health_mental: raw.enabledThemes?.health_mental ?? defaults.enabledThemes.health_mental,
@@ -2758,6 +2763,7 @@
     const photoVisibilityLock = document.getElementById("photo-visibility-lock");
     const adminAllowCommunityShare = document.getElementById("admin-allow-community-share");
     const adminThemeFestival = document.getElementById("admin-theme-festival");
+    const adminThemePool = document.getElementById("admin-theme-pool");
     const adminThemeDaily = document.getElementById("admin-theme-daily");
     const adminThemeHealthSport = document.getElementById("admin-theme-health-sport");
     const adminThemeHealthMental = document.getElementById("admin-theme-health-mental");
@@ -2924,6 +2930,7 @@
       const settings = getAdminSettings();
       adminAllowCommunityShare.checked = settings.allowCommunityShare;
       adminThemeFestival.checked = !!settings.enabledThemes.festival;
+      adminThemePool.checked = !!settings.enabledThemes.pool;
       adminThemeDaily.checked = !!settings.enabledThemes.daily;
       adminThemeHealthSport.checked = !!settings.enabledThemes.health_sport;
       adminThemeHealthMental.checked = !!settings.enabledThemes.health_mental;
@@ -2937,6 +2944,7 @@
     function saveAdminSettingsFromForm() {
       const enabledThemes = {
         festival: !!adminThemeFestival.checked,
+        pool: !!adminThemePool.checked,
         daily: !!adminThemeDaily.checked,
         health_sport: !!adminThemeHealthSport.checked,
         health_mental: !!adminThemeHealthMental.checked,
