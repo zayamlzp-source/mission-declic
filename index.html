@@ -1582,6 +1582,119 @@
       }));
     }
 
+    function buildCommunityMissions(startId) {
+      const CATEGORY_MAP = {
+        social: "LIEN",
+        decale: "JOUE",
+        courage: "OSE",
+        photo: "JOUE",
+        creativite: "JOUE",
+        observation: "RESSENS",
+        entraide: "LIEN",
+        cooperation: "ENTRAÎNE",
+        mouvement: "ENTRAÎNE",
+        emotion: "RESSENS",
+        jeu: "JOUE",
+        introspection: "RESSENS"
+      };
+
+      const raw = [
+        { c: "social", l: 1, t: "Parler 2 minutes avec une personne inconnue", d: "Lance un échange simple, naturel et respectueux. Le but est d'oser le contact, pas de performer." },
+        { c: "social", l: 1, t: "Faire un compliment sincère à une personne", d: "Choisis quelque chose de vrai, simple et direct. Évite les compliments forcés ou flous." },
+        { c: "social", l: 2, t: "Demander à quelqu'un ce qui lui fait du bien en ce moment", d: "Pose la question avec douceur. Accueille la réponse sans chercher à la relancer à tout prix." },
+        { c: "social", l: 2, t: "Demander à une personne de te proposer une mini-mission", d: "Accepte une mission légère, faisable dans le moment. Si elle est irrespectueuse, refuse-la." },
+        { c: "social", l: 3, t: "Créer un échange vrai de 3 minutes avec une personne inconnue", d: "Vise un moment authentique, pas une discussion automatique. Le but est la qualité de présence." },
+        { c: "social", l: 3, t: "Dire à quelqu'un : \"Aujourd'hui j'essaie d'oser un peu plus\"", d: "Dis-le simplement, sans te justifier. Observe ce que ça change dans la relation." },
+
+        { c: "decale", l: 1, t: "Faire un chifoumi à distance avec un inconnu", d: "Cherche une interaction légère et drôle, sans insister si la personne ne suit pas." },
+        { c: "decale", l: 1, t: "Poser comme une statue à côté d'une vraie statue", d: "Prends la même posture et fais une photo si possible." },
+        { c: "decale", l: 2, t: "Présenter un lieu banal comme s'il était légendaire", d: "Parle pendant 20 à 30 secondes comme un guide passionné d'un endroit complètement ordinaire." },
+        { c: "decale", l: 2, t: "Inventer une fonction sacrée à un objet banal", d: "Choisis un objet simple et raconte à quoi il sert dans un monde imaginaire." },
+        { c: "decale", l: 3, t: "Poser une question absurde mais douce à un inconnu", d: "Exemple : \"Tu dirais que cette journée a quelle couleur ?\" Le ton doit rester léger et respectueux." },
+        { c: "decale", l: 3, t: "Faire semblant d'être guide touristique d'un lieu sans intérêt", d: "Crée une mini-présentation théâtrale et assumée, même très courte." },
+
+        { c: "courage", l: 1, t: "Demander de l'aide pour quelque chose de léger", d: "Choisis une petite demande simple, même si tu pourrais te débrouiller seul." },
+        { c: "courage", l: 1, t: "Dire non à une petite chose acceptée par automatisme", d: "Repère un réflexe d'acceptation et remplace-le par un non calme et clair." },
+        { c: "courage", l: 2, t: "Oser proposer un mini-jeu à quelqu'un", d: "Propose un chifoumi, un mime ou un défi de 10 secondes. N'insiste pas en cas de refus." },
+        { c: "courage", l: 2, t: "Dire une vérité simple sur ton état du moment", d: "Exemple : \"Je suis un peu stressé mais je le fais quand même.\"" },
+        { c: "courage", l: 3, t: "Chanter 20 secondes dans un lieu public", d: "Le but n'est pas de bien chanter, mais de traverser un petit inconfort." },
+        { c: "courage", l: 3, t: "Demander quelque chose que tu n'oses pas demander d'habitude", d: "Reste dans quelque chose de respectueux, simple et sans pression." },
+
+        { c: "photo", l: 1, t: "Photographier 3 détails beaux dans un lieu banal", d: "Cherche des textures, lumières, couleurs ou formes inattendues." },
+        { c: "photo", l: 1, t: "Faire une photo drôle avec une statue", d: "Interagis avec la statue comme si elle faisait partie de la scène." },
+        { c: "photo", l: 2, t: "Créer une photo qui raconte une mini-histoire", d: "Une seule image, mais avec une intention claire, comme une scène de film." },
+        { c: "photo", l: 2, t: "Faire une photo avant/après d'un lieu ou d'un objet", d: "Montre une transformation, un contraste ou un changement de regard." },
+        { c: "photo", l: 3, t: "Faire une photo avec le plus de monde possible dans un espace exigu", d: "Cherche l'effet de groupe, le défi logistique et l'humour visuel." },
+        { c: "photo", l: 3, t: "Faire une photo collective improvisée avec des inconnus volontaires", d: "Propose une pose simple et ludique. Le consentement est indispensable." },
+
+        { c: "creativite", l: 1, t: "Donner un nouveau nom poétique à un lieu", d: "Choisis une rue, un coin ou un banc et rebaptise-le selon ce qu'il t'inspire." },
+        { c: "creativite", l: 1, t: "Inventer une micro-histoire à partir d'un objet", d: "L'histoire peut durer 20 secondes. Va à l'essentiel." },
+        { c: "creativite", l: 2, t: "Écrire une phrase mystérieuse et la donner à quelqu'un", d: "La phrase doit intriguer ou faire sourire, pas mettre mal à l'aise." },
+        { c: "creativite", l: 2, t: "Créer une mission pour un inconnu", d: "Invente une petite mission drôle, faisable et respectueuse." },
+        { c: "creativite", l: 3, t: "Transformer une situation banale en scène de film", d: "Ajoute un ton dramatique, épique ou absurde à ce que tu es en train de vivre." },
+        { c: "creativite", l: 3, t: "Raconter une micro-histoire en moins de 30 secondes à quelqu'un", d: "L'objectif est d'oser créer sur le vif, sans préparer." },
+
+        { c: "observation", l: 1, t: "Trouver 5 détails que personne ne regarde d'habitude", d: "Observe les coins, textures, reflets, sons ou petits signes autour de toi." },
+        { c: "observation", l: 1, t: "Repérer un détail drôle dans un environnement sérieux", d: "Cherche ce qui crée un léger décalage." },
+        { c: "observation", l: 2, t: "Observer un lieu 10 minutes sans téléphone", d: "Ne cherche rien de spécial au début. Laisse émerger ce que tu remarques." },
+        { c: "observation", l: 2, t: "Trouver 3 choses belles dans un lieu que tu trouves moche", d: "Le but est de déplacer ton regard." },
+        { c: "observation", l: 3, t: "Repérer une énergie différente chez 3 personnes", d: "Observe les rythmes, postures ou présences, sans juger." },
+        { c: "observation", l: 3, t: "Identifier le coin le plus apaisant d'un lieu public", d: "Appuie-toi sur ce que tu ressens réellement, pas seulement sur l'apparence." },
+
+        { c: "entraide", l: 1, t: "Dire merci d'une façon inhabituelle mais sincère", d: "Sois précis, humain et concret." },
+        { c: "entraide", l: 1, t: "Laisser un mot positif à quelqu'un", d: "Le mot peut être anonyme ou direct, mais il doit être simple et vrai." },
+        { c: "entraide", l: 2, t: "Rendre un petit service sans qu'on te le demande", d: "Choisis quelque chose d'utile et discret." },
+        { c: "entraide", l: 2, t: "Proposer ton aide une fois, sans insister", d: "Laisse l'autre libre d'accepter ou non." },
+        { c: "entraide", l: 3, t: "Faire quelque chose de gentil anonymement", d: "Ne cherche pas à être vu ni remercié." },
+        { c: "entraide", l: 3, t: "Offrir un vrai moment d'écoute de 2 minutes", d: "Ne coupe pas, ne conseille pas tout de suite, sois juste présent." },
+
+        { c: "cooperation", l: 1, t: "Faire deviner une émotion sans parler", d: "Utilise uniquement ton corps, ton visage ou ta posture." },
+        { c: "cooperation", l: 1, t: "Construire une mini-histoire à plusieurs, chacun un mot", d: "Laisse la logique émerger du groupe." },
+        { c: "cooperation", l: 2, t: "Réussir une mission à deux sans parler", d: "Choisis une action courte qui demande un minimum de coordination." },
+        { c: "cooperation", l: 2, t: "Faire une photo collective absurde", d: "Chacun ajoute un détail ou une posture pour enrichir la scène." },
+        { c: "cooperation", l: 3, t: "Faire un mini-défi de coordination avec un inconnu volontaire", d: "Exemple : reproduire un geste en miroir ou réussir une action synchronisée." },
+        { c: "cooperation", l: 3, t: "Créer une chaîne de 3 personnes pour accomplir une tâche", d: "Le défi doit rester simple, court et compréhensible." },
+
+        { c: "mouvement", l: 1, t: "Faire une pause statue de 10 secondes à trois endroits", d: "Choisis des lieux différents et tiens la pose sans surjouer." },
+        { c: "mouvement", l: 1, t: "Inventer un mini-rituel gestuel de victoire", d: "Crée un geste court que tu pourras réutiliser plus tard." },
+        { c: "mouvement", l: 2, t: "Traverser un lieu avec une démarche imposée", d: "Exemple : démarche royale, discrète, ralentie ou ultra-déterminée." },
+        { c: "mouvement", l: 2, t: "Mimer une émotion uniquement avec le corps", d: "Pas de parole, pas d'explication." },
+        { c: "mouvement", l: 3, t: "Marcher comme si le sol changeait de matière", d: "Passe du sable imaginaire à la glace, puis à la boue ou au ressort." },
+        { c: "mouvement", l: 3, t: "Faire un salut théâtral à un lieu ou un objet", d: "Assume le geste quelques secondes, puis repars normalement." },
+
+        { c: "emotion", l: 1, t: "Décrire ton humeur avec une couleur", d: "Choisis une couleur qui te ressemble aujourd'hui et explique-la si besoin." },
+        { c: "emotion", l: 1, t: "Dire ce qui te met en joie aujourd'hui", d: "Reste concret et simple." },
+        { c: "emotion", l: 2, t: "Dire ce que tu aimerais oser plus souvent", d: "Choisis une personne ou note-le à voix haute pour toi." },
+        { c: "emotion", l: 2, t: "Partager une peur légère avec quelqu'un", d: "Pas besoin d'aller dans l'intime profond. Le but est l'authenticité." },
+        { c: "emotion", l: 3, t: "Demander à quelqu'un ce qui le touche en ce moment", d: "Pose la question avec douceur et respecte son envie ou non de répondre." },
+        { c: "emotion", l: 3, t: "Dire : \"Là, je suis un peu stressé mais je le fais quand même\"", d: "Nommer ce qui est là peut déjà changer la mission." },
+
+        { c: "jeu", l: 1, t: "Faire un chifoumi collectif", d: "Lance le jeu avec quelques personnes prêtes à participer." },
+        { c: "jeu", l: 1, t: "Proposer un mime minute", d: "Choisis une règle simple et rapide." },
+        { c: "jeu", l: 2, t: "Faire un défi chrono de 30 secondes", d: "Le défi doit être compréhensible instantanément." },
+        { c: "jeu", l: 2, t: "Créer une règle absurde pour un jeu existant", d: "Modifie un détail du jeu pour le rendre plus drôle ou plus étrange." },
+        { c: "jeu", l: 3, t: "Organiser un mini-jeu express avec 2 ou 3 personnes", d: "Tu dois lancer le cadre, expliquer vite, puis faire jouer." },
+        { c: "jeu", l: 3, t: "Transformer un espace en terrain de jeu symbolique", d: "Définis des zones, une règle et un objectif en moins d'une minute." },
+
+        { c: "introspection", l: 1, t: "Écrire 10 rêves sans autocensure", d: "N'essaie pas d'être réaliste. Laisse venir." },
+        { c: "introspection", l: 1, t: "T'asseoir 10 minutes sans téléphone", d: "Observe ce qui monte en toi sans chercher à l'effacer." },
+        { c: "introspection", l: 2, t: "Noter 3 choses que tu évites trop souvent", d: "Va au concret. Pas besoin de faire une grande analyse." },
+        { c: "introspection", l: 2, t: "Faire une action seul que tu attends toujours de faire avec d'autres", d: "Choisis quelque chose de simple mais symbolique." },
+        { c: "introspection", l: 3, t: "Écrire une promesse simple à toi-même", d: "Formule-la de façon claire, réaliste et engageante." },
+        { c: "introspection", l: 3, t: "Noter ce que cette journée te raconte sur toi", d: "Cherche une phrase simple, pas un texte long." }
+      ];
+
+      return raw.map((r, i) => createMission({
+        id: startId + i,
+        text: r.t,
+        category: CATEGORY_MAP[r.c] || "JOUE",
+        level: r.l,
+        theme: "festival",
+        tags: ["communauté", r.c],
+        details: r.d
+      }));
+    }
+
     const DEFAULT_MISSIONS = [
       createMission({ id: 1, text: "Va parler à quelqu'un que tu n'aurais pas abordé… et reste un vrai moment avec lui", category: "OSE", level: 3, tags: ["rencontre"] }),
       createMission({ id: 2, text: "Regarde quelqu'un dans les yeux et souris", category: "OSE", level: 1, tags: ["simple", "regard"] }),
@@ -1681,7 +1794,8 @@
       createMission({ id: 86, text: "Note 3 choses positives de ta journée", category: "RESSENS", level: 1, theme: "health_mental", tags: ["santé", "mental"] }),
       createMission({ id: 87, text: "Fais 5 minutes sans écran et observe simplement", category: "OSE", level: 2, theme: "health_mental", tags: ["santé", "mental"] }),
       createMission({ id: 88, text: "Écris une intention simple pour la suite de ta journée", category: "LIEN", level: 1, theme: "health_mental", tags: ["santé", "mental"] }),
-      ...buildHealthMissions(89)
+      ...buildHealthMissions(89),
+      ...buildCommunityMissions(289)
     ];
 
     let MISSIONS = [];
