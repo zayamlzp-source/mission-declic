@@ -3724,6 +3724,12 @@
       const tabBtns = document.querySelectorAll(".admin-tab-btn");
       const tabContents = document.querySelectorAll(".admin-tab-content");
 
+      // Set first tab as active by default
+      if (tabBtns.length > 0) {
+        tabBtns[0].classList.add("active");
+        if (tabContents.length > 0) tabContents[0].classList.add("active");
+      }
+
       tabBtns.forEach(btn => {
         btn.addEventListener("click", (e) => {
           e.preventDefault();
