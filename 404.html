@@ -663,11 +663,13 @@
           border-radius: 16px;
           background: #fff;
           overflow: hidden;
+          border: 1px solid var(--line);
+          box-shadow: 0 10px 24px rgba(30, 20, 10, 0.06);
         }
 
         .admin-tabs-nav {
           display: flex;
-          gap: 0;
+          gap: 6px;
           flex-wrap: nowrap;
           border-bottom: 2px solid var(--line);
           overflow-x: auto;
@@ -675,38 +677,65 @@
           position: sticky;
           top: 64px;
           z-index: 4;
-          background: #f7f3eb;
+          background: linear-gradient(180deg, #fbf7ef 0%, #f6efdf 100%);
           box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-          padding: 0;
+          padding: 8px;
           margin: 0;
         }
 
         .admin-tab-btn {
-          flex: 1 1 auto;
+          flex: 0 0 auto;
           min-width: 120px;
-          padding: 12px 14px;
-          border: none;
-          background: transparent;
+          padding: 11px 14px;
+          border: 1px solid rgba(0, 0, 0, 0.05);
+          border-radius: 12px;
+          background: rgba(255, 255, 255, 0.85);
           color: var(--muted);
           font-size: 0.9rem;
           font-weight: 600;
           cursor: pointer;
           position: relative;
           white-space: nowrap;
-          transition: color 0.2s, background 0.2s;
-          border-bottom: 3px solid transparent;
-          margin-bottom: -2px;
+          transition: transform 0.16s ease, color 0.2s, background 0.2s, box-shadow 0.2s;
+          box-shadow: 0 1px 0 rgba(0, 0, 0, 0.04);
         }
 
         .admin-tab-btn:hover {
-          background: rgba(122, 143, 111, 0.05);
+          background: #ffffff;
           color: var(--text);
+          transform: translateY(-1px);
+          box-shadow: 0 6px 14px rgba(32, 18, 9, 0.08);
         }
 
         .admin-tab-btn.active {
-          color: var(--accent);
-          border-bottom-color: var(--accent);
-          background: transparent;
+          color: #2a4a2a;
+          border-color: rgba(122, 143, 111, 0.35);
+          background: linear-gradient(180deg, #eef7e8 0%, #e7f1df 100%);
+          box-shadow: 0 8px 16px rgba(122, 143, 111, 0.18);
+        }
+
+        .admin-tab-btn.is-dragging {
+          opacity: 0.7;
+          transform: scale(0.98);
+          box-shadow: 0 10px 18px rgba(0, 0, 0, 0.15);
+        }
+
+        .admin-tabs-controls {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          gap: 10px;
+          padding: 8px 12px;
+          border-bottom: 1px solid var(--line);
+          background: #fff;
+        }
+
+        .admin-tabs-controls .micro {
+          color: var(--muted);
+        }
+
+        .admin-tabs-controls .btn {
+          white-space: nowrap;
         }
 
         .admin-tab-content {
@@ -901,6 +930,11 @@
             font-size: 0.85rem;
           }
 
+          .admin-tabs-nav {
+            gap: 5px;
+            padding: 7px;
+          }
+
           .admin-tab-content {
             padding: 16px;
           }
@@ -914,6 +948,11 @@
 
           .admin-tabs-nav {
             top: 52px;
+          }
+
+          .admin-tabs-controls {
+            flex-direction: column;
+            align-items: flex-start;
           }
 
           .admin-form-grid {
@@ -1224,6 +1263,11 @@
             <button class="admin-tab-btn" data-tab="stats">📊 Statistiques</button>
           </div>
 
+          <div class="admin-tabs-controls">
+            <div class="micro">Astuce: glisse-dépose les onglets pour changer leur ordre.</div>
+            <button id="admin-reset-tab-order-btn" class="btn btn-link" type="button">Réinitialiser l'ordre</button>
+          </div>
+
           <!-- TAB: RÉGLAGES -->
           <div class="admin-tab-content active" id="tab-settings">
             <div class="card stack">
@@ -1420,7 +1464,8 @@
       adminSettings: "festival_admin_settings",
       missionMode: "festival_mission_mode",
       adminPin: "festival_admin_pin",
-      adminRecoveryEmail: "festival_admin_recovery_email"
+      adminRecoveryEmail: "festival_admin_recovery_email",
+      adminTabOrder: "festival_admin_tab_order"
     };
 
     const DEFAULT_ADMIN_PIN = "7777";
@@ -3734,31 +3779,119 @@
       return Object.entries(map).sort((a, b) => b[1] - a[1]);
     }
 
-    function initAdminTabs() {
+    function setActiveAdminTab(tabName) {
       const tabBtns = document.querySelectorAll(".admin-tab-btn");
       const tabContents = document.querySelectorAll(".admin-tab-content");
+      tabBtns.forEach(btn => btn.classList.toggle("active", btn.getAttribute("data-tab") === tabName));
+      tabContents.forEach(content => content.classList.toggle("active", content.id === `tab-${tabName}`));
+    }
 
-      // Set first tab as active by default
-      if (tabBtns.length > 0) {
-        tabBtns[0].classList.add("active");
-        if (tabContents.length > 0) tabContents[0].classList.add("active");
+    function saveAdminTabOrder(nav) {
+      const order = [...nav.querySelectorAll(".admin-tab-btn")].map(btn => btn.getAttribute("data-tab"));
+      saveJSON(STORAGE_KEYS.adminTabOrder, order);
+    }
+
+    function applySavedAdminTabOrder(nav) {
+      const saved = loadJSON(STORAGE_KEYS.adminTabOrder, null);
+      if (!Array.isArray(saved) || !saved.length) return;
+
+      const btnById = new Map(
+        [...nav.querySelectorAll(".admin-tab-btn")].map(btn => [btn.getAttribute("data-tab"), btn])
+      );
+      const contentById = new Map(
+        [...document.querySelectorAll(".admin-tab-content")].map(panel => [panel.id.replace("tab-", ""), panel])
+      );
+
+      const normalized = saved.filter(id => btnById.has(id));
+      btnById.forEach((_, id) => {
+        if (!normalized.includes(id)) normalized.push(id);
+      });
+
+      normalized.forEach(id => {
+        const btn = btnById.get(id);
+        const panel = contentById.get(id);
+        if (btn) nav.appendChild(btn);
+        if (panel && panel.parentElement) panel.parentElement.appendChild(panel);
+      });
+    }
+
+    function initAdminTabReorder(nav) {
+      let draggedBtn = null;
+
+      function getDropTarget(event) {
+        return event.target.closest(".admin-tab-btn");
       }
+
+      function attachDragHandlers(btn) {
+        btn.draggable = true;
+        btn.title = "Glisser-déposer pour réordonner";
+
+        btn.addEventListener("dragstart", () => {
+          draggedBtn = btn;
+          btn.classList.add("is-dragging");
+        });
+
+        btn.addEventListener("dragend", () => {
+          btn.classList.remove("is-dragging");
+          draggedBtn = null;
+          saveAdminTabOrder(nav);
+        });
+      }
+
+      [...nav.querySelectorAll(".admin-tab-btn")].forEach(attachDragHandlers);
+
+      nav.addEventListener("dragover", (event) => {
+        if (!draggedBtn) return;
+        event.preventDefault();
+        const target = getDropTarget(event);
+        if (!target || target === draggedBtn) return;
+
+        const rect = target.getBoundingClientRect();
+        const shouldInsertBefore = event.clientX < rect.left + rect.width / 2;
+        if (shouldInsertBefore) {
+          nav.insertBefore(draggedBtn, target);
+        } else {
+          nav.insertBefore(draggedBtn, target.nextElementSibling);
+        }
+      });
+    }
+
+    function initAdminTabs() {
+      const nav = document.querySelector(".admin-tabs-nav");
+      if (!nav) return;
+
+      applySavedAdminTabOrder(nav);
+      initAdminTabReorder(nav);
+
+      const tabBtns = [...nav.querySelectorAll(".admin-tab-btn")];
+      const activeBtn = tabBtns.find(btn => btn.classList.contains("active"));
+      const activeTab = activeBtn?.getAttribute("data-tab") || tabBtns[0]?.getAttribute("data-tab");
+      if (activeTab) setActiveAdminTab(activeTab);
 
       tabBtns.forEach(btn => {
         btn.addEventListener("click", (e) => {
           e.preventDefault();
           const tabName = btn.getAttribute("data-tab");
-          
-          // Remove active from all buttons and contents
-          tabBtns.forEach(b => b.classList.remove("active"));
-          tabContents.forEach(c => c.classList.remove("active"));
-          
-          // Add active to clicked button and corresponding content
-          btn.classList.add("active");
-          const tabContent = document.getElementById(`tab-${tabName}`);
-          if (tabContent) tabContent.classList.add("active");
+          if (!tabName) return;
+          setActiveAdminTab(tabName);
         });
       });
+
+      const resetBtn = document.getElementById("admin-reset-tab-order-btn");
+      if (resetBtn) {
+        resetBtn.addEventListener("click", () => {
+          localStorage.removeItem(STORAGE_KEYS.adminTabOrder);
+          const defaultOrder = ["settings", "missions", "moderation", "suggestions", "stats"];
+          defaultOrder.forEach(id => {
+            const btn = nav.querySelector(`.admin-tab-btn[data-tab="${id}"]`);
+            const panel = document.getElementById(`tab-${id}`);
+            if (btn) nav.appendChild(btn);
+            if (panel && panel.parentElement) panel.parentElement.appendChild(panel);
+          });
+          setActiveAdminTab("settings");
+          Toast.info("Ordre des onglets réinitialisé.");
+        });
+      }
     }
 
     function renderOrga() {
