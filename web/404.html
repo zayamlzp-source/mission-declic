@@ -548,6 +548,65 @@
           background: #fff;
         }
 
+        .admin-form-grid {
+          display: grid;
+          gap: 10px;
+          grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+        }
+
+        .admin-list {
+          display: grid;
+          gap: 10px;
+        }
+
+        .admin-item {
+          display: grid;
+          gap: 10px;
+          padding: 12px;
+          border: 1px solid var(--line);
+          border-radius: 14px;
+          background: #fff;
+        }
+
+        .admin-item-top {
+          display: flex;
+          gap: 12px;
+          align-items: flex-start;
+        }
+
+        .admin-item-main {
+          flex: 1;
+          min-width: 0;
+        }
+
+        .admin-item-actions {
+          display: flex;
+          gap: 8px;
+          flex-wrap: wrap;
+        }
+
+        .admin-thumb {
+          width: 72px;
+          height: 72px;
+          object-fit: cover;
+          border-radius: 12px;
+          border: 1px solid var(--line);
+          background: var(--soft);
+          flex: 0 0 auto;
+        }
+
+        .status-badge {
+          display: inline-flex;
+          align-items: center;
+          gap: 6px;
+          padding: 4px 8px;
+          border-radius: 999px;
+          background: var(--soft);
+          border: 1px solid var(--line);
+          font-size: 0.78rem;
+          color: var(--muted);
+        }
+
         /* ===== Draw / Tirage ===== */
         .draw-hidden { display: none !important; }
 
@@ -656,6 +715,7 @@
       <div class="top-actions">
         <button id="install-btn" class="btn btn-secondary" style="display:none;">Installer l'app</button>
         <button id="admin-access-btn" class="btn btn-secondary">Admin</button>
+        <button id="admin-recover-btn" class="btn btn-link">Code oublié ?</button>
         <button class="btn btn-link" data-go="home">Accueil</button>
         <button class="btn btn-link" data-go="suggest">Proposer</button>
       </div>
@@ -859,9 +919,87 @@
             <input id="admin-pin-input" class="input" type="password" maxlength="24" placeholder="Nouveau code" />
           </div>
 
+          <div>
+            <label class="label" for="admin-recovery-email-input">E-mail de récupération <span class="micro">(code envoyé par mail via Supabase)</span></label>
+            <input id="admin-recovery-email-input" class="input" type="email" maxlength="120" placeholder="nom@exemple.com" />
+          </div>
+
           <div class="row">
             <button id="admin-save-settings-btn" class="btn btn-primary">Enregistrer réglages</button>
           </div>
+        </div>
+
+        <div class="card stack">
+          <h3>Modération photos</h3>
+          <p class="sub">Valider, refuser ou repasser en privé les photos partagées par les participants.</p>
+          <div id="admin-photo-review-list" class="admin-list"></div>
+        </div>
+
+        <div class="card stack">
+          <h3>Gestion des missions</h3>
+          <div class="admin-form-grid">
+            <div style="grid-column: 1 / -1;">
+              <label class="label" for="admin-mission-text">Mission</label>
+              <textarea id="admin-mission-text" class="textarea" placeholder="Texte de la mission..."></textarea>
+            </div>
+            <div>
+              <label class="label" for="admin-mission-category">Catégorie</label>
+              <select id="admin-mission-category" class="select">
+                <option value="OSE">OSE</option>
+                <option value="ENTRAÎNE">ENTRAÎNE</option>
+                <option value="RESSENS">RESSENS</option>
+                <option value="LIEN">LIEN</option>
+                <option value="JOUE">JOUE</option>
+              </select>
+            </div>
+            <div>
+              <label class="label" for="admin-mission-level">Niveau</label>
+              <select id="admin-mission-level" class="select">
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+                <option value="6">6</option>
+                <option value="7">7</option>
+                <option value="8">8</option>
+                <option value="9">9</option>
+                <option value="10">10</option>
+              </select>
+            </div>
+            <div>
+              <label class="label" for="admin-mission-theme">Thème</label>
+              <select id="admin-mission-theme" class="select">
+                <option value="festival">Festival</option>
+                <option value="daily">Quotidien</option>
+                <option value="health_sport">Santé sport</option>
+                <option value="health_mental">Santé mental</option>
+                <option value="health_wellness">Bien-être</option>
+                <option value="health_breathing">Respiration</option>
+                <option value="health_yoga">Yoga</option>
+              </select>
+            </div>
+            <div style="grid-column: 1 / -1;">
+              <label class="label" for="admin-mission-note">Note interne <span class="micro">(facultatif)</span></label>
+              <input id="admin-mission-note" class="input" type="text" placeholder="Ex. mission ajoutée par l'orga" />
+            </div>
+          </div>
+          <div class="row">
+            <button id="admin-save-mission-btn" class="btn btn-primary">Ajouter la mission</button>
+            <button id="admin-cancel-mission-edit-btn" class="btn btn-secondary">Annuler l'édition</button>
+            <button id="admin-reset-missions-btn" class="btn btn-secondary">Réinitialiser les missions par défaut</button>
+          </div>
+          <div>
+            <label class="label" for="admin-mission-search">Rechercher une mission</label>
+            <input id="admin-mission-search" class="input" type="text" placeholder="Texte, thème, catégorie..." />
+          </div>
+          <div id="admin-missions-list" class="admin-list"></div>
+        </div>
+
+        <div class="card stack">
+          <h3>Propositions à traiter</h3>
+          <p class="sub">Transformer une suggestion en mission active ou la refuser.</p>
+          <div id="admin-suggestions-review-list" class="admin-list"></div>
         </div>
 
         <div class="card stack">
@@ -935,8 +1073,12 @@
       backendConfig: "festival_backend_config",
       adminSettings: "festival_admin_settings",
       missionMode: "festival_mission_mode",
-      adminPin: "festival_admin_pin"
+      adminPin: "festival_admin_pin",
+      adminRecoveryEmail: "festival_admin_recovery_email"
     };
+
+    const DEFAULT_ADMIN_PIN = "7777";
+    const DEFAULT_ADMIN_RECOVERY_EMAIL = "l5ddlm@hotmail.com";
 
     const REMOTE_SYNC_KEYS = new Set([
       STORAGE_KEYS.missions,
@@ -995,11 +1137,19 @@
     }
 
     function getAdminPin() {
-      return localStorage.getItem(STORAGE_KEYS.adminPin) || "2026";
+      return localStorage.getItem(STORAGE_KEYS.adminPin) || DEFAULT_ADMIN_PIN;
     }
 
     function setAdminPin(value) {
       localStorage.setItem(STORAGE_KEYS.adminPin, value);
+    }
+
+    function getAdminRecoveryEmail() {
+      return localStorage.getItem(STORAGE_KEYS.adminRecoveryEmail) || DEFAULT_ADMIN_RECOVERY_EMAIL;
+    }
+
+    function setAdminRecoveryEmail(value) {
+      localStorage.setItem(STORAGE_KEYS.adminRecoveryEmail, value);
     }
 
     function getMissionMode() {
@@ -1046,7 +1196,6 @@
 
     function resetMissions() {
       saveMissions(DEFAULT_MISSIONS.map(m => ({ ...m })));
-      Toast.success("Missions réinitialisées.");
     }
 
     function addMissionToList({ text, category, level, note }) {
@@ -1110,6 +1259,50 @@
         apikey: config.supabaseAnonKey,
         Authorization: `Bearer ${config.supabaseAnonKey}`
       };
+    }
+
+    async function supabaseAuthRequest(path, body, config = getBackendConfig()) {
+      if (!isSupabaseEnabled(config)) {
+        throw new Error("Supabase n'est pas configuré sur cet appareil.");
+      }
+
+      const url = `${config.supabaseUrl.replace(/\/$/, "")}/auth/v1/${path}`;
+      const response = await fetch(url, {
+        method: "POST",
+        headers: supabaseHeaders(config),
+        body: JSON.stringify(body)
+      });
+
+      if (response.ok) {
+        const text = await response.text();
+        return text ? JSON.parse(text) : null;
+      }
+
+      let message = `Erreur auth (${response.status})`;
+      try {
+        const payload = await response.json();
+        message = payload.error_description || payload.msg || payload.message || message;
+      } catch (error) {
+        const text = await response.text();
+        if (text) message = text;
+      }
+      throw new Error(message);
+    }
+
+    async function requestAdminRecoveryOtp(email) {
+      return supabaseAuthRequest("otp", {
+        email,
+        create_user: true,
+        data: { role: "admin_recovery" }
+      });
+    }
+
+    async function verifyAdminRecoveryOtp(email, token) {
+      return supabaseAuthRequest("verify", {
+        email,
+        token,
+        type: "email"
+      });
     }
 
     async function pullRemoteState() {
@@ -1844,11 +2037,22 @@
 
     // ===== Résultats =====
     function getResults() {
-      return loadJSON(STORAGE_KEYS.results, []);
+      return loadJSON(STORAGE_KEYS.results, []).map(normalizeResultRecord);
     }
 
     function saveResults(results) {
-      return saveJSON(STORAGE_KEYS.results, results);
+      return saveJSON(STORAGE_KEYS.results, results.map(normalizeResultRecord));
+    }
+
+    function normalizeResultRecord(result) {
+      const normalized = { ...result };
+      normalized.visibility = normalized.visibility || "private";
+      if (!normalized.photoUrl) {
+        normalized.reviewStatus = "none";
+      } else if (!normalized.reviewStatus) {
+        normalized.reviewStatus = normalized.visibility === "participants" ? "approved" : "private";
+      }
+      return normalized;
     }
 
     function createMissionResult({
@@ -1858,6 +2062,7 @@
       status = "done",
       photoUrl = "",
       visibility = "private",
+      reviewStatus = null,
       orgaMessage = "",
       rating = null,
       displayName = "",
@@ -1871,6 +2076,7 @@
         status,
         photoUrl,
         visibility,
+        reviewStatus: reviewStatus || (photoUrl ? (visibility === "participants" ? "pending" : "private") : "none"),
         orgaMessage,
         rating,
         displayName,
@@ -1890,6 +2096,15 @@
       const item = results.find(r => r.id === resultId);
       if (!item) return null;
       item.rating = rating;
+      saveResults(results);
+      return item;
+    }
+
+    function updateResultReview(resultId, updates) {
+      const results = getResults();
+      const item = results.find(r => r.id === resultId);
+      if (!item) return null;
+      Object.assign(item, updates, { adminReviewedAt: nowIso() });
       saveResults(results);
       return item;
     }
@@ -1918,6 +2133,16 @@
     function saveSuggestion(item) {
       const suggestions = getSuggestions();
       suggestions.push(item);
+      saveSuggestions(suggestions);
+      return item;
+    }
+
+    function updateSuggestionStatus(id, status) {
+      const suggestions = getSuggestions();
+      const item = suggestions.find(s => s.id === id);
+      if (!item) return null;
+      item.status = status;
+      item.updatedAt = nowIso();
       saveSuggestions(suggestions);
       return item;
     }
@@ -1998,7 +2223,11 @@
     }
 
     function countSharedPhotos(results) {
-      return results.filter(r => !!r.photoUrl && r.visibility === "participants").length;
+      return results.filter(r => !!r.photoUrl && r.visibility === "participants" && r.reviewStatus === "approved").length;
+    }
+
+    function countPendingPhotos(results) {
+      return results.filter(r => !!r.photoUrl && r.visibility === "participants" && r.reviewStatus === "pending").length;
     }
 
     function countOrgaMessages(results) {
@@ -2079,7 +2308,8 @@
       currentMission: null,
       currentPhotoDataUrl: "",
       drawMode: null,        // "choose-theme" | "random-theme"
-      selectedTheme: null    // thème choisi par l'utilisateur
+      selectedTheme: null,   // thème choisi par l'utilisateur
+      adminEditingMissionId: null
     };
 
     // ===== DOM =====
@@ -2127,6 +2357,19 @@
     const adminThemeHealthBreathing = document.getElementById("admin-theme-health-breathing");
     const adminThemeHealthYoga = document.getElementById("admin-theme-health-yoga");
     const adminPinInput = document.getElementById("admin-pin-input");
+    const adminRecoveryEmailInput = document.getElementById("admin-recovery-email-input");
+    const adminPhotoReviewList = document.getElementById("admin-photo-review-list");
+    const adminMissionText = document.getElementById("admin-mission-text");
+    const adminMissionCategory = document.getElementById("admin-mission-category");
+    const adminMissionLevel = document.getElementById("admin-mission-level");
+    const adminMissionTheme = document.getElementById("admin-mission-theme");
+    const adminMissionNote = document.getElementById("admin-mission-note");
+    const adminSaveMissionBtn = document.getElementById("admin-save-mission-btn");
+    const adminCancelMissionEditBtn = document.getElementById("admin-cancel-mission-edit-btn");
+    const adminResetMissionsBtn = document.getElementById("admin-reset-missions-btn");
+    const adminMissionSearch = document.getElementById("admin-mission-search");
+    const adminMissionsList = document.getElementById("admin-missions-list");
+    const adminSuggestionsReviewList = document.getElementById("admin-suggestions-review-list");
 
     function dedupeMissionModeOptions() {
       if (!missionModeSelect) return;
@@ -2152,6 +2395,53 @@
       }
       hydrateAdminSettingsForm();
       showScreen("orga");
+    }
+
+    async function recoverAdminPinByEmail() {
+      const config = getBackendConfig();
+      if (!isSupabaseEnabled(config)) {
+        Toast.error("Récupération e-mail indisponible: configure d'abord Supabase dans orga.html.");
+        return;
+      }
+
+      const enteredEmail = (window.prompt("E-mail de récupération admin :") || "").trim().toLowerCase();
+      if (!enteredEmail) return;
+
+      if (enteredEmail !== getAdminRecoveryEmail().trim().toLowerCase()) {
+        Toast.error("E-mail de récupération incorrect.");
+        return;
+      }
+
+      try {
+        await requestAdminRecoveryOtp(enteredEmail);
+      } catch (error) {
+        Toast.error(`Envoi impossible: ${error.message}`);
+        return;
+      }
+
+      Toast.info("Un code de vérification a été envoyé par e-mail.", 4500);
+
+      const token = (window.prompt("Entre le code reçu par e-mail :") || "").trim();
+      if (!token) {
+        Toast.warning("Aucun code saisi.");
+        return;
+      }
+
+      try {
+        await verifyAdminRecoveryOtp(enteredEmail, token);
+      } catch (error) {
+        Toast.error(`Code invalide: ${error.message}`);
+        return;
+      }
+
+      const newPin = (window.prompt("Nouveau code admin :", DEFAULT_ADMIN_PIN) || "").trim();
+      if (!newPin) {
+        Toast.warning("Le code admin n'a pas été modifié.");
+        return;
+      }
+
+      setAdminPin(newPin);
+      Toast.success("Code admin mis à jour via l'e-mail de récupération.");
     }
 
     function showScreen(name) {
@@ -2229,6 +2519,7 @@
       adminThemeHealthBreathing.checked = !!settings.enabledThemes.health_breathing;
       adminThemeHealthYoga.checked = !!settings.enabledThemes.health_yoga;
       adminPinInput.value = "";
+      if (adminRecoveryEmailInput) adminRecoveryEmailInput.value = getAdminRecoveryEmail();
     }
 
     function saveAdminSettingsFromForm() {
@@ -2254,6 +2545,9 @@
 
       const newPin = adminPinInput.value.trim();
       if (newPin) setAdminPin(newPin);
+
+      const recoveryEmail = adminRecoveryEmailInput?.value.trim().toLowerCase() || DEFAULT_ADMIN_RECOVERY_EMAIL;
+      setAdminRecoveryEmail(recoveryEmail);
 
       updateProgressBar();
       Toast.success("Réglages admin enregistrés.");
@@ -2641,7 +2935,7 @@
     // ===== Photos =====
     function getSharedPhotos() {
       return getResults()
-        .filter(r => !!r.photoUrl && r.visibility === "participants")
+        .filter(r => !!r.photoUrl && r.visibility === "participants" && r.reviewStatus === "approved")
         .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
     }
 
@@ -2681,6 +2975,265 @@
       });
     }
 
+    function resetAdminMissionForm() {
+      STATE.adminEditingMissionId = null;
+      if (adminMissionText) adminMissionText.value = "";
+      if (adminMissionCategory) adminMissionCategory.value = "OSE";
+      if (adminMissionLevel) adminMissionLevel.value = "1";
+      if (adminMissionTheme) adminMissionTheme.value = "festival";
+      if (adminMissionNote) adminMissionNote.value = "";
+      if (adminSaveMissionBtn) adminSaveMissionBtn.textContent = "Ajouter la mission";
+    }
+
+    function populateAdminMissionForm(mission) {
+      if (!mission) return;
+      STATE.adminEditingMissionId = mission.id;
+      adminMissionText.value = mission.text || "";
+      adminMissionCategory.value = mission.category || "OSE";
+      adminMissionLevel.value = String(normalizeMissionLevel(mission.level));
+      adminMissionTheme.value = mission.theme || "festival";
+      adminMissionNote.value = mission.note || "";
+      adminSaveMissionBtn.textContent = `Enregistrer mission #${mission.id}`;
+      adminMissionText.focus();
+    }
+
+    function updateMissionById(id, updates) {
+      const mission = getMissionById(id);
+      if (!mission) return null;
+      Object.assign(mission, updates);
+      saveMissions(MISSIONS);
+      return mission;
+    }
+
+    function saveAdminMissionFromForm() {
+      const text = adminMissionText.value.trim();
+      if (!text) {
+        Toast.warning("Écris le texte de la mission.");
+        adminMissionText.focus();
+        return;
+      }
+
+      const payload = {
+        text,
+        category: adminMissionCategory.value,
+        level: Number(adminMissionLevel.value) || 1,
+        theme: adminMissionTheme.value || "festival",
+        note: adminMissionNote.value.trim()
+      };
+
+      if (STATE.adminEditingMissionId) {
+        updateMissionById(STATE.adminEditingMissionId, payload);
+        Toast.success("Mission modifiée.");
+      } else {
+        const nextId = Math.max(0, ...MISSIONS.map(m => m.id), 0) + 1;
+        MISSIONS.push(normalizeMissionRecord(createMission({ id: nextId, ...payload, active: true })));
+        saveMissions(MISSIONS);
+        Toast.success("Mission ajoutée.");
+      }
+
+      resetAdminMissionForm();
+      renderOrga();
+      updateProgressBar();
+    }
+
+    function renderAdminMissionList() {
+      if (!adminMissionsList) return;
+      const query = (adminMissionSearch?.value || "").trim().toLowerCase();
+      const items = [...MISSIONS]
+        .filter(m => !query || [m.text, m.category, m.theme, m.note].filter(Boolean).join(" ").toLowerCase().includes(query))
+        .sort((a, b) => a.id - b.id);
+
+      adminMissionsList.innerHTML = "";
+
+      if (!items.length) {
+        adminMissionsList.innerHTML = '<div class="empty">Aucune mission trouvée.</div>';
+        return;
+      }
+
+      items.forEach(mission => {
+        const row = document.createElement("div");
+        row.className = "admin-item";
+        const stateLabel = mission.active ? "active" : "inactive";
+        row.innerHTML = `
+          <div class="admin-item-main">
+            <div class="journal-title">#${mission.id} · ${escapeHtml(mission.text)}</div>
+            <div class="micro">${escapeHtml(mission.theme || "festival")} · ${escapeHtml(mission.category)} · Niveau ${normalizeMissionLevel(mission.level)} · ${stateLabel}${mission.note ? ` · ${escapeHtml(mission.note)}` : ""}</div>
+          </div>
+        `;
+
+        const actions = document.createElement("div");
+        actions.className = "admin-item-actions";
+
+        const editBtn = document.createElement("button");
+        editBtn.className = "btn btn-secondary";
+        editBtn.textContent = "Modifier";
+        editBtn.addEventListener("click", () => populateAdminMissionForm(mission));
+
+        const toggleBtn = document.createElement("button");
+        toggleBtn.className = "btn btn-secondary";
+        toggleBtn.textContent = mission.active ? "Désactiver" : "Réactiver";
+        toggleBtn.addEventListener("click", () => {
+          toggleMissionActive(mission.id);
+          renderOrga();
+          updateProgressBar();
+        });
+
+        const deleteBtn = document.createElement("button");
+        deleteBtn.className = "btn btn-secondary";
+        deleteBtn.textContent = "Supprimer";
+        deleteBtn.addEventListener("click", () => {
+          if (!window.confirm(`Supprimer la mission #${mission.id} ?`)) return;
+          removeMissionById(mission.id);
+          if (STATE.adminEditingMissionId === mission.id) resetAdminMissionForm();
+          renderOrga();
+          updateProgressBar();
+        });
+
+        actions.appendChild(editBtn);
+        actions.appendChild(toggleBtn);
+        actions.appendChild(deleteBtn);
+        row.appendChild(actions);
+        adminMissionsList.appendChild(row);
+      });
+    }
+
+    function renderAdminPhotoReview() {
+      if (!adminPhotoReviewList) return;
+      const items = getResults()
+        .filter(r => !!r.photoUrl)
+        .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+
+      adminPhotoReviewList.innerHTML = "";
+
+      if (!items.length) {
+        adminPhotoReviewList.innerHTML = '<div class="empty">Aucune photo à modérer.</div>';
+        return;
+      }
+
+      items.forEach(result => {
+        const mission = getMissionById(result.missionId);
+        const row = document.createElement("div");
+        row.className = "admin-item";
+        row.innerHTML = `
+          <div class="admin-item-top">
+            <img class="admin-thumb" src="${escapeHtml(result.photoUrl)}" alt="Photo mission" />
+            <div class="admin-item-main">
+              <div class="journal-title">${mission ? escapeHtml(mission.text) : "Mission"}</div>
+              <div class="micro">${formatDateTime(result.createdAt)}${result.displayName ? ` · ${escapeHtml(result.displayName)}` : ""}</div>
+              <div class="status-badge">${escapeHtml(result.visibility)} · ${escapeHtml(result.reviewStatus || "none")}</div>
+            </div>
+          </div>
+        `;
+
+        const actions = document.createElement("div");
+        actions.className = "admin-item-actions";
+
+        if (result.visibility === "participants" && result.reviewStatus !== "approved") {
+          const approveBtn = document.createElement("button");
+          approveBtn.className = "btn btn-primary";
+          approveBtn.textContent = "Valider";
+          approveBtn.addEventListener("click", () => {
+            updateResultReview(result.id, { reviewStatus: "approved" });
+            renderOrga();
+            renderPhotos();
+          });
+          actions.appendChild(approveBtn);
+        }
+
+        if (result.reviewStatus !== "rejected") {
+          const rejectBtn = document.createElement("button");
+          rejectBtn.className = "btn btn-secondary";
+          rejectBtn.textContent = "Refuser";
+          rejectBtn.addEventListener("click", () => {
+            updateResultReview(result.id, { reviewStatus: "rejected" });
+            renderOrga();
+            renderPhotos();
+          });
+          actions.appendChild(rejectBtn);
+        }
+
+        if (result.visibility !== "private") {
+          const privateBtn = document.createElement("button");
+          privateBtn.className = "btn btn-secondary";
+          privateBtn.textContent = "Passer en privé";
+          privateBtn.addEventListener("click", () => {
+            updateResultReview(result.id, { visibility: "private", reviewStatus: "private" });
+            renderOrga();
+            renderPhotos();
+          });
+          actions.appendChild(privateBtn);
+        }
+
+        row.appendChild(actions);
+        adminPhotoReviewList.appendChild(row);
+      });
+    }
+
+    function importSuggestionAsMission(suggestion) {
+      const nextId = Math.max(0, ...MISSIONS.map(m => m.id), 0) + 1;
+      MISSIONS.push(normalizeMissionRecord(createMission({
+        id: nextId,
+        text: suggestion.text,
+        category: suggestion.category || "JOUE",
+        level: suggestion.level || 1,
+        theme: "festival",
+        note: `Suggestion ${suggestion.displayName || "participant"}`,
+        active: true
+      })));
+      saveMissions(MISSIONS);
+      updateSuggestionStatus(suggestion.id, "imported");
+    }
+
+    function renderAdminSuggestionsReview() {
+      if (!adminSuggestionsReviewList) return;
+      const items = getSuggestions()
+        .filter(item => item.status === "proposed")
+        .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+
+      adminSuggestionsReviewList.innerHTML = "";
+
+      if (!items.length) {
+        adminSuggestionsReviewList.innerHTML = '<div class="empty">Aucune proposition en attente.</div>';
+        return;
+      }
+
+      items.forEach(item => {
+        const row = document.createElement("div");
+        row.className = "admin-item";
+        row.innerHTML = `
+          <div class="admin-item-main">
+            <div class="journal-title">${escapeHtml(item.text)}</div>
+            <div class="micro">${formatDateTime(item.createdAt)}${item.category ? ` · ${escapeHtml(item.category)}` : ""}${item.level ? ` · Niveau ${item.level}` : ""}${item.displayName ? ` · ${escapeHtml(item.displayName)}` : ""}</div>
+          </div>
+        `;
+
+        const actions = document.createElement("div");
+        actions.className = "admin-item-actions";
+
+        const importBtn = document.createElement("button");
+        importBtn.className = "btn btn-primary";
+        importBtn.textContent = "Ajouter aux missions";
+        importBtn.addEventListener("click", () => {
+          importSuggestionAsMission(item);
+          renderOrga();
+          updateProgressBar();
+        });
+
+        const rejectBtn = document.createElement("button");
+        rejectBtn.className = "btn btn-secondary";
+        rejectBtn.textContent = "Refuser";
+        rejectBtn.addEventListener("click", () => {
+          updateSuggestionStatus(item.id, "rejected");
+          renderOrga();
+        });
+
+        actions.appendChild(importBtn);
+        actions.appendChild(rejectBtn);
+        row.appendChild(actions);
+        adminSuggestionsReviewList.appendChild(row);
+      });
+    }
+
     // ===== Orga =====
     function sortMapDesc(map) {
       return Object.entries(map).sort((a, b) => b[1] - a[1]);
@@ -2693,8 +3246,9 @@
       const skipped = countSkipped();
       const photos = countPhotos(results);
       const shared = countSharedPhotos(results);
+      const pendingPhotos = countPendingPhotos(results);
       const messageCount = countOrgaMessages(results);
-      const suggestions = getSuggestions().length;
+      const suggestions = getSuggestions().filter(item => item.status === "proposed").length;
 
       const completionRate = shown ? Math.round((done / shown) * 100) : 0;
       const shareRate = photos ? Math.round((shared / photos) * 100) : 0;
@@ -2703,6 +3257,7 @@
       const recommendations = [];
       if (!done) recommendations.push("Démarrer avec une animation d'amorce pour générer les premières validations.");
       if (done && completionRate < 50) recommendations.push("Le taux de validation est bas : proposer plus de missions niveau 1 à 2.");
+      if (pendingPhotos > 0) recommendations.push(`${pendingPhotos} photo(s) attendent une validation admin.`);
       if (shared < 3) recommendations.push("Peu de photos partagées : rappeler le choix 'partager avec les participants'.");
       if (suggestions > 0) recommendations.push("Des idées de missions sont en attente : trier et activer les meilleures.");
       if (!recommendations.length) recommendations.push("Rythme global sain : continuer et observer les enchaînements les plus engageants.");
@@ -2710,7 +3265,7 @@
       orgaSummary.innerHTML = [
         `<div><strong>Participation:</strong> ${done} validations sur ${shown} missions vues (${completionRate}%).</div>`,
         `<div><strong>Fluidité:</strong> ${skipped} missions passées, ${feedbackRate}% des validations avec message orga.</div>`,
-        `<div><strong>Partage:</strong> ${shared} photos partagées sur ${photos} photos (${shareRate}%).</div>`,
+        `<div><strong>Partage:</strong> ${shared} photos validées sur ${photos} photos (${shareRate}%).</div>`,
         `<div><strong>Recommandations:</strong> ${escapeHtml(recommendations.join(" "))}</div>`
       ].join("");
 
@@ -2720,6 +3275,7 @@
         passées: skipped,
         photos: photos,
         partagées: shared,
+        en_attente: pendingPhotos,
         messages: messageCount,
         propositions: suggestions
       };
@@ -2766,6 +3322,10 @@
             return `<div><strong>${mission ? escapeHtml(mission.text) : "Mission"}</strong><br><span class="micro">${formatDateTime(r.createdAt)}${r.displayName ? ` · ${escapeHtml(r.displayName)}` : ""}</span><br>${escapeHtml(r.orgaMessage)}</div>`;
           }).join("")
         : '<div class="micro">Aucun message pour l\'instant.</div>';
+
+      renderAdminPhotoReview();
+      renderAdminMissionList();
+      renderAdminSuggestionsReview();
     }
 
     // ===== Utilitaires =====
@@ -2780,6 +3340,7 @@
 
     // ===== Événements =====
     document.getElementById("admin-access-btn").addEventListener("click", openAdminAccess);
+    document.getElementById("admin-recover-btn").addEventListener("click", recoverAdminPinByEmail);
 
     // "Je joue" lance directement une mission
     document.getElementById("start-btn").addEventListener("click", startGame);
@@ -2791,6 +3352,25 @@
     document.getElementById("cancel-validation-btn").addEventListener("click", () => showScreen("mission"));
     document.getElementById("submit-suggestion-btn").addEventListener("click", submitSuggestion);
     document.getElementById("admin-save-settings-btn").addEventListener("click", saveAdminSettingsFromForm);
+    if (adminSaveMissionBtn) {
+      adminSaveMissionBtn.addEventListener("click", saveAdminMissionFromForm);
+    }
+    if (adminCancelMissionEditBtn) {
+      adminCancelMissionEditBtn.addEventListener("click", resetAdminMissionForm);
+    }
+    if (adminResetMissionsBtn) {
+      adminResetMissionsBtn.addEventListener("click", () => {
+        if (!window.confirm("Réinitialiser la liste complète des missions ?")) return;
+        resetMissions();
+        resetAdminMissionForm();
+        renderOrga();
+        updateProgressBar();
+        Toast.success("Missions réinitialisées.");
+      });
+    }
+    if (adminMissionSearch) {
+      adminMissionSearch.addEventListener("input", renderAdminMissionList);
+    }
     if (missionModeSelect) {
       missionModeSelect.addEventListener("change", () => {
         setMissionMode(missionModeSelect.value);

@@ -38,6 +38,8 @@ Suivre les etapes de `SUPABASE_SETUP.md`:
 
 Ensuite, `index.html` lit automatiquement cette configuration depuis le navigateur.
 
+Une fois Supabase configure avec l'authentification e-mail OTP, l'app peut aussi recuperer le code admin via le bouton `Code oublie ?`.
+
 ## PWA (installation mobile/desktop)
 
 Depuis le site publie:

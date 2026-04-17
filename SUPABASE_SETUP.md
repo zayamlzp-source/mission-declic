@@ -61,6 +61,21 @@ create policy "state_update_anon"
 - **Project URL** : `https://xxxxxxxx.supabase.co`
 - **anon public key** : `eyJhbGci...`
 
+## 2bis. Activer la recuperation admin par e-mail
+
+Dans **Supabase > Authentication > Providers > Email** :
+
+- Activer le provider **Email**
+- Activer les **One-Time Passwords (OTP)** par e-mail
+- Verifier que l'envoi d'e-mails est configure pour le projet
+
+L'application participant utilise ce flux pour le bouton `Code oublie ?` de l'admin :
+
+- saisie de l'e-mail de recuperation admin
+- reception d'un code OTP par e-mail
+- verification du code
+- definition d'un nouveau code admin local
+
 ---
 
 ## 3. Configurer orga.html
