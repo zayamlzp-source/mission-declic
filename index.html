@@ -547,6 +547,103 @@
           border-radius: 12px;
           background: #fff;
         }
+
+        /* ===== Draw / Tirage ===== */
+        .draw-hidden { display: none !important; }
+
+        .draw-mode-box {
+          margin-top: 4px;
+          display: flex;
+          flex-direction: column;
+          gap: 10px;
+        }
+
+        .draw-mode-box h3 {
+          font-size: 0.95rem;
+          font-weight: 600;
+          color: var(--text);
+          margin: 0 0 4px 0;
+        }
+
+        .theme-list {
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          gap: 8px;
+          margin: 4px 0;
+        }
+
+        .theme-btn {
+          padding: 10px 12px;
+          border-radius: 14px;
+          border: 1.5px solid var(--line);
+          background: #fff;
+          cursor: pointer;
+          text-align: left;
+          font-size: 0.88rem;
+          line-height: 1.3;
+          transition: border-color 0.15s;
+        }
+
+        .theme-btn .theme-icon { font-size: 1.1rem; display: block; margin-bottom: 4px; }
+        .theme-btn .theme-label { font-weight: 600; color: var(--text); }
+
+        .theme-btn.active {
+          border-color: var(--accent);
+          background: #f0f5ec;
+        }
+
+        /* Wheel overlay */
+        .wheel-overlay {
+          position: fixed;
+          inset: 0;
+          background: rgba(244,237,228,0.97);
+          z-index: 9999;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          gap: 20px;
+          padding: 32px 24px;
+        }
+
+        .wheel-overlay h2 {
+          font-size: 1.1rem;
+          font-weight: 700;
+          color: var(--text);
+          margin: 0;
+          text-align: center;
+        }
+
+        .wheel-reel {
+          width: 100%;
+          max-width: 340px;
+          min-height: 80px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-size: 1rem;
+          font-weight: 500;
+          text-align: center;
+          border-radius: 20px;
+          background: #fff;
+          border: 1.5px solid var(--line);
+          padding: 18px 20px;
+          line-height: 1.4;
+          box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+          color: var(--text);
+        }
+
+        .wheel-theme-label {
+          font-size: 2rem;
+          font-weight: 700;
+          text-align: center;
+        }
+
+        .wheel-subtext {
+          font-size: 0.85rem;
+          color: var(--muted);
+          text-align: center;
+        }
     </style>
 </head>
 <body>
@@ -582,7 +679,7 @@
             <select id="mission-mode-select" class="select">
               <option value="festival">Mission festi</option>
               <option value="daily">Vie quotidienne</option>
-              <option value="health">Santé (mix)</option>
+              <option value="health">Santé (mix sport + mental)</option>
               <option value="health_sport">Santé sport</option>
               <option value="health_mental">Santé mental</option>
               <option value="health_wellness">Bien-être</option>
@@ -595,6 +692,21 @@
           <div class="home-actions">
             <button id="start-btn" class="btn btn-primary">Je joue</button>
             <button id="journal-btn" class="btn btn-secondary">Mon journal</button>
+          </div>
+
+          <!-- Bloc choix du mode de tirage (caché par défaut) -->
+          <div id="draw-mode-box" class="draw-mode-box draw-hidden">
+            <h3>Comment tu veux jouer ?</h3>
+            <button id="btn-choose-theme" class="btn btn-secondary">Je choisis un thème</button>
+            <button id="btn-random-theme" class="btn btn-primary">Surprends-moi</button>
+          </div>
+
+          <!-- Sélecteur de thème (caché par défaut) -->
+          <div id="theme-picker-box" class="draw-hidden">
+            <h3 style="font-size:0.95rem;font-weight:600;margin:0 0 8px 0;">Choisis un thème</h3>
+            <div id="theme-list" class="theme-list"></div>
+            <button id="btn-launch-themed-draw" class="btn btn-primary" style="margin-top:4px;">Lancer le tirage</button>
+            <button id="btn-cancel-theme-pick" class="btn btn-link" style="margin-top:2px;">← Retour</button>
           </div>
 
           <div class="progress-section">
@@ -864,6 +976,17 @@
     let remoteSyncTimer = null;
 
     const THEME_KEYS = ["festival", "daily", "health_sport", "health_mental", "health_wellness", "health_breathing", "health_yoga"];
+
+    // Thèmes affichés dans le sélecteur de tirage
+    const DRAW_THEMES = [
+      { id: "festival",         label: "Festival",    icon: "🎪" },
+      { id: "daily",            label: "Quotidien",   icon: "☀️" },
+      { id: "health_sport",     label: "Sport",       icon: "💪" },
+      { id: "health_mental",    label: "Mental",      icon: "🧠" },
+      { id: "health_wellness",  label: "Bien-être",   icon: "🌿" },
+      { id: "health_breathing", label: "Respiration", icon: "🫁" },
+      { id: "health_yoga",      label: "Yoga",        icon: "🧘" }
+    ];
 
     function getDefaultAdminSettings() {
       return {
@@ -1152,7 +1275,7 @@
 
     function computeInternalLevel(doneCount) {
       const level = 1 + Math.floor(doneCount / 2);
-      return Math.min(level, 10);
+      return Math.min(level, 8);
     }
 
     function getMissionById(missionId) {
@@ -1174,7 +1297,7 @@
 
     function getMissionPoolForProgression(state) {
       const level = state.internalLevel;
-      const allowedLevels = [level, level - 1, level + 1].filter(n => n >= 1 && n <= 10);
+      const allowedLevels = [level, level - 1, level + 1].filter(n => n >= 1 && n <= 8);
       const mode = getMissionMode();
       const adminSettings = getAdminSettings();
 
@@ -1212,7 +1335,10 @@
       active = true,
       bonus = false,
       tags = [],
-      note = ""
+      note = "",
+      details = "",
+      setup = "",
+      after = ""
     }) {
       return {
         id,
@@ -1226,130 +1352,234 @@
         active,
         bonus,
         tags,
-        note
+        note,
+        details,
+        setup,
+        after
       };
     }
 
-    function buildHealthMissionBank(startId = 89) {
-      let nextId = startId;
-      const missions = [];
-      const missionsPerLevel = 10;
-
-      const sportTemplates = [
-        level => `Marche ${5 + level * 5} minutes à rythme soutenu.`,
-        level => `Fais ${8 + level * 4} squats contrôlés.`,
-        level => `Fais ${6 + level * 3} pompes (ou variante adaptée).`,
-        level => `Fais ${8 + level * 3} fentes alternées.`,
-        level => `Tiens ${15 + level * 10} secondes en gainage.`,
-        level => `Fais ${10 + level * 6} jumping jacks.`,
-        level => `Monte ${Math.max(1, Math.floor(level * 2))} étages à pied.`,
-        level => `Fais ${10 + level * 5} mountain climbers.`,
-        level => `Danse ${2 + level} minutes sans pause.`,
-        level => `Ajoute ${500 * level} pas à ta journée.`,
-        level => `Fais ${5 + level * 3} relevés de mollets par jambe.`,
-        level => `Tiens ${10 + level * 8} secondes en chaise contre un mur.`,
-        level => `Fais ${4 + level * 2} burpees à ton rythme.`,
-        level => `Fais ${6 + level * 3} montées de genoux par jambe.`,
-        level => `Fais ${3 + level} minutes de corde imaginaire.`,
-        level => `Cours ou trottine ${Math.max(2, level * 3)} minutes.`,
-        level => `Fais ${8 + level * 2} crunchs lents et propres.`,
-        level => `Fais ${8 + level * 2} ponts fessiers.`,
-        level => `Fais ${2 + level} blocs de 1 minute d'effort / 1 minute calme.`,
-        level => `Termine par ${2 + level} minutes de récupération active.`
+    function buildHealthMissions(startId) {
+      const CAT = { sport: "ENTRAÎNE", wellbeing: "RESSENS", breath: "RESSENS", yoga: "JOUE" };
+      const THM = { sport: "health_sport", wellbeing: "health_wellness", breath: "health_breathing", yoga: "health_yoga" };
+      const raw = [
+        // --- SPORT ---
+        { m:"sport",l:1,t:"Marche 5 minutes sans téléphone.",d:"Sors ou marche chez toi sans écran, en gardant ton attention sur ton corps et ton environnement.",s:"Prévois 5 minutes libres et laisse ton téléphone de côté.",a:"Note si ton énergie a changé, même légèrement." },
+        { m:"sport",l:1,t:"Fais 10 squats lents.",d:"Descends doucement, remonte en contrôlant ton mouvement, sans chercher la vitesse.",s:"Tiens-toi debout, pieds largeur des hanches.",a:"Observe les jambes, le souffle, et ton équilibre." },
+        { m:"sport",l:1,t:"Monte un étage à pied.",d:"Choisis volontairement les escaliers au lieu de l'ascenseur ou de l'escalator.",s:"Repère un escalier accessible.",a:"Observe si ton souffle s'accélère ou non." },
+        { m:"sport",l:1,t:"Danse 2 minutes.",d:"Bouge librement sans chercher à bien faire. Le but est d'activer le corps.",s:"Lance une musique ou fais-le en silence.",a:"Note ton humeur après avoir bougé." },
+        { m:"sport",l:1,t:"Fais 1 minute de marche sur place.",d:"Lève les pieds régulièrement et garde un rythme simple.",s:"Place-toi dans un espace dégagé.",a:"Observe si cela t'a réveillé un peu." },
+        { m:"sport",l:2,t:"Marche 10 minutes à bon rythme.",d:"Marche un peu plus vite que d'habitude, sans être essoufflé excessivement.",s:"Prévois un trajet simple ou un aller-retour court.",a:"Observe ta température corporelle et ton souffle." },
+        { m:"sport",l:2,t:"Fais 15 squats.",d:"Garde les pieds stables et le dos aussi droit que possible.",s:"Place-toi sur un sol stable.",a:"Note si le mouvement devient plus facile après quelques répétitions." },
+        { m:"sport",l:2,t:"Fais 10 pompes contre un mur.",d:"Incline ton corps vers le mur et pousse avec contrôle.",s:"Place tes mains à hauteur de poitrine contre un mur.",a:"Observe les bras, les épaules et le haut du corps." },
+        { m:"sport",l:2,t:"Tiens 20 secondes en gainage.",d:"Cherche une ligne simple et stable, sans creuser le bas du dos.",s:"Choisis gainage au sol ou incliné selon ton niveau.",a:"Observe le ventre, les épaules et ta stabilité." },
+        { m:"sport",l:2,t:"Fais 20 jumping jacks modérés.",d:"Reste souple dans les articulations et adapte l'amplitude si besoin.",s:"Prévois un peu d'espace autour de toi.",a:"Note si ton rythme cardiaque a augmenté." },
+        { m:"sport",l:3,t:"Marche 15 minutes rapidement.",d:"Garde un rythme soutenu mais encore confortable.",s:"Choisis un trajet sans trop d'interruptions.",a:"Observe si tu te sens plus réveillé." },
+        { m:"sport",l:3,t:"Fais 20 squats.",d:"Reste régulier du début à la fin.",s:"Stabilise tes appuis au sol.",a:"Observe la chauffe dans les jambes." },
+        { m:"sport",l:3,t:"Fais 10 fentes alternées.",d:"Avance une jambe puis l'autre, en gardant le contrôle.",s:"Prévois un petit espace dégagé.",a:"Note l'équilibre entre jambe droite et gauche." },
+        { m:"sport",l:3,t:"Tiens 30 secondes en gainage.",d:"Cherche la stabilité sans crispation excessive.",s:"Place-toi en position adaptée à ton niveau.",a:"Observe si tu tiens mieux qu'au niveau précédent." },
+        { m:"sport",l:3,t:"Monte 4 étages cumulés à pied.",d:"Tu peux les faire d'un coup ou répartis dans la journée.",s:"Repère les escaliers disponibles.",a:"Observe ton souffle et tes jambes." },
+        { m:"sport",l:4,t:"Marche 20 minutes.",d:"Garde une marche volontaire et régulière.",s:"Prévois un trajet ou un créneau dédié.",a:"Observe si ton mental s'est éclairci." },
+        { m:"sport",l:4,t:"Cours ou trottine 5 minutes.",d:"Le but n'est pas la performance mais l'activation.",s:"Choisis un terrain simple et sûr.",a:"Observe ton souffle et tes appuis." },
+        { m:"sport",l:4,t:"Fais 25 squats.",d:"Garde un rythme stable du début à la fin.",s:"Ancre bien les pieds au sol.",a:"Observe la fatigue musculaire et ta posture." },
+        { m:"sport",l:4,t:"Fais 12 pompes inclinées.",d:"Adapte l'inclinaison pour garder une exécution propre.",s:"Utilise un mur, une table solide ou un support stable.",a:"Observe les bras et la poitrine." },
+        { m:"sport",l:4,t:"Tiens 40 secondes en chaise contre un mur.",d:"Descends jusqu'à une position supportable et tiens.",s:"Place ton dos contre un mur.",a:"Observe les cuisses et le mental." },
+        { m:"sport",l:5,t:"Marche rapide 25 minutes.",d:"Garde un rythme soutenu mais tenable.",s:"Prévois chaussures et trajet adaptés.",a:"Observe l'effet sur ton énergie." },
+        { m:"sport",l:5,t:"Cours 8 minutes.",d:"Reste souple, sans forcer inutilement.",s:"Choisis une surface confortable.",a:"Observe si ton souffle revient vite ou lentement." },
+        { m:"sport",l:5,t:"Fais 30 squats.",d:"Reste stable, régulier, sans précipitation.",s:"Pieds largeur des hanches.",a:"Note si les dernières répétitions restent propres." },
+        { m:"sport",l:5,t:"Fais 15 fentes par jambe.",d:"Cherche le contrôle plus que la vitesse.",s:"Prévois un espace dégagé.",a:"Observe si une jambe fatigue plus que l'autre." },
+        { m:"sport",l:5,t:"Fais un mini-circuit de 8 minutes.",d:"Enchaîne 2 ou 3 exercices simples sans trop de pause.",s:"Choisis à l'avance tes exercices.",a:"Observe ta récupération après l'effort." },
+        { m:"sport",l:6,t:"Marche rapide ou footing 30 minutes.",d:"Choisis l'option adaptée à ton état du jour.",s:"Prends des chaussures adaptées.",a:"Observe la durée réelle de récupération." },
+        { m:"sport",l:6,t:"Fais 35 squats.",d:"Garde une amplitude régulière.",s:"Prépare ton espace.",a:"Observe si la technique reste stable." },
+        { m:"sport",l:6,t:"Fais 15 pompes inclinées ou 8 au sol.",d:"Choisis la version qui te permet une exécution propre.",s:"Prépare ton support ou le sol.",a:"Observe les bras, les poignets et le haut du corps." },
+        { m:"sport",l:6,t:"Tiens 1 minute en gainage.",d:"Reste stable et respire régulièrement.",s:"Choisis une variante de gainage adaptée.",a:"Observe si tu compenses ou non." },
+        { m:"sport",l:6,t:"Fais 15 burpees lents.",d:"Privilégie le contrôle plutôt que la vitesse.",s:"Prévois un espace sécurisé.",a:"Observe le cardio et la qualité de mouvement." },
+        { m:"sport",l:7,t:"Cours 15 minutes.",d:"Garde un effort stable sans partir trop vite.",s:"Choisis un parcours simple.",a:"Observe la régularité de ton souffle." },
+        { m:"sport",l:7,t:"Fais 40 squats.",d:"Reste concentré jusqu'aux dernières répétitions.",s:"Ancre bien tes pieds.",a:"Observe si ton bassin reste stable." },
+        { m:"sport",l:7,t:"Fais 20 fentes alternées.",d:"Reste fluide et équilibré.",s:"Prévois de l'espace devant toi.",a:"Observe la jambe la plus solide." },
+        { m:"sport",l:7,t:"Fais 50 jumping jacks.",d:"Garde un rythme constant et modéré.",s:"Dégage l'espace autour de toi.",a:"Observe le cardio et la coordination." },
+        { m:"sport",l:7,t:"Monte 10 étages cumulés.",d:"Tu peux répartir l'effort sur la journée.",s:"Repère les escaliers accessibles.",a:"Observe souffle, jambes, motivation." },
+        { m:"sport",l:8,t:"Bouge 35 minutes sans longue pause.",d:"Marche rapide, footing, circuit ou mélange : l'essentiel est la continuité.",s:"Prévois ton créneau et ton format.",a:"Observe si tu restes régulier sur la durée." },
+        { m:"sport",l:8,t:"Cours 20 minutes.",d:"Trouve un rythme tenable du début à la fin.",s:"Choisis un terrain adapté.",a:"Observe l'endurance et la récupération." },
+        { m:"sport",l:8,t:"Fais 20 pompes inclinées ou 12 au sol.",d:"Choisis la version la plus exigeante que tu peux garder propre.",s:"Prépare ton support ou le sol.",a:"Observe la qualité des dernières répétitions." },
+        { m:"sport",l:8,t:"Tiens 1 minute 20 en gainage.",d:"Respire et garde le corps aligné.",s:"Choisis une variante adaptée.",a:"Observe le ventre, les épaules et le bas du dos." },
+        { m:"sport",l:8,t:"Fais un circuit de 12 minutes.",d:"Enchaîne plusieurs exercices simples avec peu de repos.",s:"Prépare ton circuit avant de commencer.",a:"Observe le niveau de fatigue globale." },
+        { m:"sport",l:9,t:"Bouge 45 minutes dans la journée.",d:"Tu peux fractionner, mais garde une vraie intention physique.",s:"Planifie les temps de mouvement.",a:"Observe ton niveau d'énergie général." },
+        { m:"sport",l:9,t:"Cours 25 minutes.",d:"Reste stable et gère ton allure.",s:"Choisis un moment favorable.",a:"Observe endurance et souffle." },
+        { m:"sport",l:9,t:"Fais 50 squats.",d:"Garde une technique cohérente jusqu'au bout.",s:"Prépare ton espace.",a:"Observe jambes et posture." },
+        { m:"sport",l:9,t:"Fais 25 burpees.",d:"Reste propre et régulier plutôt que rapide.",s:"Prévois un sol stable.",a:"Observe le cardio et la capacité de récupération." },
+        { m:"sport",l:9,t:"Enchaîne cardio + renforcement 15 minutes.",d:"Mélange mouvement dynamique et exercice musculaire.",s:"Prépare 2 ou 3 exercices à l'avance.",a:"Observe le niveau de fatigue complet." },
+        { m:"sport",l:10,t:"Bouge 60 minutes dans la journée.",d:"Marche, course, circuit ou combinaison : vise une vraie densité de mouvement.",s:"Répartis ou regroupe selon ton organisation.",a:"Observe ta discipline et ton état général." },
+        { m:"sport",l:10,t:"Cours 30 minutes.",d:"Trouve une allure stable du début à la fin.",s:"Prévois chaussures et moment adapté.",a:"Observe endurance, souffle et mental." },
+        { m:"sport",l:10,t:"Fais 60 squats.",d:"Reste attentif à la qualité du mouvement malgré le volume.",s:"Prends un appui stable si besoin.",a:"Observe contrôle, fatigue et solidité." },
+        { m:"sport",l:10,t:"Tiens 2 minutes en gainage.",d:"Respire, reste aligné et gère l'effort sans t'effondrer.",s:"Choisis une variante adaptée à ton niveau réel.",a:"Observe la gestion mentale et physique." },
+        { m:"sport",l:10,t:"Fais une séance complète : échauffement, effort, retour au calme.",d:"Structure volontairement ton temps de mouvement au lieu de juste empiler des exercices.",s:"Prévois ton déroulé avant de commencer.",a:"Observe la différence entre séance pensée et effort improvisé." },
+        // --- BIEN-ÊTRE ---
+        { m:"wellbeing",l:1,t:"Bois un verre d'eau lentement.",d:"Prends le temps de boire en conscience, sans faire autre chose en même temps.",s:"Prépare un verre d'eau à portée de main.",a:"Observe si ton corps semble plus réveillé." },
+        { m:"wellbeing",l:1,t:"Ouvre une fenêtre 2 minutes.",d:"Laisse entrer un peu d'air et change l'atmosphère du lieu.",s:"Va à une fenêtre ou sors brièvement si possible.",a:"Observe l'effet sur ta sensation d'espace." },
+        { m:"wellbeing",l:1,t:"Ferme les yeux 30 secondes.",d:"Arrête toute stimulation visuelle pendant un court instant.",s:"Assieds-toi ou reste debout dans un endroit stable.",a:"Observe si ton système se calme légèrement." },
+        { m:"wellbeing",l:1,t:"Relâche les épaules 5 fois.",d:"Monte-les légèrement puis laisse-les retomber ou desserre-les consciemment.",s:"Prends quelques secondes pour sentir ton haut du corps.",a:"Observe les tensions résiduelles." },
+        { m:"wellbeing",l:1,t:"Assieds-toi 2 minutes sans écran.",d:"Reste simplement là, sans distraction immédiate.",s:"Éloigne ton téléphone et ton ordinateur.",a:"Observe ton niveau d'agitation intérieure." },
+        { m:"wellbeing",l:2,t:"Bois 2 verres d'eau de plus dans la journée.",d:"Ajoute volontairement un peu d'hydratation à ta routine.",s:"Prévois une bouteille ou un verre visible.",a:"Observe si tu te sens moins sec ou plus clair." },
+        { m:"wellbeing",l:2,t:"Range un petit coin autour de toi.",d:"Choisis un espace réduit mais réel : table, sac, étagère, coin bureau.",s:"Définis un espace précis à alléger.",a:"Observe l'effet du rangement sur ton esprit." },
+        { m:"wellbeing",l:2,t:"Fais 5 minutes sans téléphone.",d:"Laisse ton téléphone à distance et fais une courte pause hors sollicitation.",s:"Active le mode silencieux si besoin.",a:"Observe si l'envie de le reprendre est forte ou faible." },
+        { m:"wellbeing",l:2,t:"Écoute une musique apaisante.",d:"Choisis un morceau qui adoucit vraiment ton état, pas juste une habitude sonore.",s:"Trouve un morceau ou une ambiance calme.",a:"Observe l'effet émotionnel." },
+        { m:"wellbeing",l:2,t:"Va prendre l'air 5 minutes.",d:"Sors quelques minutes, même juste devant chez toi ou près d'une fenêtre ouverte.",s:"Prévois une courte coupure.",a:"Observe si ton corps respire différemment." },
+        { m:"wellbeing",l:3,t:"Fais une vraie pause de 10 minutes.",d:"Pause sans scroll, sans tâche secondaire, sans remplissage automatique.",s:"Bloque 10 minutes réelles.",a:"Observe si tu repars autrement." },
+        { m:"wellbeing",l:3,t:"Mange un repas sans écran.",d:"Prends un repas ou une collation en gardant ton attention sur ce que tu fais.",s:"Éteins ou éloigne les écrans.",a:"Observe le rythme auquel tu manges." },
+        { m:"wellbeing",l:3,t:"Écris 3 choses qui t'ont fait du bien aujourd'hui.",d:"Reste simple et concret, même pour de petites choses.",s:"Prends une feuille ou ouvre une note.",a:"Observe si cela change ta perception de la journée." },
+        { m:"wellbeing",l:3,t:"Couche-toi 15 minutes plus tôt.",d:"Anticipe légèrement le sommeil au lieu d'attendre l'épuisement.",s:"Réduis un peu l'activité du soir.",a:"Observe la différence le lendemain si possible." },
+        { m:"wellbeing",l:3,t:"Fais 5 minutes d'étirements doux.",d:"Cherche surtout le relâchement, pas la performance.",s:"Prévois un petit espace calme.",a:"Observe les zones qui se détendent le plus." },
+        { m:"wellbeing",l:4,t:"Bois 1,5 litre d'eau sur la journée.",d:"Répartis l'eau sur la journée plutôt que tout d'un coup.",s:"Prévois une gourde ou un repère visuel.",a:"Observe ton énergie ou ton confort corporel." },
+        { m:"wellbeing",l:4,t:"Fais une marche calme de 15 minutes.",d:"Ne cherche pas la vitesse, cherche l'apaisement.",s:"Choisis un moment où tu peux marcher sans pression.",a:"Observe l'effet sur ton agitation mentale." },
+        { m:"wellbeing",l:4,t:"Range un espace qui te surcharge.",d:"Choisis un endroit qui te pèse vraiment visuellement ou mentalement.",s:"Délimite clairement la zone.",a:"Observe si ton esprit respire mieux." },
+        { m:"wellbeing",l:4,t:"Écris ce qui t'épuise aujourd'hui.",d:"N'analyse pas trop : liste ce qui te vide concrètement.",s:"Prends 3 à 5 minutes pour écrire.",a:"Observe si nommer les choses change quelque chose." },
+        { m:"wellbeing",l:4,t:"Coupe les écrans 20 minutes avant de dormir.",d:"Laisse le système nerveux ralentir un peu avant le sommeil.",s:"Prévois une activité calme de remplacement.",a:"Observe l'endormissement ou le calme du soir." },
+        { m:"wellbeing",l:5,t:"Prépare un repas simple et nourrissant.",d:"Cherche quelque chose qui soutient vraiment ton corps, sans sophistication inutile.",s:"Choisis une base simple avant de commencer.",a:"Observe la sensation après le repas." },
+        { m:"wellbeing",l:5,t:"Garde 20 minutes pour toi sans culpabiliser.",d:"Considère ce temps comme légitime, pas comme un reste.",s:"Bloque ce créneau à l'avance.",a:"Observe les résistances internes éventuelles." },
+        { m:"wellbeing",l:5,t:"Fais une douche ou un bain vraiment réparateur.",d:"Ralentis, respire, et transforme ce moment en récupération réelle.",s:"Prévois un moment où tu ne seras pas pressé.",a:"Observe le relâchement corporel." },
+        { m:"wellbeing",l:5,t:"Écris une limite saine à poser.",d:"Choisis une limite réaliste, concrète, et liée à ton énergie.",s:"Prends quelques minutes seul.",a:"Observe si la limite t'allège ou te tend." },
+        { m:"wellbeing",l:5,t:"Fais une soirée plus calme que d'habitude.",d:"Réduis volontairement stimulation, bruit ou surcharge.",s:"Choisis à l'avance ce que tu simplifies.",a:"Observe la différence sur ton système." },
+        { m:"wellbeing",l:6,t:"Fais une marche bien-être de 25 minutes.",d:"Marche pour réguler, pas pour performer.",s:"Prévois un moment dédié.",a:"Observe ce qui a bougé intérieurement." },
+        { m:"wellbeing",l:6,t:"Garde 25 minutes de récupération réelle.",d:"Pas de multitâche, pas de faux repos rempli.",s:"Coupe les sollicitations pendant ce temps.",a:"Observe si tu ressens une vraie récupération." },
+        { m:"wellbeing",l:6,t:"Coupe une source de stress évitable.",d:"Choisis une source identifiable que tu peux réduire aujourd'hui.",s:"Repère ce qui te parasite le plus.",a:"Observe l'espace gagné." },
+        { m:"wellbeing",l:6,t:"Fais un automassage de 5 minutes.",d:"Mains, visage, nuque, épaules ou pieds : choisis une zone utile.",s:"Installe-toi au calme.",a:"Observe les zones qui se relâchent vraiment." },
+        { m:"wellbeing",l:6,t:"Organise ta soirée pour mieux dormir.",d:"Prépare en avance ce qui peut simplifier la fin de journée.",s:"Décide d'une ou deux actions concrètes.",a:"Observe si la soirée devient moins lourde." },
+        { m:"wellbeing",l:7,t:"Sanctuarise 30 minutes pour toi.",d:"Traite ce temps comme non négociable aujourd'hui.",s:"Bloque le créneau dans ta journée.",a:"Observe si cela change ton rapport au reste." },
+        { m:"wellbeing",l:7,t:"Réduis une charge mentale concrète.",d:"Fais une action qui enlève un poids réel de ton esprit.",s:"Choisis une source précise de surcharge.",a:"Observe le soulagement ou non." },
+        { m:"wellbeing",l:7,t:"Fais une sieste courte ou un repos yeux fermés.",d:"Même 10 à 20 minutes peuvent suffire si le repos est réel.",s:"Trouve un endroit calme.",a:"Observe si ton système redescend." },
+        { m:"wellbeing",l:7,t:"Crée un petit rituel de fin de journée.",d:"Choisis quelque chose de simple à répéter : lumière douce, tisane, silence, respiration.",s:"Décide du rituel avant le soir.",a:"Observe si cela marque une vraie transition." },
+        { m:"wellbeing",l:7,t:"Observe honnêtement ton niveau de fatigue.",d:"Sans te juger, demande-toi où tu en es vraiment aujourd'hui.",s:"Prends une minute seul.",a:"Observe si tu ajustes tes choix ensuite." },
+        { m:"wellbeing",l:8,t:"Organise ta journée en fonction de ton énergie réelle.",d:"Adapte au moins une partie de ta journée à ton état, pas à l'automatisme.",s:"Prends un moment pour évaluer ton niveau d'énergie.",a:"Observe si cela te respecte davantage." },
+        { m:"wellbeing",l:8,t:"Garde 40 minutes pour te régénérer.",d:"Ce temps doit vraiment restaurer ton système.",s:"Bloque ce temps à l'avance.",a:"Observe si cela change ton état de fond." },
+        { m:"wellbeing",l:8,t:"Mets une vraie limite à une surcharge.",d:"Refuse, reporte, réduis ou restructure une pression inutile.",s:"Identifie la surcharge la plus claire.",a:"Observe le mélange éventuel de soulagement et de peur." },
+        { m:"wellbeing",l:8,t:"Fais 15 minutes d'étirements ou de relaxation.",d:"Choisis ce qui aide le plus ton corps aujourd'hui.",s:"Prépare un espace calme.",a:"Observe le niveau de détente obtenu." },
+        { m:"wellbeing",l:8,t:"Coupe les écrans 1 heure avant le sommeil.",d:"Laisse ton système ralentir sans stimulation numérique.",s:"Prévois une alternative calme.",a:"Observe le calme du soir." },
+        { m:"wellbeing",l:9,t:"Consacre 45 minutes à ta récupération.",d:"Considère ce temps comme un vrai besoin, pas comme un luxe.",s:"Bloque-le dans la journée.",a:"Observe si ton système décroche vraiment." },
+        { m:"wellbeing",l:9,t:"Supprime un engagement inutile aujourd'hui.",d:"Retire quelque chose qui te prend plus qu'il ne t'apporte.",s:"Choisis clairement ce que tu enlèves.",a:"Observe l'espace que cela crée." },
+        { m:"wellbeing",l:9,t:"Prépare une soirée très sobre en stimulations.",d:"Moins de bruit, moins d'écran, moins de remplissage.",s:"Décide à l'avance ce que tu simplifies.",a:"Observe ton état en fin de soirée." },
+        { m:"wellbeing",l:9,t:"Fais un moment nature ou ciel de 20 minutes.",d:"Va dehors ou mets-toi au contact d'un horizon plus large que ton quotidien immédiat.",s:"Choisis un lieu simple d'accès.",a:"Observe la différence sur ton système mental." },
+        { m:"wellbeing",l:9,t:"Choisis le repos plutôt que la surproduction.",d:"Renonce à faire plus juste pour cocher ou remplir.",s:"Repère où tu peux desserrer.",a:"Observe ce que cela te fait intérieurement." },
+        { m:"wellbeing",l:10,t:"Organise une journée entière plus respectueuse de ton énergie.",d:"Pense ta journée avec plus de cohérence énergétique que d'habitude.",s:"Prends quelques minutes pour poser un cadre.",a:"Observe si la journée a changé de texture." },
+        { m:"wellbeing",l:10,t:"Garde 1 heure pour restaurer ton système.",d:"Consacre une vraie heure à quelque chose de profondément récupérateur.",s:"Bloque ce temps comme un rendez-vous.",a:"Observe la qualité du changement." },
+        { m:"wellbeing",l:10,t:"Fais 20 minutes de relaxation profonde.",d:"Allongé, guidé ou non, cherche un vrai ralentissement.",s:"Prépare un espace calme.",a:"Observe le tonus global du corps." },
+        { m:"wellbeing",l:10,t:"Écris ce que tu refuses désormais pour te préserver.",d:"Nommer clairement ce qui te détruit ou t'use change déjà quelque chose.",s:"Prends un temps d'écriture au calme.",a:"Observe la force ou la difficulté de ce constat." },
+        { m:"wellbeing",l:10,t:"Fais de ton bien-être une priorité visible aujourd'hui.",d:"Pose au moins un choix concret qui montre cette priorité.",s:"Décide d'une action claire dès le début de journée.",a:"Observe si cette priorité est restée réelle ou théorique." },
+        // --- RESPIRATION ---
+        { m:"breath",l:1,t:"Fais 3 respirations lentes.",d:"Ralentis volontairement le rythme respiratoire sur trois cycles.",s:"Arrête-toi quelques secondes.",a:"Observe si ton système redescend un peu." },
+        { m:"breath",l:1,t:"Inspire par le nez, expire doucement par la bouche.",d:"Laisse l'expiration sortir sans la forcer brutalement.",s:"Prends une posture simple et stable.",a:"Observe la détente éventuelle dans le haut du corps." },
+        { m:"breath",l:1,t:"Pose une main sur le ventre en respirant.",d:"Sens si le ventre bouge un peu avec l'inspiration et l'expiration.",s:"Assieds-toi ou allonge-toi confortablement.",a:"Observe si le souffle descend davantage." },
+        { m:"breath",l:1,t:"Fais une expiration longue 3 fois.",d:"Essaie juste de souffler un peu plus longtemps que d'habitude.",s:"Ralentis quelques secondes.",a:"Observe l'effet sur les épaules ou la mâchoire." },
+        { m:"breath",l:1,t:"Observe ton souffle 30 secondes.",d:"Ne corrige rien au début, regarde seulement ce qui est là.",s:"Prends un moment d'arrêt.",a:"Observe si tu respirais vite, haut, court ou calme." },
+        { m:"breath",l:2,t:"Fais 1 minute de respiration calme.",d:"Ralentis volontairement sans chercher la performance.",s:"Mets-toi dans une position confortable.",a:"Observe ton rythme intérieur." },
+        { m:"breath",l:2,t:"Inspire 4 secondes, expire 4 secondes.",d:"Cherche une régularité simple sur plusieurs cycles.",s:"Compte mentalement sans te crisper.",a:"Observe si la respiration se stabilise." },
+        { m:"breath",l:2,t:"Fais 6 respirations abdominales.",d:"Laisse le ventre s'ouvrir légèrement sans forcer.",s:"Pose une main sur le ventre si utile.",a:"Observe si le souffle descend mieux." },
+        { m:"breath",l:2,t:"Relâche les épaules à chaque expiration.",d:"Associe la sortie de l'air à une détente corporelle.",s:"Prends une posture assise ou debout stable.",a:"Observe les tensions du haut du corps." },
+        { m:"breath",l:2,t:"Respire avant de répondre à quelqu'un.",d:"Prends un vrai cycle respiratoire avant de parler ou réagir.",s:"Repère un moment concret dans la journée.",a:"Observe si cela change ta réponse." },
+        { m:"breath",l:3,t:"Respire 2 minutes en conscience.",d:"Reste présent au souffle sans partir trop vite ailleurs.",s:"Prends un moment calme.",a:"Observe la qualité de présence obtenue." },
+        { m:"breath",l:3,t:"Inspire 4, expire 6 pendant plusieurs cycles.",d:"Allonge légèrement l'expiration pour apaiser le système.",s:"Compte doucement.",a:"Observe si le rythme interne ralentit." },
+        { m:"breath",l:3,t:"Fais 10 respirations abdominales.",d:"Cherche plus d'ampleur basse, sans forcer la cage thoracique.",s:"Assieds-toi ou allonge-toi.",a:"Observe le ventre, le dos et les côtes." },
+        { m:"breath",l:3,t:"Respire assis, le dos bien droit.",d:"Une posture plus stable peut clarifier le souffle.",s:"Assieds-toi sans t'affaisser.",a:"Observe la différence avec une posture relâchée." },
+        { m:"breath",l:3,t:"Fais une pause souffle avant un moment stressant.",d:"Utilise le souffle comme sas avant une situation tendue.",s:"Repère un moment concret à venir.",a:"Observe si cela change ton entrée dans la situation." },
+        { m:"breath",l:4,t:"Respire 3 minutes lentement.",d:"Reste simple, stable, sans te crisper sur la durée.",s:"Choisis un moment sans interruption.",a:"Observe ton état avant/après." },
+        { m:"breath",l:4,t:"Inspire 5, expire 5 pendant 3 minutes.",d:"Travaille une respiration régulière et équilibrée.",s:"Compte calmement.",a:"Observe la stabilité obtenue." },
+        { m:"breath",l:4,t:"Fais 12 respirations abdominales profondes.",d:"Cherche une amplitude douce mais réelle.",s:"Place une main sur le ventre si utile.",a:"Observe si le bas du corps respire davantage." },
+        { m:"breath",l:4,t:"Respire au réveil pendant 2 minutes.",d:"Commence la journée en installant du souffle plutôt que de partir directement dans le rythme.",s:"Fais-le avant de prendre ton téléphone.",a:"Observe le ton de ton démarrage." },
+        { m:"breath",l:4,t:"Respire avant de dormir pendant 2 minutes.",d:"Utilise le souffle pour créer une transition vers le repos.",s:"Allonge-toi ou assieds-toi au calme.",a:"Observe le relâchement du soir." },
+        { m:"breath",l:5,t:"Fais 5 minutes de respiration consciente.",d:"Tiens un vrai temps de pratique, sans remplir avec autre chose.",s:"Prévois un créneau clair.",a:"Observe la qualité de recentrage." },
+        { m:"breath",l:5,t:"Inspire 5, expire 5 pendant 5 minutes.",d:"Vise la cohérence régulière, sans rigidité.",s:"Compte en silence ou avec un minuteur doux.",a:"Observe si le rythme devient naturel." },
+        { m:"breath",l:5,t:"Essaie une respiration en carré 4-4-4-4 si c'est confortable.",d:"Inspire, garde, expire, garde, sans forcer. Réduis si besoin.",s:"Pratique seulement si cela reste confortable.",a:"Observe si cela te calme ou te tend." },
+        { m:"breath",l:5,t:"Pratique avant un moment de tension.",d:"Utilise le souffle comme régulation préventive.",s:"Repère un moment concret où tu montes facilement.",a:"Observe l'impact réel." },
+        { m:"breath",l:5,t:"Observe l'effet avant / après.",d:"Prends quelques secondes pour mesurer ce qui change dans le corps ou la tête.",s:"Note mentalement ton état avant de commencer.",a:"Compare avec ton état après." },
+        { m:"breath",l:6,t:"Fais 6 minutes de respiration consciente.",d:"Tiens une durée un peu plus longue sans quitter la pratique.",s:"Prévois un espace calme.",a:"Observe stabilité, agitation ou relâchement." },
+        { m:"breath",l:6,t:"Inspire 5, expire 6 sur plusieurs minutes.",d:"Allonge un peu plus l'expiration si cela reste confortable.",s:"Compte doucement.",a:"Observe si l'apaisement augmente." },
+        { m:"breath",l:6,t:"Pratique matin et soir.",d:"Installe deux points d'ancrage respiratoires dans la journée.",s:"Décide quand précisément tu les fais.",a:"Observe si le souffle devient plus disponible." },
+        { m:"breath",l:6,t:"Fais 20 respirations abdominales lentes.",d:"Va vers la lenteur et la douceur, pas vers l'effort.",s:"Assieds-toi ou allonge-toi confortablement.",a:"Observe le ventre et le calme mental." },
+        { m:"breath",l:6,t:"Utilise le souffle pour ralentir le mental.",d:"Quand le mental accélère, ramène ton attention au rythme respiratoire.",s:"Repère un moment où ton esprit part vite.",a:"Observe si le souffle reprend la main." },
+        { m:"breath",l:7,t:"Fais 8 minutes de respiration consciente.",d:"Approfondis la durée sans transformer cela en performance.",s:"Prévois un temps protégé.",a:"Observe ta capacité à rester avec le souffle." },
+        { m:"breath",l:7,t:"Inspire 5, expire 7 sur plusieurs cycles.",d:"Allonge l'expiration uniquement si cela reste fluide.",s:"Compte sans tension.",a:"Observe le niveau d'apaisement." },
+        { m:"breath",l:7,t:"Pratique 3 fois dans la journée.",d:"Installe plusieurs rappels respiratoires courts ou longs.",s:"Choisis matin, milieu de journée, soir ou autre.",a:"Observe si le souffle devient un réflexe d'appui." },
+        { m:"breath",l:7,t:"Respire avant une discussion sensible.",d:"Prends quelques cycles avant d'entrer dans l'échange.",s:"Repère la discussion en question.",a:"Observe si ton entrée dans l'échange change." },
+        { m:"breath",l:7,t:"Respire après une émotion forte.",d:"Ne cherche pas à faire disparaître l'émotion, mais à accompagner ton système.",s:"Dès qu'un pic arrive, reviens au souffle.",a:"Observe si le corps redescend." },
+        { m:"breath",l:8,t:"Fais 10 minutes de respiration consciente.",d:"Maintiens ta pratique dans une vraie continuité.",s:"Prévois un créneau dédié.",a:"Observe la densité de présence obtenue." },
+        { m:"breath",l:8,t:"Inspire 5, expire 8 sans forcer.",d:"N'allonge l'expiration que si cela reste paisible.",s:"Pratique assis ou allongé.",a:"Observe l'effet sur le système nerveux." },
+        { m:"breath",l:8,t:"Pratique matin, milieu de journée et soir.",d:"Fais du souffle un fil rouge réel dans la journée.",s:"Pose trois moments précis.",a:"Observe si cela structure ton état intérieur." },
+        { m:"breath",l:8,t:"Fais 30 respirations lentes.",d:"Compte les cycles sans te raidir.",s:"Prends une posture stable.",a:"Observe la concentration obtenue." },
+        { m:"breath",l:8,t:"Reviens au souffle dès que tu te disperses.",d:"Fais du souffle ton point d'ancrage principal.",s:"Rappelle-toi cette consigne sur la journée.",a:"Observe combien de fois tu y reviens réellement." },
+        { m:"breath",l:9,t:"Fais 12 minutes de respiration consciente.",d:"Maintiens une pratique longue et stable.",s:"Choisis un moment sans interruption.",a:"Observe ton niveau de présence." },
+        { m:"breath",l:9,t:"Garde une respiration silencieuse et stable.",d:"Laisse le souffle devenir plus fin, plus calme, plus posé.",s:"Prends une posture confortable.",a:"Observe la qualité du calme." },
+        { m:"breath",l:9,t:"Installe un vrai rituel respiratoire.",d:"Choisis une forme simple que tu pourrais répéter.",s:"Décide durée, moment et posture.",a:"Observe si cela devient concret ou reste abstrait." },
+        { m:"breath",l:9,t:"Respire avant et après toute montée de tension.",d:"Encadre les pics de stress avec le souffle.",s:"Rappelle-toi cette consigne toute la journée.",a:"Observe si cela change tes transitions émotionnelles." },
+        { m:"breath",l:9,t:"Observe l'effet sur ta présence mentale.",d:"Après la pratique, regarde si ton mental est plus clair, plus lent ou plus stable.",s:"Prends quelques secondes pour faire le constat.",a:"Note mentalement ou par écrit ce que tu observes." },
+        { m:"breath",l:10,t:"Fais 15 minutes de respiration consciente.",d:"Tiens une pratique longue avec régularité et présence.",s:"Bloque un vrai créneau.",a:"Observe la qualité de profondeur obtenue." },
+        { m:"breath",l:10,t:"Pratique 3 à 4 moments dans la journée.",d:"Fais du souffle un outil central, pas un moment isolé.",s:"Répartis les moments dans la journée.",a:"Observe si cela transforme ta journée." },
+        { m:"breath",l:10,t:"Fais 50 cycles cohérents.",d:"Cherche une respiration régulière, stable et douce.",s:"Prends le temps nécessaire sans te presser.",a:"Observe l'endurance de ton attention." },
+        { m:"breath",l:10,t:"Utilise le souffle comme base de régulation aujourd'hui.",d:"Avant, pendant et après les moments sensibles, reviens consciemment à la respiration.",s:"Décide dès le matin que le souffle est ton appui principal.",a:"Observe si cette base a vraiment tenu." },
+        { m:"breath",l:10,t:"Termine par 1 minute d'immobilité totale.",d:"Après le souffle, reste simplement là, immobile, sans rien ajouter.",s:"Choisis une posture stable.",a:"Observe le silence intérieur ou l'agitation résiduelle." },
+        // --- YOGA ---
+        { m:"yoga",l:1,t:"Tiens la posture de la montagne 30 secondes.",d:"Reste debout, ancré, stable, avec une attention simple à la verticalité.",s:"Place tes pieds au sol et allonge la colonne.",a:"Observe l'ancrage et la posture." },
+        { m:"yoga",l:1,t:"Fais le chat-vache 5 fois.",d:"Alterne doucement dos rond et dos creux en suivant le souffle.",s:"Place-toi à quatre pattes si c'est confortable.",a:"Observe la mobilité de la colonne." },
+        { m:"yoga",l:1,t:"Tiens la posture de l'enfant 30 secondes.",d:"Laisse le corps se déposer sans chercher une forme parfaite.",s:"Installe-toi au sol confortablement.",a:"Observe le relâchement du dos et du souffle." },
+        { m:"yoga",l:1,t:"Fais une pince debout douce.",d:"Laisse tomber le haut du corps sans forcer l'étirement.",s:"Garde les genoux souples si besoin.",a:"Observe l'arrière du corps." },
+        { m:"yoga",l:1,t:"Allonge-toi et respire 1 minute.",d:"Termine par une minute de présence simple au sol.",s:"Installe-toi confortablement sur le dos.",a:"Observe le calme obtenu." },
+        { m:"yoga",l:2,t:"Tiens la montagne 1 minute.",d:"Reste stable et attentif à tes appuis.",s:"Pieds au sol, nuque longue, épaules relâchées.",a:"Observe ta posture naturelle." },
+        { m:"yoga",l:2,t:"Fais 3 salutations au soleil simplifiées.",d:"Enchaîne lentement les mouvements avec le souffle.",s:"Prévois un peu d'espace autour de toi.",a:"Observe l'échauffement global du corps." },
+        { m:"yoga",l:2,t:"Tiens l'enfant 1 minute.",d:"Laisse le corps se déposer un peu plus longtemps.",s:"Ajuste genoux et bras pour ton confort.",a:"Observe dos, souffle et nuque." },
+        { m:"yoga",l:2,t:"Essaie le chien tête en bas 20 secondes.",d:"Plie les genoux si nécessaire et cherche surtout la longueur du dos.",s:"Pars à quatre pattes ou depuis une planche adaptée.",a:"Observe épaules, jambes, souffle." },
+        { m:"yoga",l:2,t:"Termine par 2 minutes de relaxation.",d:"Laisse le corps intégrer la pratique sans rien ajouter.",s:"Allonge-toi confortablement.",a:"Observe l'effet global de la mini-séance." },
+        { m:"yoga",l:3,t:"Fais 5 minutes de yoga doux.",d:"Enchaîne quelques mouvements simples sans te presser.",s:"Prépare un espace calme.",a:"Observe la fluidité corporelle." },
+        { m:"yoga",l:3,t:"Fais 4 salutations au soleil lentes.",d:"Coordonne mouvement et respiration sans chercher la vitesse.",s:"Laisse assez d'espace devant et derrière toi.",a:"Observe le rythme interne créé." },
+        { m:"yoga",l:3,t:"Tiens le chien tête en bas 30 secondes.",d:"Cherche l'allongement et la stabilité.",s:"Ajuste la posture à ton niveau réel.",a:"Observe épaules, dos et jambes." },
+        { m:"yoga",l:3,t:"Tiens la planche 15 secondes.",d:"Garde une ligne simple sans creuser le dos.",s:"Pars du sol ou d'une version adaptée.",a:"Observe ventre, bras, épaules." },
+        { m:"yoga",l:3,t:"Essaie l'arbre 20 secondes par jambe.",d:"Travaille l'équilibre avec calme et concentration.",s:"Fixe un point devant toi.",a:"Observe stabilité et différence entre les côtés." },
+        { m:"yoga",l:4,t:"Fais 8 minutes de yoga.",d:"Enchaîne plusieurs postures avec continuité.",s:"Prévois un tapis ou un sol confortable.",a:"Observe le ressenti global." },
+        { m:"yoga",l:4,t:"Fais 5 salutations au soleil.",d:"Reste régulier et attentif au souffle.",s:"Prépare ton espace.",a:"Observe échauffement, souffle et fluidité." },
+        { m:"yoga",l:4,t:"Tiens la chaise 30 secondes.",d:"Cherche la stabilité dans les jambes et le tronc.",s:"Pieds ancrés au sol.",a:"Observe jambes et respiration." },
+        { m:"yoga",l:4,t:"Fais un triangle simple de chaque côté.",d:"Travaille l'ouverture latérale et l'ancrage.",s:"Écarte les pieds largement.",a:"Observe les côtés du corps." },
+        { m:"yoga",l:4,t:"Garde 2 minutes de relaxation finale.",d:"Laisse le corps intégrer la pratique en silence.",s:"Allonge-toi confortablement.",a:"Observe le calme final." },
+        { m:"yoga",l:5,t:"Fais 10 minutes de yoga.",d:"Maintiens une pratique un peu plus longue et cohérente.",s:"Prévois un créneau sans interruption.",a:"Observe ton niveau d'engagement." },
+        { m:"yoga",l:5,t:"Fais 6 salutations au soleil.",d:"Coordonne souffle et mouvement avec régularité.",s:"Prépare ton espace.",a:"Observe l'endurance douce." },
+        { m:"yoga",l:5,t:"Tiens la planche 30 secondes.",d:"Garde une ligne stable et respirante.",s:"Choisis une variante adaptée.",a:"Observe le centre du corps." },
+        { m:"yoga",l:5,t:"Fais guerrier 1 et 2 de chaque côté.",d:"Travaille ancrage, ouverture et stabilité.",s:"Prévois assez d'espace autour de toi.",a:"Observe les jambes, le bassin et la présence." },
+        { m:"yoga",l:5,t:"Tiens la pince assise 1 minute.",d:"Cherche l'étirement sans forcer ni t'effondrer.",s:"Assieds-toi au sol ou sur un support si besoin.",a:"Observe l'arrière des jambes et le dos." },
+        { m:"yoga",l:6,t:"Fais 12 minutes de yoga.",d:"Garde une pratique construite et stable.",s:"Prends un vrai créneau dédié.",a:"Observe la qualité de continuité." },
+        { m:"yoga",l:6,t:"Fais 8 salutations au soleil.",d:"Travaille rythme, souffle et endurance douce.",s:"Prépare ton espace.",a:"Observe le souffle et la chauffe corporelle." },
+        { m:"yoga",l:6,t:"Tiens le chien tête en bas 1 minute.",d:"Reste dans la posture en ajustant genoux et talons si besoin.",s:"Entre progressivement dans la posture.",a:"Observe épaules, dos, jambes." },
+        { m:"yoga",l:6,t:"Tiens la chaise 45 secondes.",d:"Reste solide sans te raidir.",s:"Ancre les pieds et engage le centre.",a:"Observe stabilité et jambes." },
+        { m:"yoga",l:6,t:"Garde 4 minutes de relaxation ou souffle final.",d:"Termine en intégrant la séance avec lenteur.",s:"Choisis relaxation allongée ou respiration assise.",a:"Observe le changement de tonus." },
+        { m:"yoga",l:7,t:"Fais 15 minutes de yoga.",d:"Tiens une pratique plus installée dans le temps.",s:"Bloque un vrai moment.",a:"Observe discipline et présence." },
+        { m:"yoga",l:7,t:"Fais 10 salutations au soleil.",d:"Reste fluide et régulier sans te précipiter.",s:"Prépare ton espace.",a:"Observe endurance douce et concentration." },
+        { m:"yoga",l:7,t:"Tiens l'arbre 1 minute par jambe.",d:"Travaille l'équilibre et la stabilité mentale.",s:"Fixe un point stable devant toi.",a:"Observe la jambe la plus stable." },
+        { m:"yoga",l:7,t:"Fais une séquence complète debout + sol.",d:"Crée une vraie continuité entre ancrage, mobilité et relâchement.",s:"Prépare 4 à 6 postures à enchaîner.",a:"Observe la cohérence de la séance." },
+        { m:"yoga",l:7,t:"Termine par 4 minutes d'immobilité allongée.",d:"Laisse la séance se déposer sans rien ajouter.",s:"Allonge-toi confortablement.",a:"Observe la profondeur du calme." },
+        { m:"yoga",l:8,t:"Fais 18 minutes de yoga.",d:"Tiens une séance plus longue avec présence.",s:"Prévois un créneau sans interruption.",a:"Observe la tenue de l'attention." },
+        { m:"yoga",l:8,t:"Tiens la planche 1 minute.",d:"Reste stable et respirant malgré l'effort.",s:"Choisis la variante adaptée.",a:"Observe centre, bras, volonté." },
+        { m:"yoga",l:8,t:"Tiens le chien tête en bas 1 minute 30.",d:"Cherche la longueur plus que la forme parfaite.",s:"Ajuste la posture si nécessaire.",a:"Observe la chaîne postérieure et les épaules." },
+        { m:"yoga",l:8,t:"Garde une ouverture de hanches prolongée.",d:"Choisis une posture adaptée et reste dans le souffle.",s:"Prépare un support si besoin.",a:"Observe les tensions profondes." },
+        { m:"yoga",l:8,t:"Fais 5 minutes de relaxation finale.",d:"Termine avec une vraie intégration du corps et du souffle.",s:"Allonge-toi au calme.",a:"Observe le niveau global de relâchement." },
+        { m:"yoga",l:9,t:"Fais 20 minutes de yoga.",d:"Garde une vraie continuité de séance.",s:"Prépare ton enchaînement à l'avance si utile.",a:"Observe engagement et qualité de présence." },
+        { m:"yoga",l:9,t:"Fais 14 salutations au soleil.",d:"Tiens le volume avec régularité.",s:"Prévois suffisamment d'espace et un bon rythme.",a:"Observe souffle et endurance." },
+        { m:"yoga",l:9,t:"Tiens la chaise 1 minute 15.",d:"Reste stable malgré l'intensité croissante.",s:"Ancre les pieds et engage le centre.",a:"Observe les jambes et le souffle." },
+        { m:"yoga",l:9,t:"Ajoute une posture d'équilibre plus fine.",d:"Choisis une variante qui demande plus de précision sans te mettre en danger.",s:"Prévois un mur ou un appui si besoin.",a:"Observe la concentration et le contrôle." },
+        { m:"yoga",l:9,t:"Observe les asymétries de ton corps pendant la séance.",d:"Regarde sans juger ce qui est plus ouvert, plus stable ou plus tendu d'un côté.",s:"Reste attentif pendant toute la pratique.",a:"Note ce que tu remarques." },
+        { m:"yoga",l:10,t:"Fais 25 minutes de yoga.",d:"Tiens une séance complète avec présence et cohérence.",s:"Prévois un vrai créneau.",a:"Observe la profondeur de pratique." },
+        { m:"yoga",l:10,t:"Fais 15 salutations au soleil.",d:"Maintiens rythme, souffle et stabilité sur la durée.",s:"Prépare ton espace.",a:"Observe endurance et concentration." },
+        { m:"yoga",l:10,t:"Tiens la planche 1 minute 30.",d:"Reste aligné et respirant malgré l'effort.",s:"Choisis la version adaptée à ton niveau.",a:"Observe centre, épaules et mental." },
+        { m:"yoga",l:10,t:"Enchaîne une vraie séquence complète avec présence.",d:"Pense le yoga comme une pratique entière, pas comme une addition de postures.",s:"Prépare ton déroulé : début, milieu, fin.",a:"Observe la cohérence de l'ensemble." },
+        { m:"yoga",l:10,t:"Termine par 5 minutes de relaxation profonde.",d:"Laisse le corps intégrer pleinement la séance.",s:"Allonge-toi dans un espace calme.",a:"Observe le niveau final de calme et d'intégration." }
       ];
-
-      const wellnessTemplates = [
-        level => `Prends ${2 + level} minutes de pause sans écran.`,
-        level => `Bois ${1 + Math.floor(level / 2)} verres d'eau en conscience.`,
-        level => `Range un espace pendant ${3 + level} minutes.`,
-        level => `Fais ${2 + level} minutes d'étirements doux.`,
-        level => `Écris ${Math.max(1, level - 1)} choses positives de la journée.`,
-        level => `Prends l'air ${3 + level * 2} minutes.`,
-        level => `Relâche nuque et épaules pendant ${1 + level} minutes.`,
-        level => `Mange un repas sans écran et plus lentement.`,
-        level => `Fais ${2 + level} minutes de silence volontaire.`,
-        level => `Prépare une ambiance calme avant le sommeil.`,
-        level => `Coupe les écrans ${10 + level * 5} minutes avant de dormir.`,
-        level => `Observe ton niveau d'énergie ${Math.max(1, Math.floor(level / 2)) + 1} fois aujourd'hui.`,
-        level => `Prends ${3 + level} respirations profondes avant une tâche stressante.`,
-        level => `Note ce qui t'épuise et une action pour alléger.`,
-        level => `Fais un automassage mains/visage ${1 + level} minutes.`,
-        level => `Planifie ${5 + level * 2} minutes de récupération réelle.`,
-        level => `Garde un moment de lenteur volontaire dans la journée.`,
-        level => `Prépare une boisson chaude en pleine conscience.`,
-        level => `Transforme une pause en vrai moment de récupération.`,
-        level => `Fais un check-in corporel complet en ${2 + level} minutes.`
-      ];
-
-      const breathingTemplates = [
-        level => `Fais ${3 + level} respirations lentes (nez -> expire longue).`,
-        level => `Pratique ${1 + level} minutes de respiration calme.`,
-        level => `Inspire 4s / expire ${4 + level}s pendant ${Math.max(4, level + 2)} cycles.`,
-        level => `Respire avec une main sur le ventre pendant ${1 + level} minutes.`,
-        level => `Fais ${5 + level} expirations longues pour relâcher les tensions.`,
-        level => `Pratique une respiration cohérente ${4 + level} minutes.`,
-        level => `Observe ton souffle sans le corriger pendant ${1 + level} minutes.`,
-        level => `Fais une pause respiration avant et après une tâche importante.`,
-        level => `Réalise ${10 + level * 2} cycles respiratoires réguliers.`,
-        level => `Respire en posture assise stable ${2 + level} minutes.`,
-        level => `Ralentis volontairement ta respiration pendant ${1 + level} minutes.`,
-        level => `Ajoute ${Math.max(1, Math.floor(level / 2)) + 1} mini-pauses souffle dans la journée.`,
-        level => `Pratique la respiration avant de dormir ${2 + level} minutes.`,
-        level => `Pratique la respiration au réveil ${2 + level} minutes.`,
-        level => `Respire en marchant lentement pendant ${2 + level} minutes.`,
-        level => `Garde l'expiration plus longue que l'inspiration sur ${8 + level} cycles.`,
-        level => `Utilise le souffle pour relâcher mâchoire et épaules ${1 + level} minutes.`,
-        level => `Pratique en silence complet ${1 + level} minutes.`,
-        level => `Fais une session allongée de respiration ${2 + level} minutes.`,
-        level => `Note en une phrase ton état avant/après la session souffle.`
-      ];
-
-      const yogaTemplates = [
-        level => `Tiens la posture montagne ${20 + level * 10} secondes.`,
-        level => `Fais ${3 + level} cycles chat-vache lents.`,
-        level => `Fais ${2 + level} salutations au soleil adaptées.`,
-        level => `Tiens la posture de l'enfant ${20 + level * 10} secondes.`,
-        level => `Tiens le chien tête en bas ${15 + level * 8} secondes.`,
-        level => `Tiens la planche ${10 + level * 8} secondes.`,
-        level => `Tiens la posture chaise ${10 + level * 8} secondes.`,
-        level => `Fais une torsion assise de chaque côté ${10 + level * 6} secondes.`,
-        level => `Tiens l'arbre ${10 + level * 8} secondes par jambe.`,
-        level => `Fais une pince assise ${15 + level * 8} secondes.`,
-        level => `Tiens une fente haute ${12 + level * 6} secondes par côté.`,
-        level => `Fais un triangle de chaque côté ${10 + level * 6} secondes.`,
-        level => `Tiens le pont ${12 + level * 7} secondes.`,
-        level => `Fais une ouverture de hanches douce ${20 + level * 8} secondes.`,
-        level => `Fais une torsion couchée ${15 + level * 8} secondes par côté.`,
-        level => `Pratique ${5 + level * 2} minutes de yoga continu.`,
-        level => `Ajoute ${1 + Math.floor(level / 2)} minute de respiration finale.`,
-        level => `Ralentis les transitions pendant toute la séance.`,
-        level => `Maintiens l'attention sur l'alignement ${4 + level} minutes.`,
-        level => `Termine par ${2 + Math.floor(level / 2)} minutes d'immobilité.`
-      ];
-
-      function pushTheme(theme, category, tags, templates) {
-        for (let level = 1; level <= 10; level++) {
-          for (let i = 0; i < missionsPerLevel; i++) {
-            missions.push(
-              createMission({
-                id: nextId++,
-                text: `[N${level}] ${templates[i](level)}`,
-                category,
-                level,
-                theme,
-                tags
-              })
-            );
-          }
-        }
-      }
-
-      pushTheme("health_sport", "ENTRAÎNE", ["santé", "sport"], sportTemplates);
-      pushTheme("health_wellness", "RESSENS", ["santé", "bien-être"], wellnessTemplates);
-      pushTheme("health_breathing", "RESSENS", ["santé", "respiration"], breathingTemplates);
-      pushTheme("health_yoga", "JOUE", ["santé", "yoga"], yogaTemplates);
-
-      return missions;
+      const TAGS = { sport: ["santé", "sport"], wellbeing: ["santé", "bien-être"], breath: ["santé", "respiration"], yoga: ["santé", "yoga"] };
+      return raw.map((r, i) => createMission({
+        id: startId + i,
+        text: r.t,
+        category: CAT[r.m],
+        theme: THM[r.m],
+        level: r.l,
+        tags: TAGS[r.m],
+        details: r.d,
+        setup: r.s,
+        after: r.a
+      }));
     }
 
     const DEFAULT_MISSIONS = [
@@ -1451,8 +1681,7 @@
       createMission({ id: 86, text: "Note 3 choses positives de ta journée", category: "RESSENS", level: 1, theme: "health_mental", tags: ["santé", "mental"] }),
       createMission({ id: 87, text: "Fais 5 minutes sans écran et observe simplement", category: "OSE", level: 2, theme: "health_mental", tags: ["santé", "mental"] }),
       createMission({ id: 88, text: "Écris une intention simple pour la suite de ta journée", category: "LIEN", level: 1, theme: "health_mental", tags: ["santé", "mental"] }),
-
-      ...buildHealthMissionBank(89)
+      ...buildHealthMissions(89)
     ];
 
     let MISSIONS = [];
@@ -1766,7 +1995,9 @@
     // ===== État UI =====
     const STATE = {
       currentMission: null,
-      currentPhotoDataUrl: ""
+      currentPhotoDataUrl: "",
+      drawMode: null,        // "choose-theme" | "random-theme"
+      selectedTheme: null    // thème choisi par l'utilisateur
     };
 
     // ===== DOM =====
@@ -1930,6 +2161,170 @@
 
       updateProgressBar();
       Toast.success("Réglages admin enregistrés.");
+    }
+
+    // ===== Tirage thématique =====
+
+    function getAvailableThemesForDraw() {
+      if (!MISSIONS.length) loadMissions();
+      const state = getProgressState();
+      const level = computeInternalLevel(state.doneMissionIds.length);
+      const allowedLevels = [level, Math.max(1, level - 1), level + 1].filter(n => n >= 1 && n <= 10);
+      const mode = getMissionMode();
+      const adminSettings = getAdminSettings();
+
+      const available = MISSIONS.filter(m => {
+        if (!m.active || m.bonus) return false;
+        if (!missionAllowedByAdmin(m, adminSettings)) return false;
+        if (!missionMatchesSelectedMode(m, mode)) return false;
+        return allowedLevels.includes(normalizeMissionLevel(m.level));
+      });
+
+      const presentThemeIds = new Set(available.map(m => m.theme).filter(Boolean));
+      return DRAW_THEMES.filter(t => presentThemeIds.has(t.id));
+    }
+
+    function renderThemePicker() {
+      const list = document.getElementById("theme-list");
+      const available = getAvailableThemesForDraw();
+      list.innerHTML = "";
+
+      available.forEach(theme => {
+        const btn = document.createElement("button");
+        btn.className = "theme-btn" + (STATE.selectedTheme === theme.id ? " active" : "");
+        btn.innerHTML = `<span class="theme-icon">${theme.icon}</span><span class="theme-label">${theme.label}</span>`;
+        btn.addEventListener("click", () => {
+          STATE.selectedTheme = theme.id;
+          list.querySelectorAll(".theme-btn").forEach(b => b.classList.remove("active"));
+          btn.classList.add("active");
+        });
+        list.appendChild(btn);
+      });
+
+      document.getElementById("draw-mode-box").classList.add("draw-hidden");
+      document.getElementById("theme-picker-box").classList.remove("draw-hidden");
+    }
+
+    function pickMissionWithTheme(themeId) {
+      const state = getProgressState();
+      state.internalLevel = computeInternalLevel(state.doneMissionIds.length);
+
+      let pool = getMissionPoolForProgression(state);
+      if (!pool.length) pool = getFallbackMissionPool(state);
+
+      // Filtre par thème demandé, avec fallback sans thème
+      let themed = themeId ? pool.filter(m => m.theme === themeId) : pool;
+      if (!themed.length) themed = pool;
+
+      // Exclusion récents
+      const recentIds = getRecentMissionIds(state, 6);
+      let candidates = themed.filter(m => !recentIds.includes(m.id) && m.id !== state.lastMissionId);
+      if (!candidates.length) candidates = themed.filter(m => m.id !== state.lastMissionId);
+      if (!candidates.length) candidates = themed;
+      if (!candidates.length) return null;
+
+      // Tirage pondéré
+      const level = state.internalLevel;
+      const weighted = [];
+      candidates.forEach(m => {
+        const ml = normalizeMissionLevel(m.level);
+        const w = ml === level ? 5 : ml === level + 1 ? 3 : 2;
+        for (let i = 0; i < w; i++) weighted.push(m);
+      });
+
+      const mission = weighted[Math.floor(Math.random() * weighted.length)];
+      state.currentMissionId = mission.id;
+      state.lastMissionId = mission.id;
+      state.shownMissionIds.push(mission.id);
+      saveProgressState(state);
+      return mission;
+    }
+
+    function animateWheel(themeObj, mission, onComplete) {
+      const overlay   = document.getElementById("wheel-overlay");
+      const titleEl   = document.getElementById("wheel-title");
+      const themeEl   = document.getElementById("wheel-theme-label");
+      const reelEl    = document.getElementById("wheel-reel");
+      const subtextEl = document.getElementById("wheel-subtext");
+
+      // Réinitialise
+      titleEl.textContent   = "Tirage en cours…";
+      themeEl.textContent   = "";
+      reelEl.textContent    = "🎲";
+      subtextEl.textContent = "La roue tourne…";
+      overlay.classList.remove("draw-hidden");
+
+      // Phase 1 : défilement du thème (emojis aléatoires) — 1.2 s
+      const ICONS = DRAW_THEMES.map(t => t.icon);
+      let count = 0;
+      const phase1 = setInterval(() => {
+        reelEl.textContent = ICONS[Math.floor(Math.random() * ICONS.length)];
+        count++;
+        if (count >= 14) {
+          clearInterval(phase1);
+          // Affiche le thème retenu
+          themeEl.textContent = themeObj ? `${themeObj.icon} ${themeObj.label}` : "";
+          reelEl.textContent  = themeObj ? themeObj.icon : "🎲";
+          subtextEl.textContent = "Thème trouvé ! Mission en cours…";
+
+          // Phase 2 : défilement des textes de missions — 1.2 s
+          const pool = MISSIONS.filter(m => !themeObj || m.theme === themeObj.id);
+          const texts = shuffleArray(pool.map(m => m.text)).slice(0, 12);
+          let c2 = 0;
+          const phase2 = setInterval(() => {
+            reelEl.textContent = texts[c2 % texts.length] || "…";
+            c2++;
+            if (c2 >= 14) {
+              clearInterval(phase2);
+              reelEl.textContent    = mission ? mission.text : "Mission introuvable.";
+              subtextEl.textContent = "C'est parti !";
+              setTimeout(() => {
+                overlay.classList.add("draw-hidden");
+                onComplete();
+              }, 900);
+            }
+          }, 90);
+        }
+      }, 80);
+    }
+
+    function showDrawModeBox() {
+      document.getElementById("draw-mode-box").classList.remove("draw-hidden");
+      document.getElementById("theme-picker-box").classList.add("draw-hidden");
+      STATE.drawMode = null;
+      STATE.selectedTheme = null;
+    }
+
+    function hideDrawUI() {
+      document.getElementById("draw-mode-box").classList.add("draw-hidden");
+      document.getElementById("theme-picker-box").classList.add("draw-hidden");
+    }
+
+    function launchMissionDraw() {
+      syncProfileFromInput();
+      hideDrawUI();
+
+      const available = getAvailableThemesForDraw();
+      let themeObj = null;
+
+      if (STATE.drawMode === "choose-theme" && STATE.selectedTheme) {
+        themeObj = DRAW_THEMES.find(t => t.id === STATE.selectedTheme) || null;
+      } else {
+        // Surprends-moi : thème aléatoire parmi les disponibles
+        if (available.length) {
+          themeObj = available[Math.floor(Math.random() * available.length)];
+        }
+      }
+
+      const mission = pickMissionWithTheme(themeObj ? themeObj.id : null);
+      if (!mission) {
+        Toast.warning("Aucune mission disponible pour le moment.");
+        return;
+      }
+
+      animateWheel(themeObj, mission, () => {
+        renderMission(mission);
+      });
     }
 
     // ===== Mission =====
@@ -2290,7 +2685,41 @@
 
     // ===== Événements =====
     document.getElementById("admin-access-btn").addEventListener("click", openAdminAccess);
-    document.getElementById("start-btn").addEventListener("click", startGame);
+
+    // "Je joue" ouvre le choix du mode de tirage
+    document.getElementById("start-btn").addEventListener("click", showDrawModeBox);
+
+    // "Je choisis un thème"
+    document.getElementById("btn-choose-theme").addEventListener("click", () => {
+      STATE.drawMode = "choose-theme";
+      STATE.selectedTheme = null;
+      renderThemePicker();
+    });
+
+    // "Surprends-moi"
+    document.getElementById("btn-random-theme").addEventListener("click", () => {
+      STATE.drawMode = "random-theme";
+      STATE.selectedTheme = null;
+      launchMissionDraw();
+    });
+
+    // "Lancer le tirage" après choix du thème
+    document.getElementById("btn-launch-themed-draw").addEventListener("click", () => {
+      if (!STATE.selectedTheme) {
+        Toast.warning("Choisis d'abord un thème.");
+        return;
+      }
+      launchMissionDraw();
+    });
+
+    // "← Retour" dans le picker de thème
+    document.getElementById("btn-cancel-theme-pick").addEventListener("click", () => {
+      document.getElementById("theme-picker-box").classList.add("draw-hidden");
+      document.getElementById("draw-mode-box").classList.remove("draw-hidden");
+      STATE.drawMode = null;
+      STATE.selectedTheme = null;
+    });
+
     document.getElementById("journal-btn").addEventListener("click", () => showScreen("journal"));
     document.getElementById("validate-mission-btn").addEventListener("click", openValidation);
     document.getElementById("another-mission-btn").addEventListener("click", goToAnotherMission);
@@ -2369,6 +2798,14 @@
       Toast.success("Connexion rétablie.", 3000);
     });
 </script>
+
+<!-- Roue de tirage (overlay plein écran) -->
+<div id="wheel-overlay" class="wheel-overlay draw-hidden" aria-live="polite">
+  <h2 id="wheel-title">Tirage en cours…</h2>
+  <div id="wheel-theme-label" class="wheel-theme-label"></div>
+  <div id="wheel-reel" class="wheel-reel">🎲</div>
+  <p id="wheel-subtext" class="wheel-subtext">La roue tourne…</p>
+</div>
 
 </body>
 </html>
