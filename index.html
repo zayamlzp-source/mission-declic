@@ -607,6 +607,94 @@
           color: var(--muted);
         }
 
+        .admin-list-scroll {
+          max-height: 70vh;
+          overflow-y: auto;
+          padding-right: 6px;
+        }
+
+        .admin-toolbar {
+          position: sticky;
+          top: 0;
+          z-index: 2;
+          display: grid;
+          gap: 10px;
+          padding: 10px;
+          margin: 0 0 6px 0;
+          border: 1px solid var(--line);
+          border-radius: 14px;
+          background: rgba(247, 243, 235, 0.96);
+          backdrop-filter: blur(6px);
+        }
+
+        .admin-theme-jump {
+          display: flex;
+          gap: 8px;
+          overflow-x: auto;
+          padding-bottom: 2px;
+          scrollbar-width: thin;
+        }
+
+        .admin-theme-jump::-webkit-scrollbar {
+          height: 6px;
+        }
+
+        .admin-theme-chip {
+          flex: 0 0 auto;
+          border: 1px solid var(--line);
+          border-radius: 999px;
+          padding: 8px 12px;
+          background: #fff;
+          color: var(--text);
+          font-size: 0.82rem;
+          font-weight: 600;
+          text-decoration: none;
+          white-space: nowrap;
+        }
+
+        .admin-theme-chip.is-flagged {
+          border-color: #e4c898;
+          background: #fff4df;
+          color: #8a6423;
+        }
+
+        .admin-theme-group {
+          display: grid;
+          gap: 10px;
+        }
+
+        .admin-theme-header {
+          position: sticky;
+          top: 0;
+          z-index: 1;
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          gap: 10px;
+          padding: 8px 10px;
+          border: 1px solid var(--line);
+          border-radius: 12px;
+          background: #f7f3eb;
+        }
+
+        .admin-theme-meta {
+          color: var(--muted);
+          font-size: 0.82rem;
+        }
+
+        .flag-badge {
+          display: inline-flex;
+          align-items: center;
+          gap: 6px;
+          padding: 4px 8px;
+          border-radius: 999px;
+          background: #fff4df;
+          border: 1px solid #e4c898;
+          color: #8a6423;
+          font-size: 0.78rem;
+          font-weight: 700;
+        }
+
         /* ===== Draw / Tirage ===== */
         .draw-hidden { display: none !important; }
 
@@ -649,6 +737,62 @@
         .theme-btn.active {
           border-color: var(--accent);
           background: #f0f5ec;
+        }
+
+        @media (max-width: 700px) {
+          .admin-list-scroll {
+            max-height: 62vh;
+            padding-right: 2px;
+          }
+
+          .admin-theme-header {
+            align-items: flex-start;
+            flex-direction: column;
+          }
+
+          .admin-item-actions {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+          }
+
+          .admin-item-actions .btn {
+            width: 100%;
+            justify-content: center;
+          }
+        }
+
+        @media (max-width: 560px) {
+          .admin-toolbar {
+            padding: 8px;
+            margin-bottom: 8px;
+          }
+
+          .admin-form-grid {
+            grid-template-columns: 1fr;
+          }
+
+          .admin-item {
+            padding: 10px;
+          }
+
+          .admin-item-top {
+            flex-direction: column;
+          }
+
+          .admin-thumb {
+            width: 100%;
+            height: auto;
+            max-height: 220px;
+          }
+
+          .admin-item-actions {
+            grid-template-columns: 1fr;
+          }
+
+          .admin-theme-chip {
+            padding: 7px 10px;
+            font-size: 0.78rem;
+          }
         }
 
         /* Wheel overlay */
@@ -734,6 +878,15 @@
             <input id="display-name-input" class="input" type="text" placeholder="Ex. Léo" maxlength="40" />
           </div>
 
+          <div id="theme-picker-box" class="draw-mode-box">
+            <div class="row" style="justify-content:space-between;align-items:center;">
+              <h3>Choisis un thème</h3>
+              <button id="clear-theme-btn" type="button" class="btn btn-link">Surprends-moi</button>
+            </div>
+            <div id="theme-list" class="theme-list"></div>
+            <div id="theme-choice-label" class="micro">Aucun thème imposé: tirage libre.</div>
+          </div>
+
           <div class="home-actions">
             <button id="start-btn" class="btn btn-primary">Je joue</button>
             <button id="journal-btn" class="btn btn-secondary">Mon journal</button>
@@ -764,6 +917,7 @@
 
         <div class="row">
           <button id="validate-mission-btn" class="btn btn-primary">Valider</button>
+          <button id="flag-mission-edit-btn" class="btn btn-secondary">À modifier</button>
           <button id="another-mission-btn" class="btn btn-secondary">Autre mission</button>
         </div>
       </div>
@@ -989,11 +1143,14 @@
             <button id="admin-cancel-mission-edit-btn" class="btn btn-secondary">Annuler l'édition</button>
             <button id="admin-reset-missions-btn" class="btn btn-secondary">Réinitialiser les missions par défaut</button>
           </div>
-          <div>
-            <label class="label" for="admin-mission-search">Rechercher une mission</label>
-            <input id="admin-mission-search" class="input" type="text" placeholder="Texte, thème, catégorie..." />
+          <div class="admin-toolbar">
+            <div>
+              <label class="label" for="admin-mission-search">Rechercher une mission</label>
+              <input id="admin-mission-search" class="input" type="text" placeholder="Texte, thème, catégorie..." />
+            </div>
+            <div id="admin-theme-jump" class="admin-theme-jump"></div>
           </div>
-          <div id="admin-missions-list" class="admin-list"></div>
+          <div id="admin-missions-list" class="admin-list admin-list-scroll"></div>
         </div>
 
         <div class="card stack">
@@ -1181,11 +1338,26 @@
     }
 
     function normalizeMissionRecord(mission) {
+      const editRequests = Array.isArray(mission.editRequests)
+        ? mission.editRequests
+            .filter(Boolean)
+            .map(request => ({
+              id: request.id || uid(),
+              sessionId: request.sessionId || "",
+              displayName: request.displayName || "",
+              note: request.note || "",
+              createdAt: request.createdAt || nowIso()
+            }))
+            .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+        : [];
+
       return {
         ...mission,
         level: normalizeMissionLevel(mission.level),
         active: mission.active !== false,
-        bonus: !!mission.bonus
+        bonus: !!mission.bonus,
+        theme: mission.theme || "festival",
+        editRequests
       };
     }
 
@@ -1499,7 +1671,8 @@
       note = "",
       details = "",
       setup = "",
-      after = ""
+      after = "",
+      editRequests = []
     }) {
       return {
         id,
@@ -1516,7 +1689,8 @@
         note,
         details,
         setup,
-        after
+        after,
+        editRequests
       };
     }
 
@@ -2358,6 +2532,9 @@
     const adminThemeHealthYoga = document.getElementById("admin-theme-health-yoga");
     const adminPinInput = document.getElementById("admin-pin-input");
     const adminRecoveryEmailInput = document.getElementById("admin-recovery-email-input");
+    const themeChoiceLabel = document.getElementById("theme-choice-label");
+    const clearThemeBtn = document.getElementById("clear-theme-btn");
+    const flagMissionEditBtn = document.getElementById("flag-mission-edit-btn");
     const adminPhotoReviewList = document.getElementById("admin-photo-review-list");
     const adminMissionText = document.getElementById("admin-mission-text");
     const adminMissionCategory = document.getElementById("admin-mission-category");
@@ -2368,6 +2545,7 @@
     const adminCancelMissionEditBtn = document.getElementById("admin-cancel-mission-edit-btn");
     const adminResetMissionsBtn = document.getElementById("admin-reset-missions-btn");
     const adminMissionSearch = document.getElementById("admin-mission-search");
+    const adminThemeJump = document.getElementById("admin-theme-jump");
     const adminMissionsList = document.getElementById("admin-missions-list");
     const adminSuggestionsReviewList = document.getElementById("admin-suggestions-review-list");
 
@@ -2550,6 +2728,7 @@
       setAdminRecoveryEmail(recoveryEmail);
 
       updateProgressBar();
+      renderThemePicker();
       Toast.success("Réglages admin enregistrés.");
     }
 
@@ -2557,9 +2736,6 @@
 
     function getAvailableThemesForDraw() {
       if (!MISSIONS.length) loadMissions();
-      const state = getProgressState();
-      const level = computeInternalLevel(state.doneMissionIds.length);
-      const allowedLevels = [level, Math.max(1, level - 1), level + 1].filter(n => n >= 1 && n <= 10);
       const mode = getMissionMode();
       const adminSettings = getAdminSettings();
 
@@ -2567,7 +2743,7 @@
         if (!m.active || m.bonus) return false;
         if (!missionAllowedByAdmin(m, adminSettings)) return false;
         if (!missionMatchesSelectedMode(m, mode)) return false;
-        return allowedLevels.includes(normalizeMissionLevel(m.level));
+        return true;
       });
 
       const presentThemeIds = new Set(available.map(m => m.theme).filter(Boolean));
@@ -2576,12 +2752,17 @@
 
     function renderThemePicker() {
       const list = document.getElementById("theme-list");
+      if (!list) return;
       const available = getAvailableThemesForDraw();
       const uniqueAvailable = [...new Map(available.map(t => [t.id, t])).values()];
+      if (STATE.selectedTheme && !uniqueAvailable.some(theme => theme.id === STATE.selectedTheme)) {
+        STATE.selectedTheme = null;
+      }
       list.innerHTML = "";
 
       uniqueAvailable.forEach(theme => {
         const btn = document.createElement("button");
+        btn.type = "button";
         btn.className = "theme-btn" + (STATE.selectedTheme === theme.id ? " active" : "");
         btn.innerHTML = `<span class="theme-icon">${theme.icon}</span><span class="theme-label">${theme.label}</span>`;
         btn.addEventListener("click", () => {
@@ -2592,7 +2773,12 @@
         list.appendChild(btn);
       });
 
-      document.getElementById("theme-picker-box").classList.remove("draw-hidden");
+      if (themeChoiceLabel) {
+        const selected = DRAW_THEMES.find(theme => theme.id === STATE.selectedTheme);
+        themeChoiceLabel.textContent = selected
+          ? `Thème choisi: ${selected.label}.`
+          : "Aucun thème imposé: tirage libre.";
+      }
     }
 
     function pickMissionWithTheme(themeId) {
@@ -2679,19 +2865,15 @@
     }
 
     function showDrawModeBox() {
-      document.getElementById("theme-picker-box").classList.remove("draw-hidden");
-      STATE.drawMode = "choose-theme";
-      STATE.selectedTheme = null;
       renderThemePicker();
     }
 
     function hideDrawUI() {
-      document.getElementById("theme-picker-box").classList.add("draw-hidden");
+      return;
     }
 
     function launchMissionDraw() {
       syncProfileFromInput();
-      hideDrawUI();
 
       const available = getAvailableThemesForDraw();
       let themeObj = null;
@@ -2720,22 +2902,17 @@
     function renderMission(mission) {
       STATE.currentMission = mission;
       missionText.textContent = mission ? mission.text : "Aucune mission disponible pour le moment.";
+      if (flagMissionEditBtn) {
+        const alreadyFlagged = !!mission?.editRequests?.some(request => request.sessionId === getOrCreateSessionId());
+        flagMissionEditBtn.textContent = alreadyFlagged ? "Modifier mon signalement" : "À modifier";
+      }
       showScreen("mission");
     }
 
     function startGame() {
       syncProfileFromInput();
-      let mission = pickNextMission();
-      if (!mission) {
-        // If local missions were corrupted/disabled, restore defaults once and retry.
-        loadMissions();
-        mission = pickNextMission();
-      }
-      if (!mission) {
-        Toast.warning("Aucune mission disponible pour le moment.");
-        return;
-      }
-      renderMission(mission);
+      STATE.drawMode = STATE.selectedTheme ? "choose-theme" : "random-theme";
+      launchMissionDraw();
     }
 
     function goToAnotherMission() {
@@ -2835,6 +3012,39 @@
       updateProgressBar();
       goToAnotherMission();
       Toast.success("Mission validée !");
+    }
+
+    function flagCurrentMissionForEdit() {
+      if (!STATE.currentMission) return;
+      const mission = getMissionById(STATE.currentMission.id);
+      if (!mission) return;
+
+      const currentSessionId = getOrCreateSessionId();
+      const existing = (mission.editRequests || []).find(request => request.sessionId === currentSessionId);
+      const defaultNote = existing?.note || "";
+      const note = window.prompt("Qu'est-ce qu'il faudrait modifier sur cette mission ? (facultatif)", defaultNote);
+      if (note === null) return;
+
+      const profile = getUserProfile();
+      mission.editRequests = Array.isArray(mission.editRequests) ? mission.editRequests : [];
+
+      if (existing) {
+        existing.note = note.trim();
+        existing.createdAt = nowIso();
+        existing.displayName = profile.displayName || existing.displayName || "";
+      } else {
+        mission.editRequests.unshift({
+          id: uid(),
+          sessionId: currentSessionId,
+          displayName: profile.displayName || "",
+          note: note.trim(),
+          createdAt: nowIso()
+        });
+      }
+
+      saveMissions(MISSIONS);
+      renderMission(mission);
+      Toast.success("Mission signalée pour modification.");
     }
 
     // ===== Journal =====
@@ -3022,7 +3232,7 @@
       };
 
       if (STATE.adminEditingMissionId) {
-        updateMissionById(STATE.adminEditingMissionId, payload);
+        updateMissionById(STATE.adminEditingMissionId, { ...payload, editRequests: [] });
         Toast.success("Mission modifiée.");
       } else {
         const nextId = Math.max(0, ...MISSIONS.map(m => m.id), 0) + 1;
@@ -3036,12 +3246,53 @@
       updateProgressBar();
     }
 
+    function getThemePresentation(themeId) {
+      const theme = DRAW_THEMES.find(item => item.id === themeId);
+      if (theme) return theme;
+      return { id: themeId || "festival", label: themeId || "Autres", icon: "•" };
+    }
+
+    function clearMissionEditRequests(id) {
+      const mission = getMissionById(id);
+      if (!mission) return;
+      mission.editRequests = [];
+      saveMissions(MISSIONS);
+    }
+
+    function renderAdminThemeJump(groups) {
+      if (!adminThemeJump) return;
+      adminThemeJump.innerHTML = "";
+
+      groups.forEach(([themeId, missions]) => {
+        const theme = getThemePresentation(themeId);
+        const chip = document.createElement("a");
+        chip.className = "admin-theme-chip" + (missions.some(mission => (mission.editRequests || []).length) ? " is-flagged" : "");
+        chip.href = `#admin-theme-${theme.id}`;
+        chip.textContent = `${theme.icon} ${theme.label}`;
+        chip.addEventListener("click", event => {
+          event.preventDefault();
+          const target = document.getElementById(`admin-theme-${theme.id}`);
+          if (target) target.scrollIntoView({ behavior: "smooth", block: "start" });
+        });
+        adminThemeJump.appendChild(chip);
+      });
+    }
+
     function renderAdminMissionList() {
       if (!adminMissionsList) return;
       const query = (adminMissionSearch?.value || "").trim().toLowerCase();
       const items = [...MISSIONS]
-        .filter(m => !query || [m.text, m.category, m.theme, m.note].filter(Boolean).join(" ").toLowerCase().includes(query))
-        .sort((a, b) => a.id - b.id);
+        .filter(m => {
+          if (!query) return true;
+          const searchText = [
+            m.text,
+            m.category,
+            m.theme,
+            m.note,
+            ...(m.editRequests || []).flatMap(request => [request.displayName, request.note])
+          ].filter(Boolean).join(" ").toLowerCase();
+          return searchText.includes(query);
+        });
 
       adminMissionsList.innerHTML = "";
 
@@ -3050,50 +3301,110 @@
         return;
       }
 
-      items.forEach(mission => {
-        const row = document.createElement("div");
-        row.className = "admin-item";
-        const stateLabel = mission.active ? "active" : "inactive";
-        row.innerHTML = `
-          <div class="admin-item-main">
-            <div class="journal-title">#${mission.id} · ${escapeHtml(mission.text)}</div>
-            <div class="micro">${escapeHtml(mission.theme || "festival")} · ${escapeHtml(mission.category)} · Niveau ${normalizeMissionLevel(mission.level)} · ${stateLabel}${mission.note ? ` · ${escapeHtml(mission.note)}` : ""}</div>
-          </div>
+      const themeIndex = DRAW_THEMES.reduce((map, theme, index) => {
+        map[theme.id] = index;
+        return map;
+      }, {});
+
+      const groups = items.reduce((map, mission) => {
+        const themeId = mission.theme || "festival";
+        if (!map.has(themeId)) map.set(themeId, []);
+        map.get(themeId).push(mission);
+        return map;
+      }, new Map());
+
+      const orderedGroups = [...groups.entries()].sort((a, b) => {
+        const aFlagged = a[1].some(mission => (mission.editRequests || []).length);
+        const bFlagged = b[1].some(mission => (mission.editRequests || []).length);
+        if (aFlagged !== bFlagged) return aFlagged ? -1 : 1;
+        return (themeIndex[a[0]] ?? 999) - (themeIndex[b[0]] ?? 999);
+      });
+
+      renderAdminThemeJump(orderedGroups);
+
+      orderedGroups.forEach(([themeId, missions]) => {
+        const theme = getThemePresentation(themeId);
+        const section = document.createElement("div");
+        section.className = "admin-theme-group";
+        section.id = `admin-theme-${theme.id}`;
+
+        const header = document.createElement("div");
+        header.className = "admin-theme-header";
+        const flaggedCount = missions.filter(mission => (mission.editRequests || []).length).length;
+        header.innerHTML = `
+          <div><strong>${theme.icon} ${escapeHtml(theme.label)}</strong></div>
+          <div class="admin-theme-meta">${missions.length} mission(s)${flaggedCount ? ` · ${flaggedCount} à revoir` : ""}</div>
         `;
+        section.appendChild(header);
 
-        const actions = document.createElement("div");
-        actions.className = "admin-item-actions";
+        missions
+          .sort((a, b) => {
+            const aCount = (a.editRequests || []).length;
+            const bCount = (b.editRequests || []).length;
+            if (aCount !== bCount) return bCount - aCount;
+            return a.id - b.id;
+          })
+          .forEach(mission => {
+            const row = document.createElement("div");
+            row.className = "admin-item";
+            const stateLabel = mission.active ? "active" : "inactive";
+            const requestCount = (mission.editRequests || []).length;
+            const latestRequest = requestCount ? mission.editRequests[0] : null;
+            row.innerHTML = `
+              <div class="admin-item-main">
+                <div class="journal-title">#${mission.id} · ${escapeHtml(mission.text)}</div>
+                <div class="micro">${escapeHtml(mission.category)} · Niveau ${normalizeMissionLevel(mission.level)} · ${stateLabel}${mission.note ? ` · ${escapeHtml(mission.note)}` : ""}</div>
+                ${requestCount ? `<div class="flag-badge">À modifier · ${requestCount} signalement(s)</div>` : ""}
+                ${latestRequest ? `<div class="micro">Dernier retour: ${escapeHtml(latestRequest.note || "Sans détail")}${latestRequest.displayName ? ` · ${escapeHtml(latestRequest.displayName)}` : ""}</div>` : ""}
+              </div>
+            `;
 
-        const editBtn = document.createElement("button");
-        editBtn.className = "btn btn-secondary";
-        editBtn.textContent = "Modifier";
-        editBtn.addEventListener("click", () => populateAdminMissionForm(mission));
+            const actions = document.createElement("div");
+            actions.className = "admin-item-actions";
 
-        const toggleBtn = document.createElement("button");
-        toggleBtn.className = "btn btn-secondary";
-        toggleBtn.textContent = mission.active ? "Désactiver" : "Réactiver";
-        toggleBtn.addEventListener("click", () => {
-          toggleMissionActive(mission.id);
-          renderOrga();
-          updateProgressBar();
-        });
+            const editBtn = document.createElement("button");
+            editBtn.className = "btn btn-secondary";
+            editBtn.textContent = "Modifier";
+            editBtn.addEventListener("click", () => populateAdminMissionForm(mission));
 
-        const deleteBtn = document.createElement("button");
-        deleteBtn.className = "btn btn-secondary";
-        deleteBtn.textContent = "Supprimer";
-        deleteBtn.addEventListener("click", () => {
-          if (!window.confirm(`Supprimer la mission #${mission.id} ?`)) return;
-          removeMissionById(mission.id);
-          if (STATE.adminEditingMissionId === mission.id) resetAdminMissionForm();
-          renderOrga();
-          updateProgressBar();
-        });
+            const toggleBtn = document.createElement("button");
+            toggleBtn.className = "btn btn-secondary";
+            toggleBtn.textContent = mission.active ? "Désactiver" : "Réactiver";
+            toggleBtn.addEventListener("click", () => {
+              toggleMissionActive(mission.id);
+              renderOrga();
+              updateProgressBar();
+            });
 
-        actions.appendChild(editBtn);
-        actions.appendChild(toggleBtn);
-        actions.appendChild(deleteBtn);
-        row.appendChild(actions);
-        adminMissionsList.appendChild(row);
+            const deleteBtn = document.createElement("button");
+            deleteBtn.className = "btn btn-secondary";
+            deleteBtn.textContent = "Supprimer";
+            deleteBtn.addEventListener("click", () => {
+              if (!window.confirm(`Supprimer la mission #${mission.id} ?`)) return;
+              removeMissionById(mission.id);
+              if (STATE.adminEditingMissionId === mission.id) resetAdminMissionForm();
+              renderOrga();
+              updateProgressBar();
+            });
+
+            actions.appendChild(editBtn);
+            if (requestCount) {
+              const clearBtn = document.createElement("button");
+              clearBtn.className = "btn btn-secondary";
+              clearBtn.textContent = "Demandes traitées";
+              clearBtn.addEventListener("click", () => {
+                clearMissionEditRequests(mission.id);
+                renderOrga();
+              });
+              actions.appendChild(clearBtn);
+            }
+            actions.appendChild(toggleBtn);
+            actions.appendChild(deleteBtn);
+            row.appendChild(actions);
+            section.appendChild(row);
+          });
+
+        adminMissionsList.appendChild(section);
       });
     }
 
@@ -3341,8 +3652,17 @@
     // ===== Événements =====
     document.getElementById("admin-access-btn").addEventListener("click", openAdminAccess);
     document.getElementById("admin-recover-btn").addEventListener("click", recoverAdminPinByEmail);
+    if (clearThemeBtn) {
+      clearThemeBtn.addEventListener("click", () => {
+        STATE.selectedTheme = null;
+        renderThemePicker();
+      });
+    }
+    if (flagMissionEditBtn) {
+      flagMissionEditBtn.addEventListener("click", flagCurrentMissionForEdit);
+    }
 
-    // "Je joue" lance directement une mission
+    // "Je joue" lance directement une mission, en tenant compte du thème choisi si présent
     document.getElementById("start-btn").addEventListener("click", startGame);
 
     document.getElementById("journal-btn").addEventListener("click", () => showScreen("journal"));
@@ -3389,6 +3709,7 @@
       dedupeMissionModeOptions();
       hydrateMissionMode();
       hydrateAdminSettingsForm();
+      renderThemePicker();
       renderJournal();
       renderSuggestions();
       renderPhotos();
