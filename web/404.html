@@ -658,6 +658,61 @@
           color: #8a6423;
         }
 
+        /* Admin tabs */
+        .admin-tabs-container {
+          border-radius: 16px;
+          background: #fff;
+          overflow: hidden;
+        }
+
+        .admin-tabs-nav {
+          display: flex;
+          gap: 0;
+          border-bottom: 2px solid var(--line);
+          overflow-x: auto;
+          background: #f7f3eb;
+          padding: 0;
+          margin: 0;
+        }
+
+        .admin-tab-btn {
+          flex: 1 1 auto;
+          min-width: 120px;
+          padding: 12px 14px;
+          border: none;
+          background: transparent;
+          color: var(--muted);
+          font-size: 0.9rem;
+          font-weight: 600;
+          cursor: pointer;
+          position: relative;
+          white-space: nowrap;
+          transition: color 0.2s, background 0.2s;
+          border-bottom: 3px solid transparent;
+          margin-bottom: -2px;
+        }
+
+        .admin-tab-btn:hover {
+          background: rgba(122, 143, 111, 0.05);
+          color: var(--text);
+        }
+
+        .admin-tab-btn.active {
+          color: var(--accent);
+          border-bottom-color: var(--accent);
+          background: transparent;
+        }
+
+        .admin-tab-content {
+          display: none;
+          padding: 20px;
+          animation: fadeIn 0.25s ease;
+        }
+
+        .admin-tab-content.active {
+          display: block;
+        }
+
         .admin-theme-group {
           display: grid;
           gap: 10px;
@@ -828,6 +883,16 @@
           .admin-item-actions .btn {
             width: 100%;
             justify-content: center;
+          }
+
+          .admin-tab-btn {
+            min-width: 100px;
+            padding: 10px 12px;
+            font-size: 0.85rem;
+          }
+
+          .admin-tab-content {
+            padding: 16px;
           }
         }
 
@@ -1133,120 +1198,145 @@
       <div class="stack">
         <div>
           <h2>Espace admin</h2>
-          <p class="sub">Réglages festival: packs de missions, partage photo commu, code d'accès admin.</p>
+          <p class="sub">Gestion festival: missions, modération, statistiques.</p>
         </div>
 
-        <div class="card stack">
-          <h3>Réglages admin</h3>
-          <div class="check-row">
-            <input id="admin-allow-community-share" type="checkbox" />
-            <label for="admin-allow-community-share">Autoriser le partage photo à la commu</label>
+        <div class="admin-tabs-container">
+          <div class="admin-tabs-nav">
+            <button class="admin-tab-btn active" data-tab="settings">⚙️ Réglages</button>
+            <button class="admin-tab-btn" data-tab="missions">📋 Missions</button>
+            <button class="admin-tab-btn" data-tab="moderation">📸 Modération</button>
+            <button class="admin-tab-btn" data-tab="suggestions">💡 Propositions</button>
+            <button class="admin-tab-btn" data-tab="stats">📊 Statistiques</button>
           </div>
 
-          <div class="admin-grid">
-            <label class="check-row"><input id="admin-theme-festival" type="checkbox" /> Mission festi</label>
-            <label class="check-row"><input id="admin-theme-daily" type="checkbox" /> Vie quotidienne</label>
-            <label class="check-row"><input id="admin-theme-health-sport" type="checkbox" /> Santé sport</label>
-            <label class="check-row"><input id="admin-theme-health-mental" type="checkbox" /> Santé mental</label>
-            <label class="check-row"><input id="admin-theme-health-wellness" type="checkbox" /> Bien-être</label>
-            <label class="check-row"><input id="admin-theme-health-breathing" type="checkbox" /> Respiration</label>
-            <label class="check-row"><input id="admin-theme-health-yoga" type="checkbox" /> Yoga</label>
-          </div>
+          <!-- TAB: RÉGLAGES -->
+          <div class="admin-tab-content active" id="tab-settings">
+            <div class="card stack">
+              <h3>Réglages admin</h3>
+              <div class="check-row">
+                <input id="admin-allow-community-share" type="checkbox" />
+                <label for="admin-allow-community-share">Autoriser le partage photo à la commu</label>
+              </div>
 
-          <div>
-            <label class="label" for="admin-pin-input">Changer code admin <span class="micro">(laisser vide pour conserver)</span></label>
-            <input id="admin-pin-input" class="input" type="password" maxlength="24" placeholder="Nouveau code" />
-          </div>
+              <div class="admin-grid">
+                <label class="check-row"><input id="admin-theme-festival" type="checkbox" /> Mission festi</label>
+                <label class="check-row"><input id="admin-theme-daily" type="checkbox" /> Vie quotidienne</label>
+                <label class="check-row"><input id="admin-theme-health-sport" type="checkbox" /> Santé sport</label>
+                <label class="check-row"><input id="admin-theme-health-mental" type="checkbox" /> Santé mental</label>
+                <label class="check-row"><input id="admin-theme-health-wellness" type="checkbox" /> Bien-être</label>
+                <label class="check-row"><input id="admin-theme-health-breathing" type="checkbox" /> Respiration</label>
+                <label class="check-row"><input id="admin-theme-health-yoga" type="checkbox" /> Yoga</label>
+              </div>
 
-          <div>
-            <label class="label" for="admin-recovery-email-input">E-mail de récupération <span class="micro">(code envoyé par mail via Supabase)</span></label>
-            <input id="admin-recovery-email-input" class="input" type="email" maxlength="120" placeholder="nom@exemple.com" />
-          </div>
+              <div>
+                <label class="label" for="admin-pin-input">Changer code admin <span class="micro">(laisser vide pour conserver)</span></label>
+                <input id="admin-pin-input" class="input" type="password" maxlength="24" placeholder="Nouveau code" />
+              </div>
 
-          <div class="row">
-            <button id="admin-save-settings-btn" class="btn btn-primary">Enregistrer réglages</button>
-          </div>
-        </div>
+              <div>
+                <label class="label" for="admin-recovery-email-input">E-mail de récupération <span class="micro">(code envoyé par mail via Supabase)</span></label>
+                <input id="admin-recovery-email-input" class="input" type="email" maxlength="120" placeholder="nom@exemple.com" />
+              </div>
 
-        <div class="card stack">
-          <h3>Modération photos</h3>
-          <p class="sub">Valider, refuser ou repasser en privé les photos partagées par les participants.</p>
-          <div id="admin-photo-review-list" class="admin-list"></div>
-        </div>
-
-        <div class="card stack">
-          <h3>Gestion des missions</h3>
-          <div class="admin-form-grid">
-            <div style="grid-column: 1 / -1;">
-              <label class="label" for="admin-mission-text">Mission</label>
-              <textarea id="admin-mission-text" class="textarea" placeholder="Texte de la mission..."></textarea>
-            </div>
-            <div>
-              <label class="label" for="admin-mission-category">Catégorie</label>
-              <select id="admin-mission-category" class="select">
-                <option value="OSE">OSE</option>
-                <option value="ENTRAÎNE">ENTRAÎNE</option>
-                <option value="RESSENS">RESSENS</option>
-                <option value="LIEN">LIEN</option>
-                <option value="JOUE">JOUE</option>
-              </select>
-            </div>
-            <div>
-              <label class="label" for="admin-mission-level">Niveau</label>
-              <select id="admin-mission-level" class="select">
-                <option value="1">1</option>
-                <option value="2">2</option>
-                <option value="3">3</option>
-                <option value="4">4</option>
-                <option value="5">5</option>
-                <option value="6">6</option>
-                <option value="7">7</option>
-                <option value="8">8</option>
-                <option value="9">9</option>
-                <option value="10">10</option>
-              </select>
-            </div>
-            <div>
-              <label class="label" for="admin-mission-theme">Thème</label>
-              <select id="admin-mission-theme" class="select">
-                <option value="festival">Festival</option>
-                <option value="daily">Quotidien</option>
-                <option value="health_sport">Santé sport</option>
-                <option value="health_mental">Santé mental</option>
-                <option value="health_wellness">Bien-être</option>
-                <option value="health_breathing">Respiration</option>
-                <option value="health_yoga">Yoga</option>
-              </select>
-            </div>
-            <div style="grid-column: 1 / -1;">
-              <label class="label" for="admin-mission-note">Note interne <span class="micro">(facultatif)</span></label>
-              <input id="admin-mission-note" class="input" type="text" placeholder="Ex. mission ajoutée par l'orga" />
+              <div class="row">
+                <button id="admin-save-settings-btn" class="btn btn-primary">Enregistrer réglages</button>
+              </div>
             </div>
           </div>
-          <div class="row">
-            <button id="admin-save-mission-btn" class="btn btn-primary">Ajouter la mission</button>
-            <button id="admin-cancel-mission-edit-btn" class="btn btn-secondary">Annuler l'édition</button>
-            <button id="admin-reset-missions-btn" class="btn btn-secondary">Réinitialiser les missions par défaut</button>
-          </div>
-          <div class="admin-toolbar">
-            <div>
-              <label class="label" for="admin-mission-search">Rechercher une mission</label>
-              <input id="admin-mission-search" class="input" type="text" placeholder="Texte, thème, catégorie..." />
+
+          <!-- TAB: MISSIONS -->
+          <div class="admin-tab-content" id="tab-missions">
+            <div class="card stack">
+              <h3>Gestion des missions</h3>
+              <div class="admin-form-grid">
+                <div style="grid-column: 1 / -1;">
+                  <label class="label" for="admin-mission-text">Mission</label>
+                  <textarea id="admin-mission-text" class="textarea" placeholder="Texte de la mission..."></textarea>
+                </div>
+                <div>
+                  <label class="label" for="admin-mission-category">Catégorie</label>
+                  <select id="admin-mission-category" class="select">
+                    <option value="OSE">OSE</option>
+                    <option value="ENTRAÎNE">ENTRAÎNE</option>
+                    <option value="RESSENS">RESSENS</option>
+                    <option value="LIEN">LIEN</option>
+                    <option value="JOUE">JOUE</option>
+                  </select>
+                </div>
+                <div>
+                  <label class="label" for="admin-mission-level">Niveau</label>
+                  <select id="admin-mission-level" class="select">
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                    <option value="6">6</option>
+                    <option value="7">7</option>
+                    <option value="8">8</option>
+                    <option value="9">9</option>
+                    <option value="10">10</option>
+                  </select>
+                </div>
+                <div>
+                  <label class="label" for="admin-mission-theme">Thème</label>
+                  <select id="admin-mission-theme" class="select">
+                    <option value="festival">Festival</option>
+                    <option value="daily">Quotidien</option>
+                    <option value="health_sport">Santé sport</option>
+                    <option value="health_mental">Santé mental</option>
+                    <option value="health_wellness">Bien-être</option>
+                    <option value="health_breathing">Respiration</option>
+                    <option value="health_yoga">Yoga</option>
+                  </select>
+                </div>
+                <div style="grid-column: 1 / -1;">
+                  <label class="label" for="admin-mission-note">Note interne <span class="micro">(facultatif)</span></label>
+                  <input id="admin-mission-note" class="input" type="text" placeholder="Ex. mission ajoutée par l'orga" />
+                </div>
+              </div>
+              <div class="row">
+                <button id="admin-save-mission-btn" class="btn btn-primary">Ajouter la mission</button>
+                <button id="admin-cancel-mission-edit-btn" class="btn btn-secondary">Annuler l'édition</button>
+                <button id="admin-reset-missions-btn" class="btn btn-secondary">Réinitialiser les missions par défaut</button>
+              </div>
+              <div class="admin-toolbar">
+                <div>
+                  <label class="label" for="admin-mission-search">Rechercher une mission</label>
+                  <input id="admin-mission-search" class="input" type="text" placeholder="Texte, thème, catégorie..." />
+                </div>
+                <div id="admin-theme-jump" class="admin-theme-jump"></div>
+              </div>
+              <div id="admin-missions-list" class="admin-list admin-list-scroll"></div>
             </div>
-            <div id="admin-theme-jump" class="admin-theme-jump"></div>
           </div>
-          <div id="admin-missions-list" class="admin-list admin-list-scroll"></div>
-        </div>
 
-        <div class="card stack">
-          <h3>Propositions à traiter</h3>
-          <p class="sub">Transformer une suggestion en mission active ou la refuser.</p>
-          <div id="admin-suggestions-review-list" class="admin-list"></div>
-        </div>
+          <!-- TAB: MODÉRATION -->
+          <div class="admin-tab-content" id="tab-moderation">
+            <div class="card stack">
+              <h3>Modération photos</h3>
+              <p class="sub">Valider, refuser ou repasser en privé les photos partagées par les participants.</p>
+              <div id="admin-photo-review-list" class="admin-list"></div>
+            </div>
+          </div>
 
-        <div class="card stack">
-          <h3>Synthèse pratique</h3>
-          <div id="orga-summary" class="muted-list"></div>
+          <!-- TAB: PROPOSITIONS -->
+          <div class="admin-tab-content" id="tab-suggestions">
+            <div class="card stack">
+              <h3>Propositions à traiter</h3>
+              <p class="sub">Transformer une suggestion en mission active ou la refuser.</p>
+              <div id="admin-suggestions-review-list" class="admin-list"></div>
+            </div>
+          </div>
+
+          <!-- TAB: STATISTIQUES -->
+          <div class="admin-tab-content" id="tab-stats">
+            <div class="card stack">
+              <h3>Statistiques</h3>
+              <div id="orga-summary" class="muted-list"></div>
+            </div>
+          </div>
         </div>
 
         <div id="orga-stats" class="orga-grid"></div>
@@ -3630,7 +3720,34 @@
       return Object.entries(map).sort((a, b) => b[1] - a[1]);
     }
 
+    function initAdminTabs() {
+      const tabBtns = document.querySelectorAll(".admin-tab-btn");
+      const tabContents = document.querySelectorAll(".admin-tab-content");
+
+      tabBtns.forEach(btn => {
+        btn.addEventListener("click", (e) => {
+          e.preventDefault();
+          const tabName = btn.getAttribute("data-tab");
+          
+          // Remove active from all buttons and contents
+          tabBtns.forEach(b => b.classList.remove("active"));
+          tabContents.forEach(c => c.classList.remove("active"));
+          
+          // Add active to clicked button and corresponding content
+          btn.classList.add("active");
+          const tabContent = document.getElementById(`tab-${tabName}`);
+          if (tabContent) tabContent.classList.add("active");
+        });
+      });
+    }
+
     function renderOrga() {
+      // Initialize tabs on first render
+      if (!document.body.hasAttribute("data-tabs-init")) {
+        initAdminTabs();
+        document.body.setAttribute("data-tabs-init", "true");
+      }
+
       const results = getResults();
       const shown = countShown(results);
       const done = countDone(results);
