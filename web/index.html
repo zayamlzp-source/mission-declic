@@ -674,31 +674,9 @@
             <input id="display-name-input" class="input" type="text" placeholder="Ex. Léo" maxlength="40" />
           </div>
 
-          <div>
-            <label class="label" for="mission-mode-select">Mode de missions</label>
-            <select id="mission-mode-select" class="select">
-              <option value="festival">Mission festi</option>
-              <option value="daily">Vie quotidienne</option>
-              <option value="health">Santé (mix sport + mental)</option>
-              <option value="health_sport">Santé sport</option>
-              <option value="health_mental">Santé mental</option>
-              <option value="health_wellness">Bien-être</option>
-              <option value="health_breathing">Respiration</option>
-              <option value="health_yoga">Yoga</option>
-              <option value="all">Mix complet</option>
-            </select>
-          </div>
-
           <div class="home-actions">
             <button id="start-btn" class="btn btn-primary">Je joue</button>
             <button id="journal-btn" class="btn btn-secondary">Mon journal</button>
-          </div>
-
-          <!-- Bloc choix du mode de tirage (caché par défaut) -->
-          <div id="draw-mode-box" class="draw-mode-box draw-hidden">
-            <h3>Comment tu veux jouer ?</h3>
-            <button id="btn-choose-theme" class="btn btn-secondary">Je choisis un thème</button>
-            <button id="btn-random-theme" class="btn btn-primary">Surprends-moi</button>
           </div>
 
           <!-- Sélecteur de thème (caché par défaut) -->
@@ -706,6 +684,7 @@
             <h3 style="font-size:0.95rem;font-weight:600;margin:0 0 8px 0;">Choisis un thème</h3>
             <div id="theme-list" class="theme-list"></div>
             <button id="btn-launch-themed-draw" class="btn btn-primary" style="margin-top:4px;">Lancer le tirage</button>
+            <button id="btn-random-theme-direct" class="btn btn-secondary" style="margin-top:6px;">Surprends-moi 🎲</button>
             <button id="btn-cancel-theme-pick" class="btn btn-link" style="margin-top:2px;">← Retour</button>
           </div>
 
@@ -1033,10 +1012,8 @@
     }
 
     function getMissionMode() {
-      const mode = localStorage.getItem(STORAGE_KEYS.missionMode) || "festival";
-      return ["festival", "daily", "health", "health_sport", "health_mental", "health_wellness", "health_breathing", "health_yoga", "all"].includes(mode)
-        ? mode
-        : "festival";
+      // Mode unique: le filtrage se fait via le choix de thème (icônes).
+      return "all";
     }
 
     function setMissionMode(mode) {
@@ -2330,7 +2307,6 @@
         list.appendChild(btn);
       });
 
-      document.getElementById("draw-mode-box").classList.add("draw-hidden");
       document.getElementById("theme-picker-box").classList.remove("draw-hidden");
     }
 
@@ -2418,14 +2394,13 @@
     }
 
     function showDrawModeBox() {
-      document.getElementById("draw-mode-box").classList.remove("draw-hidden");
-      document.getElementById("theme-picker-box").classList.add("draw-hidden");
-      STATE.drawMode = null;
+      document.getElementById("theme-picker-box").classList.remove("draw-hidden");
+      STATE.drawMode = "choose-theme";
       STATE.selectedTheme = null;
+      renderThemePicker();
     }
 
     function hideDrawUI() {
-      document.getElementById("draw-mode-box").classList.add("draw-hidden");
       document.getElementById("theme-picker-box").classList.add("draw-hidden");
     }
 
@@ -2818,19 +2793,33 @@
     // "Je joue" ouvre le choix du mode de tirage
     document.getElementById("start-btn").addEventListener("click", showDrawModeBox);
 
-    // "Je choisis un thème"
-    document.getElementById("btn-choose-theme").addEventListener("click", () => {
-      STATE.drawMode = "choose-theme";
-      STATE.selectedTheme = null;
-      renderThemePicker();
-    });
+    // Compat: anciens boutons éventuels (si présents)
+    const btnChooseTheme = document.getElementById("btn-choose-theme");
+    if (btnChooseTheme) {
+      btnChooseTheme.addEventListener("click", () => {
+        STATE.drawMode = "choose-theme";
+        STATE.selectedTheme = null;
+        renderThemePicker();
+      });
+    }
 
-    // "Surprends-moi"
-    document.getElementById("btn-random-theme").addEventListener("click", () => {
-      STATE.drawMode = "random-theme";
-      STATE.selectedTheme = null;
-      launchMissionDraw();
-    });
+    const btnRandomTheme = document.getElementById("btn-random-theme");
+    if (btnRandomTheme) {
+      btnRandomTheme.addEventListener("click", () => {
+        STATE.drawMode = "random-theme";
+        STATE.selectedTheme = null;
+        launchMissionDraw();
+      });
+    }
+
+    const btnRandomThemeDirect = document.getElementById("btn-random-theme-direct");
+    if (btnRandomThemeDirect) {
+      btnRandomThemeDirect.addEventListener("click", () => {
+        STATE.drawMode = "random-theme";
+        STATE.selectedTheme = null;
+        launchMissionDraw();
+      });
+    }
 
     // "Lancer le tirage" après choix du thème
     document.getElementById("btn-launch-themed-draw").addEventListener("click", () => {
@@ -2844,7 +2833,6 @@
     // "← Retour" dans le picker de thème
     document.getElementById("btn-cancel-theme-pick").addEventListener("click", () => {
       document.getElementById("theme-picker-box").classList.add("draw-hidden");
-      document.getElementById("draw-mode-box").classList.remove("draw-hidden");
       STATE.drawMode = null;
       STATE.selectedTheme = null;
     });
@@ -2856,11 +2844,13 @@
     document.getElementById("cancel-validation-btn").addEventListener("click", () => showScreen("mission"));
     document.getElementById("submit-suggestion-btn").addEventListener("click", submitSuggestion);
     document.getElementById("admin-save-settings-btn").addEventListener("click", saveAdminSettingsFromForm);
-    missionModeSelect.addEventListener("change", () => {
-      setMissionMode(missionModeSelect.value);
-      Toast.info("Mode de missions mis à jour.");
-      updateProgressBar();
-    });
+    if (missionModeSelect) {
+      missionModeSelect.addEventListener("change", () => {
+        setMissionMode(missionModeSelect.value);
+        Toast.info("Mode de missions mis à jour.");
+        updateProgressBar();
+      });
+    }
     photoInput.addEventListener("change", handlePhotoChange);
 
     // ===== Initialisation =====
