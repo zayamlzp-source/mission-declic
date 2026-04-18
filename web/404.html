@@ -10,14 +10,14 @@
     <link rel="manifest" href="./manifest.webmanifest">
     <link rel="icon" href="./assets/icons/icon-192.svg" type="image/svg+xml">
     <link rel="apple-touch-icon" href="./assets/icons/icon-192.svg">
-    <title>Festival — Missions</title>
-    <meta property="og:title" content="Festival — Missions">
+    <title>Missions Déclic</title>
+    <meta property="og:title" content="Missions Déclic">
     <meta property="og:description" content="Laisse-toi surprendre par des missions. Ose, ressens, joue, crée des liens.">
     <meta property="og:type" content="website">
-    <meta property="og:url" content="https://zayamlzp-source.github.io/festival-missions/">
-    <meta property="og:image" content="https://zayamlzp-source.github.io/festival-missions/assets/icons/icon-512.svg">
+    <meta property="og:url" content="https://zayamlzp-source.github.io/mission-declic/">
+    <meta property="og:image" content="https://zayamlzp-source.github.io/mission-declic/assets/icons/icon-512.svg">
     <meta name="twitter:card" content="summary">
-    <meta name="twitter:title" content="Festival — Missions">
+    <meta name="twitter:title" content="Missions Déclic">
     <meta name="twitter:description" content="Laisse-toi surprendre par des missions au festival.">
     <style>
         * { box-sizing: border-box; }
@@ -39,23 +39,56 @@
 
         body {
           margin: 0;
-          font-family: Arial, sans-serif;
-          background: linear-gradient(180deg, var(--bg) 0%, var(--bg-2) 100%);
+          font-family: "Avenir Next", "Segoe UI", "Trebuchet MS", "Verdana", sans-serif;
+          background:
+            radial-gradient(1200px 420px at -12% -15%, rgba(183,111,83,0.16), transparent 52%),
+            radial-gradient(920px 360px at 108% -10%, rgba(122,143,111,0.2), transparent 56%),
+            linear-gradient(180deg, var(--bg) 0%, var(--bg-2) 100%);
           color: var(--text);
           min-height: 100vh;
           padding: 18px;
+          position: relative;
+          overflow-x: hidden;
+        }
+
+        body::before,
+        body::after {
+          content: "";
+          position: fixed;
+          border-radius: 999px;
+          filter: blur(26px);
+          pointer-events: none;
+          z-index: 0;
+        }
+
+        body::before {
+          width: 260px;
+          height: 260px;
+          right: -90px;
+          top: 74px;
+          background: rgba(183,111,83,0.15);
+        }
+
+        body::after {
+          width: 320px;
+          height: 320px;
+          left: -120px;
+          bottom: 42px;
+          background: rgba(122,143,111,0.14);
         }
 
         .app {
           width: 100%;
           max-width: 720px;
           margin: 0 auto;
-          background: var(--card);
-          backdrop-filter: blur(8px);
+          background: linear-gradient(160deg, rgba(255,255,255,0.9), rgba(255,255,255,0.84));
+          backdrop-filter: blur(14px);
           border-radius: 28px;
-          box-shadow: var(--shadow);
+          box-shadow: 0 24px 56px rgba(42,33,26,0.14);
           overflow: hidden;
-          border: 1px solid rgba(255,255,255,0.65);
+          border: 1px solid rgba(255,255,255,0.75);
+          position: relative;
+          z-index: 1;
         }
 
         .topbar {
@@ -65,16 +98,28 @@
           gap: 12px;
           padding: 16px 18px;
           border-bottom: 1px solid var(--line);
-          background: rgba(255,255,255,0.65);
+          background: linear-gradient(180deg, rgba(255,255,255,0.86), rgba(255,255,255,0.66));
           position: sticky;
           top: 0;
           z-index: 5;
-          backdrop-filter: blur(10px);
+          backdrop-filter: blur(16px);
         }
 
         .brand {
+          font-size: 1.02rem;
+          font-weight: 800;
+          letter-spacing: 0.05em;
+          text-transform: uppercase;
+          color: #2e2a23;
+        }
+
+        .brand-subline {
+          margin-top: 2px;
+          font-size: 0.74rem;
+          letter-spacing: 0.04em;
+          text-transform: uppercase;
+          color: #5e6658;
           font-weight: 700;
-          letter-spacing: 0.02em;
         }
 
         .top-actions {
@@ -110,7 +155,7 @@
         }
 
         h1 {
-          font-size: 1.9rem;
+          font-size: 2.1rem;
           line-height: 1.12;
           margin-bottom: 10px;
         }
@@ -136,11 +181,11 @@
         }
 
         .card {
-          background: rgba(255,255,255,0.92);
-          border: 1px solid rgba(222,213,200,0.7);
+          background: linear-gradient(180deg, rgba(255,255,255,0.95), rgba(255,255,255,0.88));
+          border: 1px solid rgba(222,213,200,0.62);
           border-radius: var(--radius);
           padding: 18px;
-          box-shadow: 0 20px 40px rgba(0,0,0,0.08);
+          box-shadow: 0 22px 44px rgba(0,0,0,0.09);
           backdrop-filter: blur(10px);
         }
 
@@ -203,13 +248,14 @@
           color: var(--text);
           background: rgba(255,255,255,0.95);
           box-shadow: 0 10px 18px rgba(0,0,0,0.08);
-          transition: transform 0.12s ease, opacity 0.2s ease, box-shadow 0.2s ease;
+          transition: transform 0.14s ease, opacity 0.2s ease, box-shadow 0.25s ease, filter 0.25s ease;
         }
 
         .btn:hover {
           opacity: 1;
           transform: translateY(-1px);
           box-shadow: 0 14px 22px rgba(0,0,0,0.12);
+          filter: saturate(1.08);
         }
 
         .btn:active {
@@ -217,7 +263,7 @@
         }
 
         .btn-primary {
-          background: linear-gradient(135deg, #7a8f6f 0%, #6f7c65 100%);
+          background: linear-gradient(135deg, #7a8f6f 0%, #6f7c65 46%, #5f7164 100%);
           color: white;
           border-color: transparent;
         }
@@ -225,6 +271,14 @@
         .btn-secondary {
           background: rgba(247,241,232,0.95);
           color: var(--text);
+        }
+
+        .admin-theme-btn.active {
+          background: linear-gradient(135deg, #8b5a3c 0%, #6f4830 100%);
+          color: white;
+          border-color: #5a3a25;
+          font-weight: 600;
+          box-shadow: 0 0 8px rgba(0,0,0,0.2);
         }
 
         .btn-warm {
@@ -244,7 +298,37 @@
         }
 
         .home-hero {
-          padding: 8px 0 14px;
+          padding: 14px 16px;
+          background: linear-gradient(135deg, rgba(122,143,111,0.1), rgba(183,111,83,0.08));
+          border: 1px solid rgba(122,143,111,0.14);
+          border-radius: 18px;
+          box-shadow: inset 0 1px 0 rgba(255,255,255,0.6);
+          animation: heroReveal 0.55s ease;
+        }
+
+        .home-value-line {
+          margin: 6px 0 0;
+          color: #6b6256;
+          font-size: 0.95rem;
+        }
+
+        .home-tagline {
+          margin: 10px 0 0;
+          color: #3f433b;
+          font-weight: 600;
+          font-size: 0.95rem;
+          min-height: 1.4em;
+        }
+
+        @keyframes heroReveal {
+          from {
+            opacity: 0;
+            transform: translateY(8px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
         }
 
         .home-actions {
@@ -255,6 +339,8 @@
 
         .home-admin-access {
           display: flex;
+          gap: 8px;
+          flex-wrap: wrap;
           justify-content: center;
           margin-top: 8px;
           opacity: 0.82;
@@ -522,13 +608,20 @@
 
         @media (max-width: 560px) {
           .topbar {
-            align-items: flex-start;
-            flex-direction: column;
+            gap: 8px;
+          }
+
+          .brand {
+            font-size: 0.9rem;
+          }
+
+          .brand-subline {
+            font-size: 0.65rem;
           }
 
           .top-actions {
-            width: 100%;
-            justify-content: flex-start;
+            justify-content: flex-end;
+            flex-shrink: 0;
           }
 
           .mission-text {
@@ -631,8 +724,32 @@
 
         .admin-list-scroll {
           max-height: 70vh;
-          overflow-y: auto;
-          padding-right: 6px;
+          overflow-y: scroll;
+          overflow-x: hidden;
+          padding-right: 12px;
+          /* Scrollbar pour Chrome/Edge */
+          scrollbar-width: thin;
+          scrollbar-color: rgba(120, 120, 120, 0.6) transparent;
+        }
+
+        .admin-list-scroll::-webkit-scrollbar {
+          width: 14px;
+        }
+
+        .admin-list-scroll::-webkit-scrollbar-track {
+          background: transparent;
+        }
+
+        .admin-list-scroll::-webkit-scrollbar-thumb {
+          background: rgba(120, 120, 120, 0.6);
+          border-radius: 10px;
+          border: 4px solid transparent;
+          background-clip: padding-box;
+        }
+
+        .admin-list-scroll::-webkit-scrollbar-thumb:hover {
+          background: rgba(100, 100, 100, 0.85);
+          background-clip: padding-box;
         }
 
         .admin-toolbar {
@@ -924,7 +1041,7 @@
         @media (max-width: 700px) {
           .admin-list-scroll {
             max-height: 62vh;
-            padding-right: 2px;
+            padding-right: 8px;
           }
 
           .admin-tabs-nav {
@@ -1079,7 +1196,8 @@
 <div class="app">
     <div class="topbar">
       <div>
-        <div class="brand">Festival — Missions</div>
+        <div class="brand">Missions Déclic</div>
+        <div class="brand-subline">Les 5 doigts de la main</div>
       </div>
       <div class="top-actions">
         <button id="install-btn" class="btn btn-secondary" style="display:none;">Installer l'app</button>
@@ -1091,7 +1209,7 @@
     <section id="screen-home" class="screen active">
       <div class="stack">
         <div class="progress-section">
-          <div class="micro">Ta jauge progression</div>
+          <div class="micro">Ta jauge de progression</div>
           <div class="progress-bar">
             <div id="progress-bar-fill" class="progress-bar-fill" style="width: 0%;"></div>
           </div>
@@ -1099,8 +1217,8 @@
         </div>
 
         <div class="home-hero">
-          <h1>Commence simplement. Le reste suivra.</h1>
-          <p class="sub">Laisse-toi surprendre.</p>
+          <p class="home-value-line">Des missions à vivre, des photos à garder, des moments à noter.</p>
+          <p id="home-tagline" class="home-tagline"></p>
         </div>
 
         <div class="card stack">
@@ -1129,7 +1247,8 @@
         </div>
 
         <div class="home-admin-access">
-          <button id="admin-access-btn" class="btn btn-link" type="button">Espace admin</button>
+          <button id="share-link-btn" class="btn btn-link" type="button">Copier le lien</button>
+          <button id="admin-access-btn" class="btn btn-link" type="button" data-go="orga" onclick="openAdminAccess()">Espace admin</button>
         </div>
       </div>
     </section>
@@ -1144,7 +1263,7 @@
 
         <div class="row">
           <button id="validate-mission-btn" class="btn btn-primary">Valider</button>
-          <button id="flag-mission-edit-btn" class="btn btn-secondary">À modifier</button>
+          <button id="flag-mission-edit-btn" class="btn btn-secondary">💡 Suggestion d'amélioration</button>
           <button id="another-mission-btn" class="btn btn-secondary">Autre mission</button>
         </div>
       </div>
@@ -1282,6 +1401,7 @@
           <div class="admin-tabs-nav">
             <button class="admin-tab-btn active" data-tab="settings">⚙️ Réglages</button>
             <button class="admin-tab-btn" data-tab="missions">📋 Missions</button>
+            <button class="admin-tab-btn" data-tab="improve">🛠️ À améliorer</button>
             <button class="admin-tab-btn" data-tab="moderation">📸 Modération</button>
             <button class="admin-tab-btn" data-tab="suggestions">💡 Propositions</button>
             <button class="admin-tab-btn" data-tab="stats">📊 Statistiques</button>
@@ -1301,16 +1421,22 @@
                 <label for="admin-allow-community-share">Autoriser le partage photo à la commu</label>
               </div>
 
-              <div class="admin-grid">
-                <label class="check-row"><input id="admin-theme-festival" type="checkbox" /> Mission festi</label>
-                <label class="check-row"><input id="admin-theme-pool" type="checkbox" /> Piscine</label>
-                <label class="check-row"><input id="admin-theme-daily" type="checkbox" /> Vie quotidienne</label>
-                <label class="check-row"><input id="admin-theme-health-sport" type="checkbox" /> Santé sport</label>
-                <label class="check-row"><input id="admin-theme-health-mental" type="checkbox" /> Santé mental</label>
-                <label class="check-row"><input id="admin-theme-health-wellness" type="checkbox" /> Bien-être</label>
-                <label class="check-row"><input id="admin-theme-health-breathing" type="checkbox" /> Respiration</label>
-                <label class="check-row"><input id="admin-theme-health-yoga" type="checkbox" /> Yoga</label>
+              <div class="check-row">
+                <input id="admin-fun-mode" type="checkbox" />
+                <label for="admin-fun-mode">Mode fun: retirer les missions bateau</label>
               </div>
+
+              <div class="admin-theme-buttons" style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; margin-bottom: 12px;">
+                <button id="admin-theme-btn-festival" class="btn btn-secondary admin-theme-btn" data-theme="festival">🎪 Festi</button>
+                <button id="admin-theme-btn-pool" class="btn btn-secondary admin-theme-btn" data-theme="pool">🏊 Piscine</button>
+                <button id="admin-theme-btn-daily" class="btn btn-secondary admin-theme-btn" data-theme="daily">📅 Quotidien</button>
+                <button id="admin-theme-btn-health-sport" class="btn btn-secondary admin-theme-btn" data-theme="health_sport">⚽ Santé sport</button>
+                <button id="admin-theme-btn-health-mental" class="btn btn-secondary admin-theme-btn" data-theme="health_mental">🧠 Santé mental</button>
+                <button id="admin-theme-btn-health-wellness" class="btn btn-secondary admin-theme-btn" data-theme="health_wellness">💆 Bien-être</button>
+                <button id="admin-theme-btn-health-breathing" class="btn btn-secondary admin-theme-btn" data-theme="health_breathing">💨 Respiration</button>
+                <button id="admin-theme-btn-health-yoga" class="btn btn-secondary admin-theme-btn" data-theme="health_yoga">🧘 Yoga</button>
+              </div>
+              <button id="admin-all-missions-btn" class="btn btn-secondary" style="width: 100%; margin-bottom: 12px;">🔄 Toutes les missions</button>
 
               <div>
                 <label class="label" for="admin-pin-input">Changer code admin <span class="micro">(laisser vide pour conserver)</span></label>
@@ -1390,9 +1516,19 @@
                   <label class="label" for="admin-mission-search">Rechercher une mission</label>
                   <input id="admin-mission-search" class="input" type="text" placeholder="Texte, thème, catégorie..." />
                 </div>
+                <div id="admin-mission-count" class="micro" style="padding: 4px 0; font-weight: 600;"></div>
                 <div id="admin-theme-jump" class="admin-theme-jump"></div>
               </div>
               <div id="admin-missions-list" class="admin-list admin-list-scroll"></div>
+            </div>
+          </div>
+
+          <!-- TAB: À AMÉLIORER -->
+          <div class="admin-tab-content" id="tab-improve">
+            <div class="card stack">
+              <h3>Missions à améliorer</h3>
+              <p class="sub">Ici tu retrouves les missions exclues du tirage pour pouvoir les retravailler puis les réintégrer.</p>
+              <div id="admin-excluded-missions-list" class="admin-list admin-list-scroll"></div>
             </div>
           </div>
 
@@ -1491,7 +1627,9 @@
       missionMode: "festival_mission_mode",
       adminPin: "festival_admin_pin",
       adminRecoveryEmail: "festival_admin_recovery_email",
-      adminTabOrder: "festival_admin_tab_order"
+      adminTabOrder: "festival_admin_tab_order",
+      selectedCategory: "festival_selected_category",
+      selectedSubThemes: "festival_selected_subthemes"
     };
 
     const DEFAULT_ADMIN_PIN = "7777";
@@ -1507,10 +1645,25 @@
     const THEME_KEYS = ["festival", "pool", "daily", "health_sport", "health_mental", "health_wellness", "health_breathing", "health_yoga"];
 
     // Thèmes affichés dans le sélecteur de tirage
+    // Catégories principales
+    const DRAW_CATEGORIES = [
+      { id: "festival", label: "Festival", icon: "🎪" },
+      { id: "quotidien", label: "Quotidien", icon: "☀️" },
+      { id: "sante", label: "Santé", icon: "❤️‍🩹" }
+    ];
+
+    // Mapping catégories → sous-thèmes
+    const CATEGORY_SUBTHEMES = {
+      festival: ["festival", "pool"],
+      quotidien: ["daily"],
+      sante: ["health_sport", "health_mental", "health_wellness", "health_breathing", "health_yoga"]
+    };
+
+    // Tous les sous-thèmes disponibles
     const DRAW_THEMES = [
       { id: "festival",         label: "Festival",    icon: "🎪" },
-      { id: "pool",             label: "Piscine",     icon: "🏊" },
       { id: "daily",            label: "Quotidien",   icon: "☀️" },
+      { id: "pool",             label: "Piscine",     icon: "🏊" },
       { id: "health_sport",     label: "Sport",       icon: "💪" },
       { id: "health_mental",    label: "Mental",      icon: "🧠" },
       { id: "health_wellness",  label: "Bien-être",   icon: "🌿" },
@@ -1518,9 +1671,18 @@
       { id: "health_yoga",      label: "Yoga",        icon: "🧘" }
     ];
 
+    function getCategoryForThemeId(themeId) {
+      if (themeId === "festival" || themeId === "pool") return "festival";
+      if (themeId === "daily") return "quotidien";
+      if (themeId && themeId.startsWith("health_")) return "sante";
+      return null;
+    }
+
     function getDefaultAdminSettings() {
       return {
         allowCommunityShare: true,
+        funMode: false,
+        excludedMissionIds: [2, 6, 11, 20, 22, 23, 25, 26, 27, 30, 31, 32, 33, 34, 35, 36, 37, 38, 41, 42, 45, 50, 51, 52, 53, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 68, 69, 70, 77, 78, 79, 80, 84, 85, 86, 87, 88, 508],
         enabledThemes: {
           festival: true,
           pool: true,
@@ -1537,8 +1699,13 @@
     function getAdminSettings() {
       const raw = loadJSON(STORAGE_KEYS.adminSettings, null) || {};
       const defaults = getDefaultAdminSettings();
+      const excludedMissionIds = Array.isArray(raw.excludedMissionIds)
+        ? raw.excludedMissionIds.map(id => Number(id)).filter(Number.isFinite)
+        : defaults.excludedMissionIds;
       return {
         allowCommunityShare: raw.allowCommunityShare !== false,
+        funMode: raw.funMode === true,
+        excludedMissionIds,
         enabledThemes: {
           festival: raw.enabledThemes?.festival ?? defaults.enabledThemes.festival,
           pool: raw.enabledThemes?.pool ?? defaults.enabledThemes.pool,
@@ -1591,7 +1758,48 @@
     function missionAllowedByAdmin(mission, settings = getAdminSettings()) {
       const theme = mission.theme || "festival";
       if (!THEME_KEYS.includes(theme)) return true;
+      if ((settings.excludedMissionIds || []).includes(mission.id)) return false;
       return !!settings.enabledThemes[theme];
+    }
+
+    function toggleMissionExcluded(id) {
+      const settings = getAdminSettings();
+      const set = new Set((settings.excludedMissionIds || []).map(Number));
+      if (set.has(id)) {
+        set.delete(id);
+      } else {
+        set.add(id);
+      }
+      saveAdminSettings({
+        ...settings,
+        excludedMissionIds: [...set]
+      });
+    }
+
+    const FUN_MODE_BATEAU_IDS = new Set([2, 22, 25, 26, 77, 78, 79, 84, 85, 86, 87, 88]);
+    const FUN_MODE_BATEAU_TAGS = new Set(["simple", "quotidien", "focus", "récup"]);
+    const FUN_MODE_BATEAU_PATTERNS = [
+      /regarde quelqu'un dans les yeux et souris/i,
+      /bois un grand verre d'eau/i,
+      /bois un verre d'eau/i,
+      /ouvre une fenêtre/i,
+      /ferme les yeux/i,
+      /observe ton souffle/i,
+      /écris une intention simple/i,
+      /fais 5 minutes sans écran/i,
+      /range un espace/i
+    ];
+
+    function missionBlockedByFunMode(mission, settings = getAdminSettings()) {
+      if (!settings.funMode) return false;
+      if (FUN_MODE_BATEAU_IDS.has(mission.id)) return true;
+
+      const level = normalizeMissionLevel(mission.level);
+      const tags = Array.isArray(mission.tags) ? mission.tags.map(tag => String(tag).toLowerCase()) : [];
+      if (level <= 2 && tags.some(tag => FUN_MODE_BATEAU_TAGS.has(tag))) return true;
+
+      const text = String(mission.text || "");
+      return FUN_MODE_BATEAU_PATTERNS.some(pattern => pattern.test(text));
     }
 
     // ===== Mission normalization =====
@@ -1601,6 +1809,7 @@
     }
 
     function normalizeMissionRecord(mission) {
+      const inferredTheme = mission.theme || (Array.isArray(mission.place) && mission.place.includes("pool") ? "pool" : "festival");
       const editRequests = Array.isArray(mission.editRequests)
         ? mission.editRequests
             .filter(Boolean)
@@ -1619,7 +1828,7 @@
         level: normalizeMissionLevel(mission.level),
         active: mission.active !== false,
         bonus: !!mission.bonus,
-        theme: mission.theme || "festival",
+        theme: inferredTheme,
         editRequests
       };
     }
@@ -1896,6 +2105,8 @@
       const allowedLevels = [level, level - 1, level + 1].filter(n => n >= 1 && n <= 8);
       const mode = getMissionMode();
       const adminSettings = getAdminSettings();
+      const selectedSubThemes = STATE?.selectedSubThemes || {};
+      const hasSubThemeSelection = Object.values(selectedSubThemes).some(v => v);
 
       return MISSIONS.filter(m => {
         if (!m.active) return false;
@@ -1903,7 +2114,10 @@
         if (!allowedLevels.includes(normalizeMissionLevel(m.level))) return false;
         if (m.id === state.currentMissionId) return false;
         if (!missionAllowedByAdmin(m, adminSettings)) return false;
+        if (missionBlockedByFunMode(m, adminSettings)) return false;
         if (!missionMatchesSelectedMode(m, mode)) return false;
+        // Filtre par sous-thèmes sélectionnés
+        if (hasSubThemeSelection && !selectedSubThemes[m.theme]) return false;
         return true;
       });
     }
@@ -1911,12 +2125,16 @@
     function getFallbackMissionPool(state) {
       const mode = getMissionMode();
       const adminSettings = getAdminSettings();
+      const selectedSubThemes = STATE?.selectedSubThemes || {};
+      const hasSubThemeSelection = Object.values(selectedSubThemes).some(v => v);
       return MISSIONS.filter(m =>
         m.active &&
         !m.bonus &&
         m.id !== state.currentMissionId &&
         missionAllowedByAdmin(m, adminSettings) &&
-        missionMatchesSelectedMode(m, mode)
+        !missionBlockedByFunMode(m, adminSettings) &&
+        missionMatchesSelectedMode(m, mode) &&
+        (!hasSubThemeSelection || selectedSubThemes[m.theme])
       );
     }
     function createMission({
@@ -2180,6 +2398,31 @@
       }));
     }
 
+    function buildMentalMissions(startId) {
+      const raw = [
+        { l: 1, c: "RESSENS", t: "Prends 1 minute pour nommer ton émotion dominante.", d: "Un mot suffit: calme, stress, joie, fatigue, etc." },
+        { l: 2, c: "RESSENS", t: "Écris 2 pensées qui tournent en boucle aujourd'hui.", d: "Le but est de les sortir de la tête, pas de les juger." },
+        { l: 3, c: "OSE", t: "Choisis une micro-action de 5 minutes sur une tâche que tu repousses.", d: "Commencer petit réduit la charge mentale." },
+        { l: 4, c: "LIEN", t: "Demande à quelqu'un: Comment ça va vraiment aujourd'hui ?", d: "Écoute sans interrompre ni corriger." },
+        { l: 5, c: "RESSENS", t: "Fais un scan corporel de 3 minutes (tête, épaules, ventre, jambes).", d: "Repère où se logent les tensions." },
+        { l: 6, c: "OSE", t: "Annule ou reporte une obligation non prioritaire pour préserver ton énergie.", d: "Pose une limite claire et calme." },
+        { l: 7, c: "JOUE", t: "Crée 10 minutes sans écran ni notification, juste pour respirer et observer.", d: "Le silence cognitif est l'objectif." },
+        { l: 8, c: "RESSENS", t: "Écris une version plus juste d'une pensée négative automatique.", d: "Exemple: je n'y arrive jamais -> c'est difficile aujourd'hui." },
+        { l: 9, c: "LIEN", t: "Partage une vulnérabilité légère avec une personne de confiance.", d: "Reste simple et concret." },
+        { l: 10, c: "OSE", t: "Planifie 3 actions de protection mentale pour demain et engage-toi à les faire.", d: "Exemple: pause, marche, coupure écran, appel soutien." }
+      ];
+
+      return raw.map((r, i) => createMission({
+        id: startId + i,
+        text: r.t,
+        category: r.c,
+        level: r.l,
+        theme: "health_mental",
+        tags: ["santé", "mental"],
+        details: r.d
+      }));
+    }
+
     function buildCommunityMissions(startId) {
       const CATEGORY_MAP = {
         social: "LIEN",
@@ -2333,7 +2576,7 @@
       createMission({ id: 3, text: "Dis à quelqu'un : \"j'avais envie de te parler\"… et vois où ça t'emmène", category: "OSE", level: 2, tags: ["rencontre"] }),
       createMission({ id: 4, text: "Va vers la personne qui t'impressionne… et dis-lui pourquoi (ex : très à l'aise / très stylée)", category: "OSE", level: 4, tags: ["audace"] }),
       createMission({ id: 5, text: "Invite un inconnu à danser (même 20 secondes)", category: "OSE", level: 3, tags: ["danse", "rencontre"] }),
-      createMission({ id: 6, text: "Motive une personne à sauter dans la piscine avec toi", category: "OSE", level: 8, place: ["pool"], tags: ["piscine"], note: "piscine" }),
+      createMission({ id: 6, text: "Motive une personne à sauter dans la piscine avec toi", category: "OSE", level: 8, theme: "pool", place: ["pool"], tags: ["piscine"], note: "piscine" }),
       createMission({ id: 7, text: "Fais une danse ridicule assumée… et tiens-la jusqu'au bout avec le sourire", category: "OSE", level: 3, tags: ["danse", "fun"] }),
       createMission({ id: 8, text: "Va voir quelqu'un seul et prends le temps avec lui", category: "OSE", level: 2, tags: ["rencontre", "présence"] }),
       createMission({ id: 9, text: "Fais un vrai compliment à un inconnu (ex : énergie, style, regard)", category: "OSE", level: 2, tags: ["compliment", "rencontre"] }),
@@ -2347,7 +2590,7 @@
       createMission({ id: 16, text: "Entraîne un groupe dans un mouvement simple (ex : limbo, clap, saut)", category: "ENTRAÎNE", level: 4, peopleMin: 3, tags: ["collectif", "corps"] }),
       createMission({ id: 17, text: "Embarque quelqu'un dans un jeu (ex : imitation, regard, mini défi, chifoumi…)", category: "ENTRAÎNE", level: 2, peopleMin: 2, tags: ["jeu", "duo"] }),
       createMission({ id: 18, text: "Fais une visite guidée du lieu avec 2 personnes (à ta manière)", category: "ENTRAÎNE", level: 5, peopleMin: 3, tags: ["collectif", "impro"] }),
-      createMission({ id: 19, text: "Lance un saut collectif dans la piscine", category: "ENTRAÎNE", level: 8, peopleMin: 2, place: ["pool"], tags: ["piscine", "collectif"], note: "piscine" }),
+      createMission({ id: 19, text: "Lance un saut collectif dans la piscine", category: "ENTRAÎNE", level: 8, peopleMin: 2, theme: "pool", place: ["pool"], tags: ["piscine", "collectif"], note: "piscine" }),
 
       createMission({ id: 20, text: "Trouve quelqu'un seul et reste avec lui (écoute vraiment)", category: "RESSENS", level: 2, tags: ["écoute", "présence"] }),
       createMission({ id: 21, text: "Demande à quelqu'un ce qu'il aime vraiment (ex : passion, moment préféré)", category: "RESSENS", level: 3, tags: ["écoute", "vrai"] }),
@@ -2383,8 +2626,8 @@
       createMission({ id: 49, text: "Fais une photo originale avec plusieurs personnes", category: "JOUE", level: 4, peopleMin: 2, tags: ["photo", "collectif"] }),
       createMission({ id: 50, text: "Va au mur d'expression et ajoute quelque chose en collaboration (dessin, mot…)", category: "JOUE", level: 1, place: ["expression_wall"], tags: ["mur", "expression"] }),
       createMission({ id: 51, text: "Invite quelqu'un à participer au mur d'expression", category: "JOUE", level: 1, place: ["expression_wall"], tags: ["mur", "invitation"] }),
-      createMission({ id: 52, text: "Crée une course : objectif traverser le plus vite possible la piscine", category: "JOUE", level: 8, peopleMin: 2, place: ["pool"], tags: ["piscine", "défi"], note: "piscine" }),
-      createMission({ id: 53, text: "Fais une action synchronisée dans l'eau", category: "JOUE", level: 8, peopleMin: 2, place: ["pool"], tags: ["piscine", "collectif"], note: "piscine" }),
+      createMission({ id: 52, text: "Crée une course : objectif traverser le plus vite possible la piscine", category: "JOUE", level: 8, peopleMin: 2, theme: "pool", place: ["pool"], tags: ["piscine", "défi"], note: "piscine" }),
+      createMission({ id: 53, text: "Fais une action synchronisée dans l'eau", category: "JOUE", level: 8, peopleMin: 2, theme: "pool", place: ["pool"], tags: ["piscine", "collectif"], note: "piscine" }),
 
       createMission({ id: 54, text: "Trouve Double Face… il a quelque chose à te proposer !", category: "BONUS", level: 0, bonus: true, tags: ["bonus"], note: "bonus" }),
 
@@ -2402,9 +2645,9 @@
       createMission({ id: 66, text: "Construis un texte cohérent à plusieurs au mur d'expression (une phrase chacun)", category: "JOUE", level: 4, place: ["expression_wall"], tags: ["mur", "expression"] }),
 
       createMission({ id: 67, text: "Lance un effet domino (5 pers min)", category: "ENTRAÎNE", level: 5, peopleMin: 5, tags: ["collectif", "fun"] }),
-      createMission({ id: 68, text: "Crée une choré à plusieurs dans l'eau", category: "JOUE", level: 5, peopleMin: 3, place: ["pool"], tags: ["piscine", "collectif"], note: "piscine" }),
-      createMission({ id: 69, text: "Fais reproduire un mouvement par d'autres dans l'eau", category: "JOUE", level: 5, peopleMin: 2, place: ["pool"], tags: ["piscine", "collectif"], note: "piscine" }),
-      createMission({ id: 70, text: "Crée une photo vivante dans l'eau", category: "JOUE", level: 5, peopleMin: 2, place: ["pool"], tags: ["piscine", "photo"], note: "piscine" }),
+      createMission({ id: 68, text: "Crée une choré à plusieurs dans l'eau", category: "JOUE", level: 5, peopleMin: 3, theme: "pool", place: ["pool"], tags: ["piscine", "collectif"], note: "piscine" }),
+      createMission({ id: 69, text: "Fais reproduire un mouvement par d'autres dans l'eau", category: "JOUE", level: 5, peopleMin: 2, theme: "pool", place: ["pool"], tags: ["piscine", "collectif"], note: "piscine" }),
+      createMission({ id: 70, text: "Crée une photo vivante dans l'eau", category: "JOUE", level: 5, peopleMin: 2, theme: "pool", place: ["pool"], tags: ["piscine", "photo"], note: "piscine" }),
       createMission({ id: 71, text: "Prends une photo avec le plus de monde possible dans un espace exigu", category: "JOUE", level: 5, peopleMin: 3, tags: ["photo", "collectif"] }),
       createMission({ id: 72, text: "Forme un cercle et lance une danse commune", category: "JOUE", level: 5, peopleMin: 3, tags: ["danse", "collectif"] }),
       createMission({ id: 73, text: "Convaincs un groupe de faire une action ensemble", category: "ENTRAÎNE", level: 5, peopleMin: 3, tags: ["collectif", "lien"] }),
@@ -2426,7 +2669,21 @@
       createMission({ id: 86, text: "Note 3 choses positives de ta journée", category: "RESSENS", level: 1, theme: "health_mental", tags: ["santé", "mental"] }),
       createMission({ id: 87, text: "Fais 5 minutes sans écran et observe simplement", category: "OSE", level: 2, theme: "health_mental", tags: ["santé", "mental"] }),
       createMission({ id: 88, text: "Écris une intention simple pour la suite de ta journée", category: "LIEN", level: 1, theme: "health_mental", tags: ["santé", "mental"] }),
+
+      createMission({ id: 901, text: "Approche un petit groupe et propose une idée simple à faire ensemble", category: "OSE", level: 5, tags: ["audace", "collectif"] }),
+      createMission({ id: 911, text: "Prends l'initiative d'un échange avec 3 personnes et garde le cap 1 minute", category: "OSE", level: 6, peopleMin: 3, tags: ["audace", "initiative"] }),
+      createMission({ id: 902, text: "Prends la parole 30 secondes devant plusieurs personnes avec une proposition claire", category: "OSE", level: 7, tags: ["audace", "leadership"] }),
+      createMission({ id: 903, text: "Lance un mini défi collectif avec au moins 5 personnes volontaires", category: "OSE", level: 9, peopleMin: 5, tags: ["audace", "collectif"] }),
+      createMission({ id: 904, text: "Anime un moment de 2 minutes avec un groupe inconnu, du début à la fin", category: "OSE", level: 10, peopleMin: 5, tags: ["audace", "animation"] }),
+
+      createMission({ id: 905, text: "Fais se rencontrer 3 personnes qui ne se connaissent pas et lance l'échange", category: "LIEN", level: 5, peopleMin: 4, tags: ["lien", "groupe"] }),
+      createMission({ id: 906, text: "Crée une mini mission en duo puis invite un autre duo à la refaire", category: "LIEN", level: 6, peopleMin: 4, tags: ["lien", "duo", "transmission"] }),
+      createMission({ id: 907, text: "Constitue un petit cercle de parole de 4 personnes pendant 2 minutes", category: "LIEN", level: 7, peopleMin: 4, tags: ["lien", "écoute"] }),
+      createMission({ id: 908, text: "Monte une action collective express avec 5 personnes et un objectif commun", category: "LIEN", level: 8, peopleMin: 5, tags: ["lien", "collectif"] }),
+      createMission({ id: 909, text: "Fais coopérer deux groupes qui ne se parlaient pas pour une mini action", category: "LIEN", level: 9, peopleMin: 6, tags: ["lien", "pont"] }),
+      createMission({ id: 910, text: "Crée un moment d'unité: 6 personnes minimum, une intention, une action, un final", category: "LIEN", level: 10, peopleMin: 6, tags: ["lien", "collectif", "leadership"] }),
       ...buildHealthMissions(89),
+      ...buildMentalMissions(1000),
       ...buildCommunityMissions(289),
       ...buildPoolMissions(500)
     ];
@@ -2437,10 +2694,38 @@
       return Array.isArray(list) && list.some(m => m && m.active && !m.bonus && Number.isFinite(Number(m.level)));
     }
 
+    function ensureThemeCoverage(list) {
+      const requiredThemeIds = DRAW_THEMES.map(theme => theme.id);
+      const activeThemeIds = new Set(
+        list
+          .filter(m => m && m.active && !m.bonus)
+          .map(m => m.theme || "festival")
+      );
+
+      const missingThemeIds = requiredThemeIds.filter(themeId => !activeThemeIds.has(themeId));
+      if (!missingThemeIds.length) return { missions: list, changed: false };
+
+      const existingIds = new Set(list.map(m => m.id));
+      const additions = DEFAULT_MISSIONS
+        .filter(m => missingThemeIds.includes(m.theme || "festival") && !existingIds.has(m.id))
+        .map(m => normalizeMissionRecord({ ...m }));
+
+      if (!additions.length) return { missions: list, changed: false };
+      return {
+        missions: [...list, ...additions],
+        changed: true
+      };
+    }
+
     function loadMissions() {
       const stored = loadJSON(STORAGE_KEYS.missions, null);
       if (Array.isArray(stored) && stored.length && hasUsableMissions(stored)) {
         MISSIONS = stored.map(normalizeMissionRecord);
+        const coverage = ensureThemeCoverage(MISSIONS);
+        if (coverage.changed) {
+          MISSIONS = coverage.missions;
+          saveMissions(MISSIONS);
+        }
       } else {
         MISSIONS = DEFAULT_MISSIONS.map(m => normalizeMissionRecord({ ...m }));
         saveMissions(MISSIONS);
@@ -2780,8 +3065,11 @@
       currentMission: null,
       currentPhotoDataUrl: "",
       drawMode: null,        // "choose-theme" | "random-theme"
-      selectedTheme: null,   // thème choisi par l'utilisateur
-      adminEditingMissionId: null
+      selectedTheme: null,   // [DEPRECATED] pour compatibilité
+      selectedCategory: null,   // "festival" | "quotidien" | "sante" | null
+      selectedSubThemes: {},    // { themeId: boolean }
+      adminEditingMissionId: null,
+      activeThemeFilter: null   // null = Toutes les missions, ou "festival", "pool", etc.
     };
 
     // ===== DOM =====
@@ -2821,14 +3109,7 @@
     const photoVisibilityWrap = document.getElementById("photo-visibility-wrap");
     const photoVisibilityLock = document.getElementById("photo-visibility-lock");
     const adminAllowCommunityShare = document.getElementById("admin-allow-community-share");
-    const adminThemeFestival = document.getElementById("admin-theme-festival");
-    const adminThemePool = document.getElementById("admin-theme-pool");
-    const adminThemeDaily = document.getElementById("admin-theme-daily");
-    const adminThemeHealthSport = document.getElementById("admin-theme-health-sport");
-    const adminThemeHealthMental = document.getElementById("admin-theme-health-mental");
-    const adminThemeHealthWellness = document.getElementById("admin-theme-health-wellness");
-    const adminThemeHealthBreathing = document.getElementById("admin-theme-health-breathing");
-    const adminThemeHealthYoga = document.getElementById("admin-theme-health-yoga");
+    const adminFunMode = document.getElementById("admin-fun-mode");
     const adminPinInput = document.getElementById("admin-pin-input");
     const adminRecoveryEmailInput = document.getElementById("admin-recovery-email-input");
     const themeChoiceLabel = document.getElementById("theme-choice-label");
@@ -2844,8 +3125,10 @@
     const adminCancelMissionEditBtn = document.getElementById("admin-cancel-mission-edit-btn");
     const adminResetMissionsBtn = document.getElementById("admin-reset-missions-btn");
     const adminMissionSearch = document.getElementById("admin-mission-search");
+    const adminMissionCountEl = document.getElementById("admin-mission-count");
     const adminThemeJump = document.getElementById("admin-theme-jump");
     const adminMissionsList = document.getElementById("admin-missions-list");
+    const adminExcludedMissionsList = document.getElementById("admin-excluded-missions-list");
     const adminSuggestionsReviewList = document.getElementById("admin-suggestions-review-list");
 
     function dedupeMissionModeOptions() {
@@ -2864,20 +3147,16 @@
 
     // ===== Navigation =====
     function openAdminAccess() {
-      const entered = window.prompt("Code admin:");
-      if (!entered) {
-        const wantsRecovery = window.confirm("Code oublié ? Cliquer sur OK pour lancer la récupération par e-mail.");
-        if (wantsRecovery) recoverAdminPinByEmail();
-        return;
+      try {
+        hydrateAdminSettingsForm();
+      } catch (error) {
+        console.error("Erreur hydration admin:", error);
       }
-      if (entered !== getAdminPin()) {
-        Toast.error("Code admin incorrect.");
-        const wantsRecovery = window.confirm("Code oublié ? Cliquer sur OK pour lancer la récupération par e-mail.");
-        if (wantsRecovery) recoverAdminPinByEmail();
-        return;
-      }
-      hydrateAdminSettingsForm();
+
       showScreen("orga");
+      if (window.location.hash !== "#orga") {
+        window.location.hash = "#orga";
+      }
     }
 
     async function recoverAdminPinByEmail() {
@@ -2934,16 +3213,24 @@
         return;
       }
       Object.values(screens).forEach(screen => {
-        if (screen) screen.classList.remove("active");
+        if (!screen) return;
+        screen.classList.remove("active");
+        screen.style.display = "none";
       });
       target.classList.add("active");
+      target.style.display = "block";
 
       if (name === "journal") renderJournal();
       if (name === "photos") renderPhotos();
       if (name === "suggest") renderSuggestions();
       if (name === "orga") {
-        renderOrga();
-        hydrateAdminSettingsForm();
+        try {
+          renderOrga();
+          hydrateAdminSettingsForm();
+        } catch (error) {
+          console.error("Erreur ouverture admin:", error);
+          Toast.error("Ouverture admin partielle: un bloc du panneau a échoué.");
+        }
       }
       if (name === "home") updateProgressBar();
     }
@@ -2960,6 +3247,7 @@
         m.active &&
         !m.bonus &&
         missionAllowedByAdmin(m, adminSettings) &&
+        !missionBlockedByFunMode(m, adminSettings) &&
         missionMatchesSelectedMode(m, mode)
       );
       const availableIds = new Set(available.map(m => m.id));
@@ -2994,37 +3282,34 @@
     function hydrateAdminSettingsForm() {
       const settings = getAdminSettings();
       adminAllowCommunityShare.checked = settings.allowCommunityShare;
-      adminThemeFestival.checked = !!settings.enabledThemes.festival;
-      adminThemePool.checked = !!settings.enabledThemes.pool;
-      adminThemeDaily.checked = !!settings.enabledThemes.daily;
-      adminThemeHealthSport.checked = !!settings.enabledThemes.health_sport;
-      adminThemeHealthMental.checked = !!settings.enabledThemes.health_mental;
-      adminThemeHealthWellness.checked = !!settings.enabledThemes.health_wellness;
-      adminThemeHealthBreathing.checked = !!settings.enabledThemes.health_breathing;
-      adminThemeHealthYoga.checked = !!settings.enabledThemes.health_yoga;
+      if (adminFunMode) adminFunMode.checked = !!settings.funMode;
+      
+      // Les boutons de thème ne sont pas hydratés - ils restent neutres au démarrage
+      // (Les checkboxes ont été remplacées par des boutons radio-style)
+      
       adminPinInput.value = "";
       if (adminRecoveryEmailInput) adminRecoveryEmailInput.value = getAdminRecoveryEmail();
     }
 
     function saveAdminSettingsFromForm() {
+      const currentSettings = getAdminSettings();
+      
+      // Tous les thèmes sont activés par défaut (le filtrage se fait via les boutons radio dans Missions)
       const enabledThemes = {
-        festival: !!adminThemeFestival.checked,
-        pool: !!adminThemePool.checked,
-        daily: !!adminThemeDaily.checked,
-        health_sport: !!adminThemeHealthSport.checked,
-        health_mental: !!adminThemeHealthMental.checked,
-        health_wellness: !!adminThemeHealthWellness.checked,
-        health_breathing: !!adminThemeHealthBreathing.checked,
-        health_yoga: !!adminThemeHealthYoga.checked
+        festival: true,
+        pool: true,
+        daily: true,
+        health_sport: true,
+        health_mental: true,
+        health_wellness: true,
+        health_breathing: true,
+        health_yoga: true
       };
-
-      if (!Object.values(enabledThemes).some(Boolean)) {
-        Toast.warning("Active au moins un pack de missions.");
-        return;
-      }
 
       saveAdminSettings({
         allowCommunityShare: !!adminAllowCommunityShare.checked,
+        funMode: !!adminFunMode?.checked,
+        excludedMissionIds: currentSettings.excludedMissionIds || [],
         enabledThemes
       });
 
@@ -3049,6 +3334,7 @@
       const available = MISSIONS.filter(m => {
         if (!m.active || m.bonus) return false;
         if (!missionAllowedByAdmin(m, adminSettings)) return false;
+        if (missionBlockedByFunMode(m, adminSettings)) return false;
         if (!missionMatchesSelectedMode(m, mode)) return false;
         return true;
       });
@@ -3062,43 +3348,148 @@
       if (!list) return;
       list.innerHTML = "";
 
+      const container = document.createElement("div");
+      container.style.display = "flex";
+      container.style.flexDirection = "column";
+      container.style.gap = "12px";
+
+      const quickThemeSection = document.createElement("div");
+      quickThemeSection.style.display = "flex";
+      quickThemeSection.style.flexDirection = "column";
+      quickThemeSection.style.gap = "8px";
+      quickThemeSection.innerHTML = "<div class='micro'>Thèmes directs:</div>";
+
+      const quickThemeBtnContainer = document.createElement("div");
+      quickThemeBtnContainer.className = "theme-list";
+
       DRAW_THEMES.forEach(theme => {
         const btn = document.createElement("button");
         btn.type = "button";
-        btn.className = "theme-btn" + (STATE.selectedTheme === theme.id ? " active" : "");
+        btn.className = "theme-btn" + (STATE.selectedSubThemes[theme.id] && Object.values(STATE.selectedSubThemes).filter(Boolean).length === 1 ? " active" : "");
         btn.innerHTML = `<span class="theme-icon">${theme.icon}</span><span class="theme-label">${theme.label}<span class="theme-checkmark">✓</span></span>`;
         btn.addEventListener("click", () => {
-          STATE.selectedTheme = theme.id;
-          list.querySelectorAll(".theme-btn").forEach(b => b.classList.remove("active"));
-          btn.classList.add("active");
+          const categoryId = getCategoryForThemeId(theme.id);
+          STATE.selectedCategory = categoryId;
+          STATE.selectedSubThemes = { [theme.id]: true };
+          if (categoryId) {
+            localStorage.setItem(STORAGE_KEYS.selectedCategory, categoryId);
+          } else {
+            localStorage.removeItem(STORAGE_KEYS.selectedCategory);
+          }
+          saveJSON(STORAGE_KEYS.selectedSubThemes, STATE.selectedSubThemes);
+          renderThemePicker();
         });
-        list.appendChild(btn);
+        quickThemeBtnContainer.appendChild(btn);
       });
 
+      quickThemeSection.appendChild(quickThemeBtnContainer);
+      container.appendChild(quickThemeSection);
+
+      // Étape 1: Sélectionner une catégorie
+      const categorySection = document.createElement("div");
+      categorySection.style.display = "flex";
+      categorySection.style.flexDirection = "column";
+      categorySection.style.gap = "8px";
+      categorySection.innerHTML = "<div class='micro'>Catégorie:</div>";
+
+      const categoryBtnContainer = document.createElement("div");
+      categoryBtnContainer.style.display = "flex";
+      categoryBtnContainer.style.gap = "8px";
+      categoryBtnContainer.style.flexWrap = "wrap";
+
+      DRAW_CATEGORIES.forEach(cat => {
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = "theme-btn" + (STATE.selectedCategory === cat.id ? " active" : "");
+        btn.innerHTML = `<span class="theme-icon">${cat.icon}</span><span class="theme-label">${cat.label}<span class="theme-checkmark">✓</span></span>`;
+        btn.addEventListener("click", () => {
+          STATE.selectedCategory = cat.id;
+          // Pré-sélectionne toutes les options par défaut
+          const themeIds = CATEGORY_SUBTHEMES[cat.id] || [];
+          STATE.selectedSubThemes = {};
+          themeIds.forEach(id => { STATE.selectedSubThemes[id] = true; });
+          localStorage.setItem(STORAGE_KEYS.selectedCategory, cat.id);
+          saveJSON(STORAGE_KEYS.selectedSubThemes, STATE.selectedSubThemes);
+          renderThemePicker();
+        });
+        categoryBtnContainer.appendChild(btn);
+      });
+
+      categorySection.appendChild(categoryBtnContainer);
+      container.appendChild(categorySection);
+
+      // Étape 2: Sélectionner les sous-thèmes de la catégorie
+      if (STATE.selectedCategory) {
+        const subThemeIds = CATEGORY_SUBTHEMES[STATE.selectedCategory] || [];
+        const subThemes = DRAW_THEMES.filter(t => subThemeIds.includes(t.id));
+
+        const subThemeSection = document.createElement("div");
+        subThemeSection.style.display = "flex";
+        subThemeSection.style.flexDirection = "column";
+        subThemeSection.style.gap = "8px";
+        subThemeSection.innerHTML = "<div class='micro'>Toutes les options sont activées. Tu peux en décocher pour affiner:</div>";
+
+        const subThemeBtnContainer = document.createElement("div");
+        subThemeBtnContainer.style.display = "flex";
+        subThemeBtnContainer.style.gap = "8px";
+        subThemeBtnContainer.style.flexWrap = "wrap";
+
+        subThemes.forEach(theme => {
+          const btn = document.createElement("button");
+          btn.type = "button";
+          btn.className = "theme-btn" + (STATE.selectedSubThemes[theme.id] ? " active" : "");
+          btn.innerHTML = `<span class="theme-icon">${theme.icon}</span><span class="theme-label">${theme.label}<span class="theme-checkmark">✓</span></span>`;
+          btn.addEventListener("click", () => {
+            STATE.selectedSubThemes[theme.id] = !STATE.selectedSubThemes[theme.id];
+            saveJSON(STORAGE_KEYS.selectedSubThemes, STATE.selectedSubThemes);
+            renderThemePicker();
+          });
+          subThemeBtnContainer.appendChild(btn);
+        });
+
+        subThemeSection.appendChild(subThemeBtnContainer);
+        container.appendChild(subThemeSection);
+      }
+
+      list.appendChild(container);
+
       if (themeChoiceLabel) {
-        const selected = DRAW_THEMES.find(theme => theme.id === STATE.selectedTheme);
-        themeChoiceLabel.textContent = selected
-          ? `Thème choisi: ${selected.label}.`
-          : "Aucun thème imposé: tirage libre.";
+        if (STATE.selectedCategory) {
+          const cat = DRAW_CATEGORIES.find(c => c.id === STATE.selectedCategory);
+          const selectedCount = Object.values(STATE.selectedSubThemes).filter(v => v).length;
+          const availableCount = (CATEGORY_SUBTHEMES[STATE.selectedCategory] || []).length;
+          if (selectedCount === 0) {
+            themeChoiceLabel.textContent = `${cat.label} sélectionné (toutes les missions ${cat.label.toLowerCase()}).`;
+          } else if (selectedCount === availableCount) {
+            themeChoiceLabel.textContent = `${cat.label} sélectionné (toutes les options activées).`;
+          } else {
+            themeChoiceLabel.textContent = `${cat.label} sélectionné (${selectedCount}/${availableCount} option(s) activée(s)).`;
+          }
+        } else {
+          themeChoiceLabel.textContent = "Aucune catégorie imposée: tirage libre.";
+        }
       }
     }
 
-    function pickMissionWithTheme(themeId) {
+    function pickMissionWithTheme(selectedSubThemesObj) {
       const state = getProgressState();
       state.internalLevel = computeInternalLevel(state.doneMissionIds.length);
 
       let pool = getMissionPoolForProgression(state);
       if (!pool.length) pool = getFallbackMissionPool(state);
 
-      // Filtre par thème demandé, avec fallback sans thème
-      let themed = themeId ? pool.filter(m => m.theme === themeId) : pool;
-      if (!themed.length) themed = pool;
+      // Si des sous-thèmes spécifiques sont choisis, filter par ceux-ci
+      const hasSelection = Object.values(selectedSubThemesObj || {}).some(v => v);
+      if (hasSelection) {
+        const selectedThemeIds = Object.keys(selectedSubThemesObj || {}).filter(k => selectedSubThemesObj[k]);
+        pool = pool.filter(m => selectedThemeIds.includes(m.theme));
+      }
 
       // Exclusion récents
       const recentIds = getRecentMissionIds(state, 6);
-      let candidates = themed.filter(m => !recentIds.includes(m.id) && m.id !== state.lastMissionId);
-      if (!candidates.length) candidates = themed.filter(m => m.id !== state.lastMissionId);
-      if (!candidates.length) candidates = themed;
+      let candidates = pool.filter(m => !recentIds.includes(m.id) && m.id !== state.lastMissionId);
+      if (!candidates.length) candidates = pool.filter(m => m.id !== state.lastMissionId);
+      if (!candidates.length) candidates = pool;
       if (!candidates.length) return null;
 
       // Tirage pondéré
@@ -3177,19 +3568,38 @@
     function launchMissionDraw() {
       syncProfileFromInput();
 
+      // Détermine les sous-thèmes actifs
+      let activeSubThemes = {};
+      const selectedSubThemesWithValues = Object.values(STATE.selectedSubThemes || {}).some(v => v);
+      
+      if (STATE.selectedCategory && selectedSubThemesWithValues) {
+        // Seulement les sous-thèmes cochés
+        activeSubThemes = STATE.selectedSubThemes;
+      } else if (STATE.selectedCategory) {
+        // Tous les sous-thèmes de la catégorie
+        const themeIds = CATEGORY_SUBTHEMES[STATE.selectedCategory] || [];
+        themeIds.forEach(id => { activeSubThemes[id] = true; });
+      }
+
       const available = getAvailableThemesForDraw();
       let themeObj = null;
 
-      if (STATE.drawMode === "choose-theme" && STATE.selectedTheme) {
-        themeObj = DRAW_THEMES.find(t => t.id === STATE.selectedTheme) || null;
-      } else {
-        // Surprends-moi : thème aléatoire parmi les disponibles
-        if (available.length) {
-          themeObj = available[Math.floor(Math.random() * available.length)];
+      if (STATE.selectedCategory && available.length) {
+        // Tirage parmi les thèmes actifs de la catégorie
+        const categoryThemeIds = Object.keys(activeSubThemes).filter(k => activeSubThemes[k]);
+        const availableInCategory = available.filter(t => categoryThemeIds.includes(t.id));
+        if (availableInCategory.length) {
+          themeObj = availableInCategory[Math.floor(Math.random() * availableInCategory.length)];
+        } else if (available.length) {
+          Toast.warning("Aucun sous-thème de cette catégorie n'a de mission active. Essaie une autre option.");
+          return;
         }
+      } else if (available.length) {
+        // Surprends-moi : thème aléatoire parmi les disponibles
+        themeObj = available[Math.floor(Math.random() * available.length)];
       }
 
-      const mission = pickMissionWithTheme(themeObj ? themeObj.id : null);
+      const mission = pickMissionWithTheme(activeSubThemes);
       if (!mission) {
         Toast.warning("Aucune mission disponible pour le moment.");
         return;
@@ -3213,12 +3623,25 @@
 
     function startGame() {
       syncProfileFromInput();
-      STATE.drawMode = STATE.selectedTheme ? "choose-theme" : "random-theme";
+      STATE.drawMode = STATE.selectedCategory ? "choose-theme" : "random-theme";
       launchMissionDraw();
     }
 
     function goToAnotherMission() {
-      const mission = getAnotherMission();
+      // Détermine les sous-thèmes actifs
+      let activeSubThemes = {};
+      const selectedSubThemesWithValues = Object.values(STATE.selectedSubThemes || {}).some(v => v);
+      
+      if (STATE.selectedCategory && selectedSubThemesWithValues) {
+        activeSubThemes = STATE.selectedSubThemes;
+      } else if (STATE.selectedCategory) {
+        const themeIds = CATEGORY_SUBTHEMES[STATE.selectedCategory] || [];
+        themeIds.forEach(id => { activeSubThemes[id] = true; });
+      }
+
+      const mission = STATE.selectedCategory
+        ? pickMissionWithTheme(activeSubThemes)
+        : getAnotherMission();
       if (!mission) {
         Toast.warning("Aucune autre mission disponible.");
         return;
@@ -3312,6 +3735,7 @@
       completeCurrentMission();
       resetValidationForm();
       updateProgressBar();
+      showNextHomeTagline();
       goToAnotherMission();
       Toast.success("Mission validée !");
     }
@@ -3324,7 +3748,7 @@
       const currentSessionId = getOrCreateSessionId();
       const existing = (mission.editRequests || []).find(request => request.sessionId === currentSessionId);
       const defaultNote = existing?.note || "";
-      const note = window.prompt("Qu'est-ce qu'il faudrait modifier sur cette mission ? (facultatif)", defaultNote);
+      const note = window.prompt("Votre suggestion d'amélioration pour cette mission (détails, clarifications, corrections...) ?", defaultNote);
       if (note === null) return;
 
       const profile = getUserProfile();
@@ -3346,7 +3770,7 @@
 
       saveMissions(MISSIONS);
       renderMission(mission);
-      Toast.success("Mission signalée pour modification.");
+      Toast.success("Merci! Votre suggestion a été enregistrée.");
     }
 
     // ===== Journal =====
@@ -3582,27 +4006,165 @@
 
     function renderAdminMissionList() {
       if (!adminMissionsList) return;
+      if (!MISSIONS || !MISSIONS.length) {
+        console.warn("❌ MISSIONS not loaded yet");
+        loadMissions();
+        return;
+      }
+      
       const query = (adminMissionSearch?.value || "").trim().toLowerCase();
-      const items = [...MISSIONS]
-        .filter(m => {
-          if (!query) return true;
-          const searchText = [
+      const activeTheme = STATE.activeThemeFilter;  // null, "festival", "pool", etc.
+      
+      console.log("🎯 renderAdminMissionList - activeTheme:", activeTheme, "query:", query);
+      
+      // EFFACER COMPLÈTEMENT le DOM d'abord
+      adminMissionsList.innerHTML = "";
+      
+      // Si aucun thème n'est sélectionné ET pas de recherche: afficher "0 / total" et retourner
+      if (activeTheme === null && !query) {
+        console.log("📭 Aucun thème sélectionné - affichage initial");
+        if (adminMissionCountEl) {
+          adminMissionCountEl.textContent = `🔍 0 / ${MISSIONS.length}`;
+        }
+        return;
+      }
+      
+      // Filtrer STRICTEMENT les missions
+      let items = MISSIONS.filter(m => {
+        // Filtre par thème
+        if (activeTheme !== null) {
+          const missionTheme = m.theme || "festival";
+          if (missionTheme !== activeTheme) return false;
+        }
+        
+        // Filtre par recherche
+        if (query) {
+          const themeLabel = getThemePresentation(m.theme).label;
+          const searchableText = [
             m.text,
             m.category,
             m.theme,
+            themeLabel,
             m.note,
-            ...(m.editRequests || []).flatMap(request => [request.displayName, request.note])
+            ...(m.tags || [])
           ].filter(Boolean).join(" ").toLowerCase();
-          return searchText.includes(query);
-        });
-
-      adminMissionsList.innerHTML = "";
+          if (!searchableText.includes(query)) return false;
+        }
+        
+        return true;
+      });
+      
+      console.log(`✅ Items filtrés: ${items.length} missions (thème: ${activeTheme || "AUCUN"})`);
+      
+      // Mettre à jour le compteur
+      const missionCountEl = adminMissionCountEl;
+      if (missionCountEl) {
+        const total = MISSIONS.length;
+        const shown = items.length;
+        let countText = `${shown}`;
+        if (activeTheme !== null || query) {
+          countText += ` / ${total}`;
+        }
+        missionCountEl.textContent = `🔍 ${countText}`;
+      }
 
       if (!items.length) {
         adminMissionsList.innerHTML = '<div class="empty">Aucune mission trouvée.</div>';
         return;
       }
 
+      const excludedMissionSet = new Set((getAdminSettings().excludedMissionIds || []).map(Number));
+      
+      // Si un SEUL thème est sélectionné: affichage PLAT (pas de groupes)
+      if (activeTheme !== null) {
+        console.log("📋 Rendu PLAT pour un seul thème");
+        renderAdminThemeJump([]);  // Pas de navigation
+        
+        items
+          .sort((a, b) => {
+            const aCount = (a.editRequests || []).length;
+            const bCount = (b.editRequests || []).length;
+            if (aCount !== bCount) return bCount - aCount;
+            return a.id - b.id;
+          })
+          .forEach(mission => {
+            const row = document.createElement("div");
+            row.className = "admin-item";
+            row.dataset.theme = mission.theme || "festival";
+            row.dataset.missionId = mission.id;
+            const stateLabel = mission.active ? "active" : "inactive";
+            const isExcluded = excludedMissionSet.has(mission.id);
+            const requestCount = (mission.editRequests || []).length;
+            const latestRequest = requestCount ? mission.editRequests[0] : null;
+            row.innerHTML = `
+              <div class="admin-item-main">
+                <div class="journal-title">#${mission.id} · ${escapeHtml(mission.text)}</div>
+                <div class="micro">${escapeHtml(mission.category)} · Niveau ${normalizeMissionLevel(mission.level)} · ${stateLabel}${isExcluded ? " · exclue" : ""}${mission.note ? ` · ${escapeHtml(mission.note)}` : ""}</div>
+                ${requestCount ? `<div class="flag-badge">💡 ${requestCount} suggestion${requestCount !== 1 ? "s" : ""} d'amélioration</div>` : ""}
+                ${latestRequest ? `<div class="micro">Dernière suggestion: ${escapeHtml(latestRequest.note || "Sans détail")}${latestRequest.displayName ? ` · ${escapeHtml(latestRequest.displayName)}` : ""}</div>` : ""}
+              </div>
+            `;
+
+            const actions = document.createElement("div");
+            actions.className = "admin-item-actions";
+
+            const editBtn = document.createElement("button");
+            editBtn.className = "btn btn-secondary";
+            editBtn.textContent = "Modifier";
+            editBtn.addEventListener("click", () => populateAdminMissionForm(mission));
+
+            const toggleBtn = document.createElement("button");
+            toggleBtn.className = "btn btn-secondary";
+            toggleBtn.textContent = mission.active ? "Désactiver" : "Réactiver";
+            toggleBtn.addEventListener("click", () => {
+              toggleMissionActive(mission.id);
+              renderOrga();
+              updateProgressBar();
+            });
+
+            const excludeBtn = document.createElement("button");
+            excludeBtn.className = "btn btn-secondary";
+            excludeBtn.textContent = isExcluded ? "Réintégrer" : "Exclure";
+            excludeBtn.addEventListener("click", () => {
+              toggleMissionExcluded(mission.id);
+              renderOrga();
+              updateProgressBar();
+            });
+
+            const deleteBtn = document.createElement("button");
+            deleteBtn.className = "btn btn-secondary";
+            deleteBtn.textContent = "Supprimer";
+            deleteBtn.addEventListener("click", () => {
+              if (!window.confirm(`Supprimer la mission #${mission.id} ?`)) return;
+              removeMissionById(mission.id);
+              if (STATE.adminEditingMissionId === mission.id) resetAdminMissionForm();
+              renderOrga();
+              updateProgressBar();
+            });
+
+            actions.appendChild(editBtn);
+            if (requestCount) {
+              const clearBtn = document.createElement("button");
+              clearBtn.className = "btn btn-secondary";
+              clearBtn.textContent = "Demandes traitées";
+              clearBtn.addEventListener("click", () => {
+                clearMissionEditRequests(mission.id);
+                renderOrga();
+              });
+              actions.appendChild(clearBtn);
+            }
+            actions.appendChild(excludeBtn);
+            actions.appendChild(toggleBtn);
+            actions.appendChild(deleteBtn);
+            row.appendChild(actions);
+            adminMissionsList.appendChild(row);
+          });
+        return;
+      }
+
+      // SINON: affichage GROUPÉ par thème (toutes les missions)
+      console.log("📊 Rendu GROUPÉ par thème (tous les thèmes)");
+      
       const themeIndex = DRAW_THEMES.reduce((map, theme, index) => {
         map[theme.id] = index;
         return map;
@@ -3622,6 +4184,7 @@
         return (themeIndex[a[0]] ?? 999) - (themeIndex[b[0]] ?? 999);
       });
 
+      console.log(`📊 ${orderedGroups.length} groupes de thèmes`);
       renderAdminThemeJump(orderedGroups);
 
       orderedGroups.forEach(([themeId, missions]) => {
@@ -3650,14 +4213,15 @@
             const row = document.createElement("div");
             row.className = "admin-item";
             const stateLabel = mission.active ? "active" : "inactive";
+            const isExcluded = excludedMissionSet.has(mission.id);
             const requestCount = (mission.editRequests || []).length;
             const latestRequest = requestCount ? mission.editRequests[0] : null;
             row.innerHTML = `
               <div class="admin-item-main">
                 <div class="journal-title">#${mission.id} · ${escapeHtml(mission.text)}</div>
-                <div class="micro">${escapeHtml(mission.category)} · Niveau ${normalizeMissionLevel(mission.level)} · ${stateLabel}${mission.note ? ` · ${escapeHtml(mission.note)}` : ""}</div>
-                ${requestCount ? `<div class="flag-badge">À modifier · ${requestCount} signalement(s)</div>` : ""}
-                ${latestRequest ? `<div class="micro">Dernier retour: ${escapeHtml(latestRequest.note || "Sans détail")}${latestRequest.displayName ? ` · ${escapeHtml(latestRequest.displayName)}` : ""}</div>` : ""}
+                <div class="micro">${escapeHtml(mission.category)} · Niveau ${normalizeMissionLevel(mission.level)} · ${stateLabel}${isExcluded ? " · exclue" : ""}${mission.note ? ` · ${escapeHtml(mission.note)}` : ""}</div>
+                ${requestCount ? `<div class="flag-badge">💡 ${requestCount} suggestion${requestCount !== 1 ? "s" : ""} d'amélioration</div>` : ""}
+                ${latestRequest ? `<div class="micro">Dernière suggestion: ${escapeHtml(latestRequest.note || "Sans détail")}${latestRequest.displayName ? ` · ${escapeHtml(latestRequest.displayName)}` : ""}</div>` : ""}
               </div>
             `;
 
@@ -3674,6 +4238,15 @@
             toggleBtn.textContent = mission.active ? "Désactiver" : "Réactiver";
             toggleBtn.addEventListener("click", () => {
               toggleMissionActive(mission.id);
+              renderOrga();
+              updateProgressBar();
+            });
+
+            const excludeBtn = document.createElement("button");
+            excludeBtn.className = "btn btn-secondary";
+            excludeBtn.textContent = isExcluded ? "Réintégrer" : "Exclure";
+            excludeBtn.addEventListener("click", () => {
+              toggleMissionExcluded(mission.id);
               renderOrga();
               updateProgressBar();
             });
@@ -3700,6 +4273,7 @@
               });
               actions.appendChild(clearBtn);
             }
+            actions.appendChild(excludeBtn);
             actions.appendChild(toggleBtn);
             actions.appendChild(deleteBtn);
             row.appendChild(actions);
@@ -3707,6 +4281,68 @@
           });
 
         adminMissionsList.appendChild(section);
+      });
+    }
+
+    function renderAdminExcludedMissionList() {
+      if (!adminExcludedMissionsList) return;
+
+      const excludedSet = new Set((getAdminSettings().excludedMissionIds || []).map(Number));
+      const items = MISSIONS
+        .filter(mission => excludedSet.has(mission.id))
+        .sort((a, b) => {
+          // Prioritize missions with suggestions first
+          const aCount = (a.editRequests || []).length;
+          const bCount = (b.editRequests || []).length;
+          if (aCount !== bCount) return bCount - aCount;
+          return a.id - b.id;
+        });
+
+      adminExcludedMissionsList.innerHTML = "";
+
+      if (!items.length) {
+        adminExcludedMissionsList.innerHTML = '<div class="empty">Aucune mission exclue pour le moment.</div>';
+        return;
+      }
+
+      items.forEach(mission => {
+        const row = document.createElement("div");
+        row.className = "admin-item";
+        const requestCount = (mission.editRequests || []).length;
+        row.innerHTML = `
+          <div class="admin-item-main">
+            <div class="journal-title">#${mission.id} · ${escapeHtml(mission.text)}</div>
+            <div class="micro">${escapeHtml(mission.category)} · Niveau ${normalizeMissionLevel(mission.level)} · ${escapeHtml(getThemePresentation(mission.theme).label)}</div>
+            ${mission.note ? `<div class="micro">Note: ${escapeHtml(mission.note)}</div>` : ""}
+            ${requestCount ? `<div class="flag-badge">💡 ${requestCount} suggestion${requestCount !== 1 ? "s" : ""} d'amélioration</div>` : ""}
+          </div>
+        `;
+
+        const actions = document.createElement("div");
+        actions.className = "admin-item-actions";
+
+        const editBtn = document.createElement("button");
+        editBtn.className = "btn btn-secondary";
+        editBtn.textContent = "Modifier";
+        editBtn.addEventListener("click", () => {
+          populateAdminMissionForm(mission);
+          setActiveAdminTab("missions");
+          adminMissionText?.scrollIntoView({ behavior: "smooth", block: "center" });
+        });
+
+        const restoreBtn = document.createElement("button");
+        restoreBtn.className = "btn btn-primary";
+        restoreBtn.textContent = "Réintégrer";
+        restoreBtn.addEventListener("click", () => {
+          toggleMissionExcluded(mission.id);
+          renderOrga();
+          updateProgressBar();
+        });
+
+        actions.appendChild(editBtn);
+        actions.appendChild(restoreBtn);
+        row.appendChild(actions);
+        adminExcludedMissionsList.appendChild(row);
       });
     }
 
@@ -3857,6 +4493,12 @@
       const tabContents = document.querySelectorAll(".admin-tab-content");
       tabBtns.forEach(btn => btn.classList.toggle("active", btn.getAttribute("data-tab") === tabName));
       tabContents.forEach(content => content.classList.toggle("active", content.id === `tab-${tabName}`));
+      
+      // Rafraîchir l'onglet missions quand on y entre
+      if (tabName === "missions") {
+        initAdminThemeButtons();
+        renderAdminMissionList();
+      }
     }
 
     function saveAdminTabOrder(nav) {
@@ -3954,7 +4596,7 @@
       if (resetBtn) {
         resetBtn.addEventListener("click", () => {
           localStorage.removeItem(STORAGE_KEYS.adminTabOrder);
-          const defaultOrder = ["settings", "missions", "moderation", "suggestions", "stats"];
+          const defaultOrder = ["settings", "missions", "improve", "moderation", "suggestions", "stats"];
           defaultOrder.forEach(id => {
             const btn = nav.querySelector(`.admin-tab-btn[data-tab="${id}"]`);
             const panel = document.getElementById(`tab-${id}`);
@@ -3968,6 +4610,13 @@
     }
 
     function renderOrga() {
+      // Assurer que les missions sont chargées
+      if (!MISSIONS || !MISSIONS.length) {
+        console.warn("⏳ Chargement des missions...");
+        loadMissions();
+        return;  // Callback will call renderOrga() again
+      }
+      
       // Initialize tabs on first render
       if (!document.body.hasAttribute("data-tabs-init")) {
         initAdminTabs();
@@ -4059,6 +4708,8 @@
 
       renderAdminPhotoReview();
       renderAdminMissionList();
+      initAdminThemeButtons();
+      renderAdminExcludedMissionList();
       renderAdminSuggestionsReview();
     }
 
@@ -4072,11 +4723,73 @@
         .replaceAll("'", "&#039;");
     }
 
+    function getFestivalShareUrl() {
+      const ogUrl = document.querySelector('meta[property="og:url"]')?.content;
+      const baseUrl = ogUrl || window.location.href;
+      try {
+        const url = new URL(baseUrl);
+        url.searchParams.set("@ju_lien.createur", "l5d2lm");
+        return url.toString();
+      } catch (error) {
+        return `${baseUrl}${baseUrl.includes("?") ? "&" : "?"}@ju_lien.createur=l5d2lm`;
+      }
+    }
+
+    async function copyFestivalLink() {
+      const url = getFestivalShareUrl();
+      try {
+        await navigator.clipboard.writeText(url);
+        Toast.success("Lien copié. Tu peux le partager.");
+      } catch (error) {
+        window.prompt("Copie ce lien pour le partager :", url);
+        Toast.info("Lien prêt à partager.");
+      }
+    }
+
+    const HOME_TAGLINES = [
+      "Chaque mission est une porte : ouvre-la.",
+      "Ose une mission. Regarde ce qu'elle ouvre.",
+      "Un petit déclic peut changer la journée.",
+      "Parfois, il suffit d'un déclic pour vivre autrement.",
+      "Avance une mission à la fois."
+    ];
+    let homeTaglineIndex = -1;
+
+    function initHomeTaglineRotation() {
+      showNextHomeTagline(true);
+    }
+
+    function showNextHomeTagline(initial = false) {
+      const target = document.getElementById("home-tagline");
+      if (!target || !HOME_TAGLINES.length) return;
+
+      let nextIndex = Math.floor(Math.random() * HOME_TAGLINES.length);
+      if (!initial && HOME_TAGLINES.length > 1) {
+        while (nextIndex === homeTaglineIndex) {
+          nextIndex = Math.floor(Math.random() * HOME_TAGLINES.length);
+        }
+      }
+
+      homeTaglineIndex = nextIndex;
+      target.textContent = HOME_TAGLINES[homeTaglineIndex];
+    }
+
     // ===== Événements =====
-    document.getElementById("admin-access-btn").addEventListener("click", openAdminAccess);
+    const adminAccessBtn = document.getElementById("admin-access-btn");
+    if (adminAccessBtn) {
+      adminAccessBtn.addEventListener("click", openAdminAccess);
+    }
+    const shareLink = document.getElementById("share-link-btn");
+    if (shareLink) {
+      shareLink.addEventListener("click", copyFestivalLink);
+    }
     if (clearThemeBtn) {
       clearThemeBtn.addEventListener("click", () => {
         STATE.selectedTheme = null;
+        STATE.selectedCategory = null;
+        STATE.selectedSubThemes = {};
+        localStorage.removeItem(STORAGE_KEYS.selectedCategory);
+        localStorage.removeItem(STORAGE_KEYS.selectedSubThemes);
         renderThemePicker();
       });
     }
@@ -4113,6 +4826,65 @@
     if (adminMissionSearch) {
       adminMissionSearch.addEventListener("input", renderAdminMissionList);
     }
+    
+    // Initialiser les event listeners pour les boutons de filtrage
+    function initAdminThemeButtons() {
+      const themeButtons = document.querySelectorAll(".admin-theme-btn");
+      
+      // Détacher les anciens listeners
+      themeButtons.forEach(btn => {
+        const newBtn = btn.cloneNode(true);
+        btn.parentNode.replaceChild(newBtn, btn);
+      });
+      
+      // Réattacher avec de nouveaux listeners
+      document.querySelectorAll(".admin-theme-btn").forEach(btn => {
+        btn.addEventListener("click", (e) => {
+          e.preventDefault();
+          const theme = btn.getAttribute("data-theme");
+          console.log("🎯 Clic bouton thème:", theme);
+          
+          // Mettre à jour l'état
+          STATE.activeThemeFilter = theme;
+          
+          // Mettre à jour l'apparence des boutons
+          document.querySelectorAll(".admin-theme-btn").forEach(b => {
+            b.classList.toggle("active", b === btn);
+          });
+          
+          // Réinitialiser le bouton "Toutes les missions"
+          const allBtn = document.getElementById("admin-all-missions-btn");
+          if (allBtn) allBtn.classList.remove("active");
+          
+          // Rafraîchir la liste
+          renderAdminMissionList();
+        });
+      });
+      
+      const allMissionsBtn = document.getElementById("admin-all-missions-btn");
+      if (allMissionsBtn) {
+        // Cloner pour détacher les anciens listeners
+        const newAllBtn = allMissionsBtn.cloneNode(true);
+        allMissionsBtn.parentNode.replaceChild(newAllBtn, allMissionsBtn);
+        
+        // Attacher le nouveau listener
+        document.getElementById("admin-all-missions-btn").addEventListener("click", (e) => {
+          e.preventDefault();
+          console.log("🔄 Clic 'Toutes les missions'");
+          
+          // Mettre à jour l'état
+          STATE.activeThemeFilter = null;
+          
+          // Réinitialiser l'apparence de tous les boutons
+          document.querySelectorAll(".admin-theme-btn").forEach(b => b.classList.remove("active"));
+          document.getElementById("admin-all-missions-btn").classList.add("active");
+          
+          // Rafraîchir la liste
+          renderAdminMissionList();
+        });
+      }
+    }
+    
     if (missionModeSelect) {
       missionModeSelect.addEventListener("change", () => {
         setMissionMode(missionModeSelect.value);
@@ -4131,11 +4903,15 @@
       dedupeMissionModeOptions();
       hydrateMissionMode();
       hydrateAdminSettingsForm();
+      // Charger la catégorie et sous-thèmes sélectionnés
+      STATE.selectedCategory = localStorage.getItem(STORAGE_KEYS.selectedCategory) || null;
+      STATE.selectedSubThemes = loadJSON(STORAGE_KEYS.selectedSubThemes, {});
       renderThemePicker();
       renderJournal();
       renderSuggestions();
       renderPhotos();
       updateProgressBar();
+      initHomeTaglineRotation();
 
       if (location.hash === "#orga") {
         openAdminAccess();
@@ -4150,11 +4926,38 @@
 
     init();
 
+    window.addEventListener("hashchange", () => {
+      if (location.hash === "#orga") openAdminAccess();
+      if (location.hash === "#missions") showScreen("missions");
+      if (location.hash === "#photos") showScreen("photos");
+    });
+
     if ("serviceWorker" in navigator) {
-      window.addEventListener("load", () => {
-        navigator.serviceWorker.register("./sw.js").catch(error => {
-          console.error("Service Worker non enregistre:", error);
-        });
+      window.addEventListener("load", async () => {
+        const isLocalhost = ["localhost", "127.0.0.1", "[::1]"].includes(location.hostname);
+        if (!window.isSecureContext && !isLocalhost) {
+          console.info("Service Worker ignore: contexte non securise.");
+          return;
+        }
+        
+        // Les Service Workers ne fonctionnent pas en mode file:// (limitation de sécurité)
+        if (window.location.protocol === "file:") {
+          console.log("ℹ️ Service Worker désactivé en mode file:// (limitation de sécurité)");
+          return;
+        }
+        
+        try {
+          const swUrl = new URL("./sw.js", window.location.href);
+          const swProbe = await fetch(swUrl.href, { cache: "no-store" });
+          if (!swProbe.ok) {
+            console.warn(`⚠️ sw.js introuvable (${swProbe.status})`);
+            return;
+          }
+          await navigator.serviceWorker.register(swUrl.href);
+          console.log("✅ Service Worker enregistré avec succès");
+        } catch (error) {
+          console.warn("⚠️ Erreur Service Worker (l'app fonctionnera sans):", error.message);
+        }
       });
     }
 
@@ -4166,15 +4969,18 @@
       const btn = document.getElementById("install-btn");
       if (btn) btn.style.display = "";
     });
-    document.getElementById("install-btn").addEventListener("click", async () => {
-      if (!_deferredInstallPrompt) return;
-      _deferredInstallPrompt.prompt();
-      const { outcome } = await _deferredInstallPrompt.userChoice;
-      _deferredInstallPrompt = null;
-      if (outcome === "accepted") {
-        document.getElementById("install-btn").style.display = "none";
-      }
-    });
+    const installBtn = document.getElementById("install-btn");
+    if (installBtn) {
+      installBtn.addEventListener("click", async () => {
+        if (!_deferredInstallPrompt) return;
+        _deferredInstallPrompt.prompt();
+        const { outcome } = await _deferredInstallPrompt.userChoice;
+        _deferredInstallPrompt = null;
+        if (outcome === "accepted") {
+          document.getElementById("install-btn").style.display = "none";
+        }
+      });
+    }
     window.addEventListener("appinstalled", () => {
       document.getElementById("install-btn").style.display = "none";
       _deferredInstallPrompt = null;
