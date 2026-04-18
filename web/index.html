@@ -797,6 +797,12 @@
           color: #8a6423;
         }
 
+        .admin-theme-chip.is-active {
+          background: linear-gradient(135deg, #7a8f6f 0%, #6f7c65 100%);
+          color: #fff;
+          border-color: #6f7c65;
+        }
+
         /* Admin tabs */
         .admin-tabs-container {
           border-radius: 16px;
@@ -3977,20 +3983,51 @@
       saveMissions(MISSIONS);
     }
 
-    function renderAdminThemeJump(groups) {
+    function renderAdminThemeJump(groups = []) {
       if (!adminThemeJump) return;
       adminThemeJump.innerHTML = "";
 
-      groups.forEach(([themeId, missions]) => {
-        const theme = getThemePresentation(themeId);
+      const allChip = document.createElement("a");
+      allChip.className = "admin-theme-chip" + (STATE.activeThemeFilter === null ? " is-active" : "");
+      allChip.href = "#";
+      allChip.textContent = "🌐 Toutes";
+      allChip.addEventListener("click", event => {
+        event.preventDefault();
+        STATE.activeThemeFilter = null;
+        renderAdminMissionList();
+      });
+      adminThemeJump.appendChild(allChip);
+
+      const groupMap = new Map(groups);
+      DRAW_THEMES.forEach(theme => {
+        const missions = groupMap.get(theme.id) || [];
         const chip = document.createElement("a");
-        chip.className = "admin-theme-chip" + (missions.some(mission => (mission.editRequests || []).length) ? " is-flagged" : "");
-        chip.href = `#admin-theme-${theme.id}`;
+        chip.className = "admin-theme-chip" +
+          (STATE.activeThemeFilter === theme.id ? " is-active" : "") +
+          (missions.some(mission => (mission.editRequests || []).length) ? " is-flagged" : "");
+        chip.href = "#";
         chip.textContent = `${theme.icon} ${theme.label}`;
         chip.addEventListener("click", event => {
           event.preventDefault();
-          const target = document.getElementById(`admin-theme-${theme.id}`);
-          if (target) target.scrollIntoView({ behavior: "smooth", block: "start" });
+          STATE.activeThemeFilter = theme.id;
+          renderAdminMissionList();
+        });
+        adminThemeJump.appendChild(chip);
+      });
+
+      groups.forEach(([themeId, missions]) => {
+        if (DRAW_THEMES.some(theme => theme.id === themeId)) return;
+        const theme = getThemePresentation(themeId);
+        const chip = document.createElement("a");
+        chip.className = "admin-theme-chip" +
+          (STATE.activeThemeFilter === themeId ? " is-active" : "") +
+          (missions.some(mission => (mission.editRequests || []).length) ? " is-flagged" : "");
+        chip.href = "#";
+        chip.textContent = `${theme.icon} ${theme.label}`;
+        chip.addEventListener("click", event => {
+          event.preventDefault();
+          STATE.activeThemeFilter = themeId;
+          renderAdminMissionList();
         });
         adminThemeJump.appendChild(chip);
       });
