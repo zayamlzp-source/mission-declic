@@ -1,7 +1,7 @@
 ﻿[
     {
         "id":  1,
-        "text":  "Va parler Ã  quelqu\u0027un que tu n\u0027aurais pas abordÃ©â€¦ et reste un vrai moment avec lui",
+        "text":  "Va parler à quelqu\u0027un que tu n\u0027aurais pas abordé… et reste un vrai moment avec lui",
         "category":  "OSE",
         "level":  3,
         "theme":  "festival",
@@ -38,7 +38,7 @@
     },
     {
         "id":  3,
-        "text":  "Dis Ã  quelqu\u0027un : \\\"j\u0027avais envie de te parler\\\"â€¦ et vois oÃ¹ Ã§a t\u0027emmÃ¨ne",
+        "text":  "Dis à quelqu\u0027un : \"j\u0027avais envie de te parler\"… et vois où ça t\u0027emmène",
         "category":  "OSE",
         "level":  2,
         "theme":  "festival",
@@ -56,7 +56,7 @@
     },
     {
         "id":  4,
-        "text":  "Va vers la personne qui t\u0027impressionneâ€¦ et dis-lui pourquoi (ex : trÃ¨s Ã  l\u0027aise / trÃ¨s stylÃ©e)",
+        "text":  "Va vers la personne qui t\u0027impressionne… et dis-lui pourquoi (ex : très à l\u0027aise / très stylée)",
         "category":  "OSE",
         "level":  4,
         "theme":  "festival",
@@ -74,7 +74,7 @@
     },
     {
         "id":  5,
-        "text":  "Invite un inconnu Ã  danser (mÃªme 20 secondes)",
+        "text":  "Invite un inconnu à danser (même 20 secondes)",
         "category":  "OSE",
         "level":  3,
         "theme":  "festival",
@@ -93,7 +93,7 @@
     },
     {
         "id":  6,
-        "text":  "Motive une personne Ã  sauter dans la piscine avec toi",
+        "text":  "Motive une personne à sauter dans la piscine avec toi",
         "category":  "OSE",
         "level":  8,
         "theme":  "festival",
@@ -111,7 +111,7 @@
     },
     {
         "id":  7,
-        "text":  "Fais une danse ridicule assumÃ©eâ€¦ et tiens-la jusqu\u0027au bout avec le sourire",
+        "text":  "Fais une danse ridicule assumée… et tiens-la jusqu\u0027au bout avec le sourire",
         "category":  "OSE",
         "level":  3,
         "theme":  "festival",
@@ -143,13 +143,13 @@
         "bonus":  false,
         "tags":  [
                      "rencontre",
-                     "prÃ©sence"
+                     "présence"
                  ],
         "note":  ""
     },
     {
         "id":  9,
-        "text":  "Fais un vrai compliment Ã  un inconnu (ex : Ã©nergie, style, regard)",
+        "text":  "Fais un vrai compliment à un inconnu (ex : énergie, style, regard)",
         "category":  "OSE",
         "level":  2,
         "theme":  "festival",
@@ -168,8 +168,8 @@
     },
     {
         "id":  10,
-        "text":  "EntraÃ®ne 5 personnes dans une chenille (et agrandis-la)",
-        "category":  "ENTRAÃŽNE",
+        "text":  "Entraîne 5 personnes dans une chenille (et agrandis-la)",
+        "category":  "ENTRAÎNE",
         "level":  5,
         "theme":  "festival",
         "peopleMin":  5,
@@ -187,8 +187,8 @@
     },
     {
         "id":  11,
-        "text":  "Lance un chifoumi, mÃªme de loin, Ã  au moins 3 personnes dans les 10 minutes qui suivent",
-        "category":  "ENTRAÃŽNE",
+        "text":  "Lance un chifoumi, même de loin, à au moins 3 personnes dans les 10 minutes qui suivent",
+        "category":  "ENTRAÎNE",
         "level":  4,
         "theme":  "festival",
         "peopleMin":  3,
@@ -202,12 +202,12 @@
                      "jeu",
                      "collectif"
                  ],
-        "note":  "niveau Ã  confirmer"
+        "note":  ""
     },
     {
         "id":  12,
-        "text":  "Lance un cri collectif (tu lances, ils rÃ©pondent)",
-        "category":  "ENTRAÃŽNE",
+        "text":  "Lance un cri collectif (tu lances, ils répondent)",
+        "category":  "ENTRAÎNE",
         "level":  5,
         "theme":  "festival",
         "peopleMin":  2,
@@ -219,14 +219,14 @@
         "bonus":  false,
         "tags":  [
                      "collectif",
-                     "Ã©nergie"
+                     "énergie"
                  ],
         "note":  ""
     },
     {
         "id":  13,
-        "text":  "Invite quelqu\u0027un dans un dÃ©fi danse (ex : 10 secondes chacun)",
-        "category":  "ENTRAÃŽNE",
+        "text":  "Invite quelqu\u0027un dans un défi danse (ex : 10 secondes chacun)",
+        "category":  "ENTRAÎNE",
         "level":  4,
         "theme":  "festival",
         "peopleMin":  2,
@@ -238,14 +238,14 @@
         "bonus":  false,
         "tags":  [
                      "danse",
-                     "dÃ©fi"
+                     "défi"
                  ],
         "note":  ""
     },
     {
         "id":  14,
-        "text":  "Rassemble 2 inconnus dans une action (danse, pose, jeuâ€¦)",
-        "category":  "ENTRAÃŽNE",
+        "text":  "Rassemble 2 inconnus dans une action (danse, pose, jeu…)",
+        "category":  "ENTRAÎNE",
         "level":  5,
         "theme":  "festival",
         "peopleMin":  3,
@@ -263,8 +263,8 @@
     },
     {
         "id":  15,
-        "text":  "Lance un dÃ©filÃ© (marche + attitude)",
-        "category":  "ENTRAÃŽNE",
+        "text":  "Lance un défilé (marche + attitude)",
+        "category":  "ENTRAÎNE",
         "level":  5,
         "theme":  "festival",
         "peopleMin":  2,
@@ -282,8 +282,8 @@
     },
     {
         "id":  16,
-        "text":  "EntraÃ®ne un groupe dans un mouvement simple (ex : limbo, clap, saut)",
-        "category":  "ENTRAÃŽNE",
+        "text":  "Entraîne un groupe dans un mouvement simple (ex : limbo, clap, saut)",
+        "category":  "ENTRAÎNE",
         "level":  4,
         "theme":  "festival",
         "peopleMin":  3,
@@ -301,8 +301,8 @@
     },
     {
         "id":  17,
-        "text":  "Embarque quelqu\u0027un dans un jeu (ex : imitation, regard, mini dÃ©fi, chifoumiâ€¦)",
-        "category":  "ENTRAÃŽNE",
+        "text":  "Embarque quelqu\u0027un dans un jeu (ex : imitation, regard, mini défi, chifoumi…)",
+        "category":  "ENTRAÎNE",
         "level":  2,
         "theme":  "festival",
         "peopleMin":  2,
@@ -320,8 +320,8 @@
     },
     {
         "id":  18,
-        "text":  "Fais une visite guidÃ©e du lieu avec 2 personnes (Ã  ta maniÃ¨re)",
-        "category":  "ENTRAÃŽNE",
+        "text":  "Fais une visite guidée du lieu avec 2 personnes (à ta manière)",
+        "category":  "ENTRAÎNE",
         "level":  5,
         "theme":  "festival",
         "peopleMin":  3,
@@ -340,7 +340,7 @@
     {
         "id":  19,
         "text":  "Lance un saut collectif dans la piscine",
-        "category":  "ENTRAÃŽNE",
+        "category":  "ENTRAÎNE",
         "level":  8,
         "theme":  "festival",
         "peopleMin":  2,
@@ -358,7 +358,7 @@
     },
     {
         "id":  20,
-        "text":  "Trouve quelqu\u0027un seul et reste avec lui (Ã©coute vraiment)",
+        "text":  "Trouve quelqu\u0027un seul et reste avec lui (écoute vraiment)",
         "category":  "RESSENS",
         "level":  2,
         "theme":  "festival",
@@ -370,14 +370,14 @@
         "active":  true,
         "bonus":  false,
         "tags":  [
-                     "Ã©coute",
-                     "prÃ©sence"
+                     "écoute",
+                     "présence"
                  ],
         "note":  ""
     },
     {
         "id":  21,
-        "text":  "Demande Ã  quelqu\u0027un ce qu\u0027il aime vraiment (ex : passion, moment prÃ©fÃ©rÃ©)",
+        "text":  "Demande à quelqu\u0027un ce qu\u0027il aime vraiment (ex : passion, moment préféré)",
         "category":  "RESSENS",
         "level":  3,
         "theme":  "festival",
@@ -389,14 +389,14 @@
         "active":  true,
         "bonus":  false,
         "tags":  [
-                     "Ã©coute",
+                     "écoute",
                      "vrai"
                  ],
         "note":  ""
     },
     {
         "id":  22,
-        "text":  "Fais un compliment sincÃ¨re (pas gÃ©nÃ©rique)",
+        "text":  "Fais un compliment sincère (pas générique)",
         "category":  "RESSENS",
         "level":  1,
         "theme":  "festival",
@@ -414,7 +414,7 @@
     },
     {
         "id":  23,
-        "text":  "Complimente un bÃ©nÃ©vole (remercie-le vraiment)",
+        "text":  "Complimente un bénévole (remercie-le vraiment)",
         "category":  "RESSENS",
         "level":  5,
         "theme":  "festival",
@@ -427,13 +427,13 @@
         "bonus":  false,
         "tags":  [
                      "gratitude",
-                     "bÃ©nÃ©vole"
+                     "bénévole"
                  ],
         "note":  ""
     },
     {
         "id":  24,
-        "text":  "Parle de quelque chose de vrai (ex : pourquoi tu es lÃ )",
+        "text":  "Parle de quelque chose de vrai (ex : pourquoi tu es là)",
         "category":  "RESSENS",
         "level":  3,
         "theme":  "festival",
@@ -471,7 +471,7 @@
     },
     {
         "id":  26,
-        "text":  "RamÃ¨ne un verre d\u0027eau Ã  quelqu\u0027un qui en a besoin",
+        "text":  "Ramène un verre d\u0027eau à quelqu\u0027un qui en a besoin",
         "category":  "RESSENS",
         "level":  1,
         "theme":  "festival",
@@ -490,7 +490,7 @@
     },
     {
         "id":  27,
-        "text":  "Partage un moment calme avec quelqu\u0027un (Ã  l\u0027Ã©cart ou posÃ©)",
+        "text":  "Partage un moment calme avec quelqu\u0027un (à l\u0027écart ou posé)",
         "category":  "RESSENS",
         "level":  3,
         "theme":  "festival",
@@ -503,13 +503,13 @@
         "bonus":  false,
         "tags":  [
                      "calme",
-                     "prÃ©sence"
+                     "présence"
                  ],
         "note":  ""
     },
     {
         "id":  28,
-        "text":  "Partage quelque chose Ã  manger avec quelqu\u0027un",
+        "text":  "Partage quelque chose à manger avec quelqu\u0027un",
         "category":  "RESSENS",
         "level":  3,
         "theme":  "festival",
@@ -527,7 +527,7 @@
     },
     {
         "id":  29,
-        "text":  "Fais un cadeau Ã  quelqu\u0027un (mÃªme symbolique)",
+        "text":  "Fais un cadeau à quelqu\u0027un (même symbolique)",
         "category":  "RESSENS",
         "level":  5,
         "theme":  "festival",
@@ -546,7 +546,7 @@
     },
     {
         "id":  30,
-        "text":  "CrÃ©e un duo (ex : mini danse, pose, dÃ©lire commun)",
+        "text":  "Crée un duo (ex : mini danse, pose, délire commun)",
         "category":  "LIEN",
         "level":  2,
         "theme":  "festival",
@@ -565,7 +565,7 @@
     },
     {
         "id":  31,
-        "text":  "CrÃ©e un trio (ex : nom + pose d\u0027Ã©quipe)",
+        "text":  "Crée un trio (ex : nom + pose d\u0027équipe)",
         "category":  "LIEN",
         "level":  2,
         "theme":  "festival",
@@ -584,7 +584,7 @@
     },
     {
         "id":  32,
-        "text":  "PrÃ©sente deux personnes (comme dans une Ã©mission)",
+        "text":  "Présente deux personnes (comme dans une émission)",
         "category":  "LIEN",
         "level":  2,
         "theme":  "festival",
@@ -603,7 +603,7 @@
     },
     {
         "id":  33,
-        "text":  "Fais rencontrer deux inconnus (et lance un Ã©change)",
+        "text":  "Fais rencontrer deux inconnus (et lance un échange)",
         "category":  "LIEN",
         "level":  2,
         "theme":  "festival",
@@ -622,7 +622,7 @@
     },
     {
         "id":  34,
-        "text":  "CrÃ©e une rencontre entre 2 inconnus et reste un moment avec eux",
+        "text":  "Crée une rencontre entre 2 inconnus et reste un moment avec eux",
         "category":  "LIEN",
         "level":  2,
         "theme":  "festival",
@@ -635,13 +635,13 @@
         "bonus":  false,
         "tags":  [
                      "rencontre",
-                     "prÃ©sence"
+                     "présence"
                  ],
         "note":  ""
     },
     {
         "id":  35,
-        "text":  "Apprends quelque chose Ã  quelqu\u0027un (ex : mouvement, jeu)",
+        "text":  "Apprends quelque chose à quelqu\u0027un (ex : mouvement, jeu)",
         "category":  "LIEN",
         "level":  2,
         "theme":  "festival",
@@ -673,13 +673,13 @@
         "bonus":  false,
         "tags":  [
                      "duo",
-                     "Ã©change"
+                     "échange"
                  ],
         "note":  ""
     },
     {
         "id":  37,
-        "text":  "CrÃ©e une poignÃ©e de main (simple et unique)",
+        "text":  "Crée une poignée de main (simple et unique)",
         "category":  "LIEN",
         "level":  2,
         "theme":  "festival",
@@ -717,7 +717,7 @@
     },
     {
         "id":  39,
-        "text":  "Bouge au ralenti (et entraÃ®ne 1â€“2 personnes)",
+        "text":  "Bouge au ralenti (et entraîne 1–2 personnes)",
         "category":  "JOUE",
         "level":  1,
         "theme":  "festival",
@@ -774,7 +774,7 @@
     },
     {
         "id":  42,
-        "text":  "Invente une autre vie (ex : mÃ©tier improbable)",
+        "text":  "Invente une autre vie (ex : métier improbable)",
         "category":  "JOUE",
         "level":  4,
         "theme":  "festival",
@@ -812,7 +812,7 @@
     },
     {
         "id":  44,
-        "text":  "CrÃ©e une scÃ¨ne avec quelqu\u0027un (ex : dispute, rencontre)",
+        "text":  "Crée une scène avec quelqu\u0027un (ex : dispute, rencontre)",
         "category":  "JOUE",
         "level":  4,
         "theme":  "festival",
@@ -831,7 +831,7 @@
     },
     {
         "id":  45,
-        "text":  "Fais quelque chose d\u0027absurde Ã  plusieurs (ex : marcher bizarrement)",
+        "text":  "Fais quelque chose d\u0027absurde à plusieurs (ex : marcher bizarrement)",
         "category":  "JOUE",
         "level":  4,
         "theme":  "festival",
@@ -850,7 +850,7 @@
     },
     {
         "id":  46,
-        "text":  "Transforme une situation en jeu (ex : danse â†’ dÃ©fi)",
+        "text":  "Transforme une situation en jeu (ex : danse → défi)",
         "category":  "JOUE",
         "level":  4,
         "theme":  "festival",
@@ -869,7 +869,7 @@
     },
     {
         "id":  47,
-        "text":  "CrÃ©e un cercle et lance un battle de danse",
+        "text":  "Crée un cercle et lance un battle de danse",
         "category":  "JOUE",
         "level":  4,
         "theme":  "festival",
@@ -888,7 +888,7 @@
     },
     {
         "id":  48,
-        "text":  "Trouve une personne qui connaÃ®t le jeu du ninja et demande-lui une dÃ©mo",
+        "text":  "Trouve une personne qui connaît le jeu du ninja et demande-lui une démo",
         "category":  "JOUE",
         "level":  4,
         "theme":  "festival",
@@ -926,7 +926,7 @@
     },
     {
         "id":  50,
-        "text":  "Va au mur d\u0027expression et ajoute quelque chose en collaboration (dessin, motâ€¦)",
+        "text":  "Va au mur d\u0027expression et ajoute quelque chose en collaboration (dessin, mot…)",
         "category":  "JOUE",
         "level":  1,
         "theme":  "festival",
@@ -945,7 +945,7 @@
     },
     {
         "id":  51,
-        "text":  "Invite quelqu\u0027un Ã  participer au mur d\u0027expression",
+        "text":  "Invite quelqu\u0027un à participer au mur d\u0027expression",
         "category":  "JOUE",
         "level":  1,
         "theme":  "festival",
@@ -964,7 +964,7 @@
     },
     {
         "id":  52,
-        "text":  "CrÃ©e une course : objectif traverser le plus vite possible la piscine",
+        "text":  "Crée une course : objectif traverser le plus vite possible la piscine",
         "category":  "JOUE",
         "level":  8,
         "theme":  "festival",
@@ -977,13 +977,13 @@
         "bonus":  false,
         "tags":  [
                      "piscine",
-                     "dÃ©fi"
+                     "défi"
                  ],
         "note":  "piscine"
     },
     {
         "id":  53,
-        "text":  "Fais une action synchronisÃ©e dans l\u0027eau",
+        "text":  "Fais une action synchronisée dans l\u0027eau",
         "category":  "JOUE",
         "level":  8,
         "theme":  "festival",
@@ -1002,9 +1002,9 @@
     },
     {
         "id":  54,
-        "text":  "Trouve Double Faceâ€¦ il a quelque chose Ã  te proposer !",
+        "text":  "Trouve Double Face… il a quelque chose à te proposer !",
         "category":  "BONUS",
-        "level":  0,
+        "level":  1,
         "theme":  "festival",
         "peopleMin":  1,
         "place":  [
@@ -1020,7 +1020,7 @@
     },
     {
         "id":  55,
-        "text":  "Propose un 2 vÃ©ritÃ©s, 1 mensonge (dire 3 phrases sur soi, faire deviner le mensonge)",
+        "text":  "Propose un 2 vérités, 1 mensonge (dire 3 phrases sur soi, faire deviner le mensonge)",
         "category":  "JOUE",
         "level":  4,
         "theme":  "festival",
@@ -1039,7 +1039,7 @@
     },
     {
         "id":  56,
-        "text":  "Lance un action ou vÃ©ritÃ©",
+        "text":  "Lance un action ou vérité",
         "category":  "JOUE",
         "level":  4,
         "theme":  "festival",
@@ -1058,7 +1058,7 @@
     },
     {
         "id":  57,
-        "text":  "Propose un je n\u0027ai jamaisâ€¦ (3 tours)",
+        "text":  "Propose un je n\u0027ai jamais… (3 tours)",
         "category":  "JOUE",
         "level":  4,
         "theme":  "festival",
@@ -1077,7 +1077,7 @@
     },
     {
         "id":  58,
-        "text":  "Invente un jeu avec une rÃ¨gle cachÃ©e",
+        "text":  "Invente un jeu avec une règle cachée",
         "category":  "JOUE",
         "level":  4,
         "theme":  "festival",
@@ -1134,7 +1134,7 @@
     },
     {
         "id":  61,
-        "text":  "Marche comme si tu Ã©tais dans un autre monde",
+        "text":  "Marche comme si tu étais dans un autre monde",
         "category":  "JOUE",
         "level":  4,
         "theme":  "festival",
@@ -1191,7 +1191,7 @@
     },
     {
         "id":  64,
-        "text":  "Fais semblant de connaÃ®tre quelqu\u0027un depuis longtemps",
+        "text":  "Fais semblant de connaître quelqu\u0027un depuis longtemps",
         "category":  "JOUE",
         "level":  4,
         "theme":  "festival",
@@ -1210,7 +1210,7 @@
     },
     {
         "id":  65,
-        "text":  "CrÃ©e une photo figÃ©e comme une scÃ¨ne de film",
+        "text":  "Crée une photo figée comme une scène de film",
         "category":  "JOUE",
         "level":  4,
         "theme":  "festival",
@@ -1229,7 +1229,7 @@
     },
     {
         "id":  66,
-        "text":  "Construis un texte cohÃ©rent Ã  plusieurs au mur d\u0027expression (une phrase chacun)",
+        "text":  "Construis un texte cohérent à plusieurs au mur d\u0027expression (une phrase chacun)",
         "category":  "JOUE",
         "level":  4,
         "theme":  "festival",
@@ -1249,7 +1249,7 @@
     {
         "id":  67,
         "text":  "Lance un effet domino (5 pers min)",
-        "category":  "ENTRAÃŽNE",
+        "category":  "ENTRAÎNE",
         "level":  5,
         "theme":  "festival",
         "peopleMin":  5,
@@ -1267,7 +1267,7 @@
     },
     {
         "id":  68,
-        "text":  "CrÃ©e une chorÃ© Ã  plusieurs dans l\u0027eau",
+        "text":  "Crée une choré à plusieurs dans l\u0027eau",
         "category":  "JOUE",
         "level":  5,
         "theme":  "festival",
@@ -1305,7 +1305,7 @@
     },
     {
         "id":  70,
-        "text":  "CrÃ©e une photo vivante dans l\u0027eau",
+        "text":  "Crée une photo vivante dans l\u0027eau",
         "category":  "JOUE",
         "level":  5,
         "theme":  "festival",
@@ -1363,7 +1363,7 @@
     {
         "id":  73,
         "text":  "Convaincs un groupe de faire une action ensemble",
-        "category":  "ENTRAÃŽNE",
+        "category":  "ENTRAÎNE",
         "level":  5,
         "theme":  "festival",
         "peopleMin":  3,
@@ -1381,7 +1381,7 @@
     },
     {
         "id":  74,
-        "text":  "Compose une mini chorÃ© avec 3 inconnus",
+        "text":  "Compose une mini choré avec 3 inconnus",
         "category":  "JOUE",
         "level":  5,
         "theme":  "festival",
@@ -1400,7 +1400,7 @@
     },
     {
         "id":  75,
-        "text":  "Organise un tÃ©lÃ©phone arabe en mode danse (en ligne : chacun refait le mouvement jusqu\u0027au dernier)",
+        "text":  "Organise un téléphone arabe en mode danse (en ligne : chacun refait le mouvement jusqu\u0027au dernier)",
         "category":  "JOUE",
         "level":  5,
         "theme":  "festival",
@@ -1419,8 +1419,8 @@
     },
     {
         "id":  76,
-        "text":  "Fais sauter 5 personnes en mÃªme temps",
-        "category":  "ENTRAÃŽNE",
+        "text":  "Fais sauter 5 personnes en même temps",
+        "category":  "ENTRAÎNE",
         "level":  5,
         "theme":  "festival",
         "peopleMin":  5,
@@ -1437,3 +1437,5 @@
         "note":  ""
     }
 ]
+
+

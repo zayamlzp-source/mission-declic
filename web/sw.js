@@ -1,4 +1,4 @@
-const CACHE_NAME = "festival-missions-v1";
+const CACHE_NAME = "mission-declic-v1";
 const APP_SHELL = [
   "./",
   "./index.html",
