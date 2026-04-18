@@ -1652,11 +1652,18 @@
       { id: "sante", label: "Santé", icon: "❤️‍🩹" }
     ];
 
-    // Mapping catégories → sous-thèmes
+    // Mapping catégories → sous-thèmes (chips affichés dans le sélecteur)
     const CATEGORY_SUBTHEMES = {
-      festival: ["festival", "pool"],
+      festival: ["pool"],
+      quotidien: ["pool", "health_sport", "health_mental", "health_wellness", "health_breathing", "health_yoga"],
+      sante: ["health_sport", "health_mental", "health_wellness", "health_breathing", "health_yoga", "pool"]
+    };
+
+    // Thèmes de base toujours inclus (non affichés comme chips) quand une catégorie est active
+    const CATEGORY_BASE_THEMES = {
+      festival: ["festival"],
       quotidien: ["daily"],
-      sante: ["health_sport", "health_mental", "health_wellness", "health_breathing", "health_yoga"]
+      sante: []
     };
 
     // Tous les sous-thèmes disponibles
@@ -3478,11 +3485,13 @@
       let pool = getMissionPoolForProgression(state);
       if (!pool.length) pool = getFallbackMissionPool(state);
 
-      // Si des sous-thèmes spécifiques sont choisis, filter par ceux-ci
-      const hasSelection = Object.values(selectedSubThemesObj || {}).some(v => v);
-      if (hasSelection) {
-        const selectedThemeIds = Object.keys(selectedSubThemesObj || {}).filter(k => selectedSubThemesObj[k]);
-        pool = pool.filter(m => selectedThemeIds.includes(m.theme));
+      // Filtrage par catégorie + sous-thèmes sélectionnés
+      const category = STATE.selectedCategory;
+      const baseThemes = (category ? CATEGORY_BASE_THEMES[category] : null) || [];
+      const selectedThemeIds = Object.keys(selectedSubThemesObj || {}).filter(k => selectedSubThemesObj[k]);
+      const allAllowed = [...new Set([...baseThemes, ...selectedThemeIds])];
+      if (allAllowed.length > 0) {
+        pool = pool.filter(m => allAllowed.includes(m.theme));
       }
 
       // Exclusion récents
