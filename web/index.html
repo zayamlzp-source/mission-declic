@@ -14,8 +14,8 @@
     <meta property="og:title" content="Missions Déclic">
     <meta property="og:description" content="Laisse-toi surprendre par des missions. Ose, ressens, joue, crée des liens.">
     <meta property="og:type" content="website">
-    <meta property="og:url" content="https://zayamlzp-source.github.io/mission-declic/">
-    <meta property="og:image" content="https://zayamlzp-source.github.io/mission-declic/assets/icons/icon-512.svg">
+    <meta property="og:url" content="https://zayamlzp-source.github.io/missions_declic/">
+    <meta property="og:image" content="https://zayamlzp-source.github.io/missions_declic/assets/icons/icon-512.svg">
     <meta name="twitter:card" content="summary">
     <meta name="twitter:title" content="Missions Déclic">
     <meta name="twitter:description" content="Laisse-toi surprendre par des missions au festival.">
@@ -39,56 +39,23 @@
 
         body {
           margin: 0;
-          font-family: "Avenir Next", "Segoe UI", "Trebuchet MS", "Verdana", sans-serif;
-          background:
-            radial-gradient(1200px 420px at -12% -15%, rgba(183,111,83,0.16), transparent 52%),
-            radial-gradient(920px 360px at 108% -10%, rgba(122,143,111,0.2), transparent 56%),
-            linear-gradient(180deg, var(--bg) 0%, var(--bg-2) 100%);
+          font-family: Arial, sans-serif;
+          background: linear-gradient(180deg, var(--bg) 0%, var(--bg-2) 100%);
           color: var(--text);
           min-height: 100vh;
           padding: 18px;
-          position: relative;
-          overflow-x: hidden;
-        }
-
-        body::before,
-        body::after {
-          content: "";
-          position: fixed;
-          border-radius: 999px;
-          filter: blur(26px);
-          pointer-events: none;
-          z-index: 0;
-        }
-
-        body::before {
-          width: 260px;
-          height: 260px;
-          right: -90px;
-          top: 74px;
-          background: rgba(183,111,83,0.15);
-        }
-
-        body::after {
-          width: 320px;
-          height: 320px;
-          left: -120px;
-          bottom: 42px;
-          background: rgba(122,143,111,0.14);
         }
 
         .app {
           width: 100%;
           max-width: 720px;
           margin: 0 auto;
-          background: linear-gradient(160deg, rgba(255,255,255,0.9), rgba(255,255,255,0.84));
-          backdrop-filter: blur(14px);
+          background: var(--card);
+          backdrop-filter: blur(8px);
           border-radius: 28px;
-          box-shadow: 0 24px 56px rgba(42,33,26,0.14);
+          box-shadow: var(--shadow);
           overflow: hidden;
-          border: 1px solid rgba(255,255,255,0.75);
-          position: relative;
-          z-index: 1;
+          border: 1px solid rgba(255,255,255,0.65);
         }
 
         .topbar {
@@ -98,28 +65,16 @@
           gap: 12px;
           padding: 16px 18px;
           border-bottom: 1px solid var(--line);
-          background: linear-gradient(180deg, rgba(255,255,255,0.86), rgba(255,255,255,0.66));
+          background: rgba(255,255,255,0.65);
           position: sticky;
           top: 0;
           z-index: 5;
-          backdrop-filter: blur(16px);
+          backdrop-filter: blur(10px);
         }
 
         .brand {
-          font-size: 1.02rem;
-          font-weight: 800;
-          letter-spacing: 0.05em;
-          text-transform: uppercase;
-          color: #2e2a23;
-        }
-
-        .brand-subline {
-          margin-top: 2px;
-          font-size: 0.74rem;
-          letter-spacing: 0.04em;
-          text-transform: uppercase;
-          color: #5e6658;
           font-weight: 700;
+          letter-spacing: 0.02em;
         }
 
         .top-actions {
@@ -155,7 +110,7 @@
         }
 
         h1 {
-          font-size: 2.1rem;
+          font-size: 1.9rem;
           line-height: 1.12;
           margin-bottom: 10px;
         }
@@ -181,11 +136,11 @@
         }
 
         .card {
-          background: linear-gradient(180deg, rgba(255,255,255,0.95), rgba(255,255,255,0.88));
-          border: 1px solid rgba(222,213,200,0.62);
+          background: rgba(255,255,255,0.92);
+          border: 1px solid rgba(222,213,200,0.7);
           border-radius: var(--radius);
           padding: 18px;
-          box-shadow: 0 22px 44px rgba(0,0,0,0.09);
+          box-shadow: 0 20px 40px rgba(0,0,0,0.08);
           backdrop-filter: blur(10px);
         }
 
@@ -1254,7 +1209,7 @@
 
         <div class="home-admin-access">
           <button id="share-link-btn" class="btn btn-link" type="button">Copier le lien</button>
-          <button id="admin-access-btn" class="btn btn-link" type="button" data-go="orga" onclick="openAdminAccess()">Espace admin</button>
+          <button id="admin-access-btn" class="btn btn-link" type="button">Espace admin</button>
         </div>
       </div>
     </section>
@@ -1682,13 +1637,6 @@
       { id: "health_breathing", label: "Respiration", icon: "🫁" },
       { id: "health_yoga",      label: "Yoga",        icon: "🧘" }
     ];
-
-    function getCategoryForThemeId(themeId) {
-      if (themeId === "festival" || themeId === "pool") return "festival";
-      if (themeId === "daily") return "quotidien";
-      if (themeId && themeId.startsWith("health_")) return "sante";
-      return null;
-    }
 
     function getDefaultAdminSettings() {
       return {
@@ -3167,16 +3115,31 @@
 
     // ===== Navigation =====
     function openAdminAccess() {
-      try {
+      const isLocalFile = window.location.protocol === "file:";
+
+      if (isLocalFile) {
         hydrateAdminSettingsForm();
-      } catch (error) {
-        console.error("Erreur hydration admin:", error);
+        showScreen("orga");
+        return;
       }
 
-      showScreen("orga");
-      if (window.location.hash !== "#orga") {
-        window.location.hash = "#orga";
+      const entered = window.prompt("Code admin:");
+      if (!entered) {
+        const wantsRecovery = window.confirm("Code oublié ? Cliquer sur OK pour lancer la récupération par e-mail.");
+        if (wantsRecovery) recoverAdminPinByEmail();
+        return;
       }
+
+      const storedPin = localStorage.getItem(STORAGE_KEYS.adminPin) || DEFAULT_ADMIN_PIN;
+
+      if (entered !== storedPin) {
+        Toast.error("Code admin incorrect.");
+        const wantsRecovery = window.confirm("Code oublié ? Cliquer sur OK pour lancer la récupération par e-mail.");
+        if (wantsRecovery) recoverAdminPinByEmail();
+        return;
+      }
+      hydrateAdminSettingsForm();
+      showScreen("orga");
     }
 
     async function recoverAdminPinByEmail() {
@@ -3233,24 +3196,16 @@
         return;
       }
       Object.values(screens).forEach(screen => {
-        if (!screen) return;
-        screen.classList.remove("active");
-        screen.style.display = "none";
+        if (screen) screen.classList.remove("active");
       });
       target.classList.add("active");
-      target.style.display = "block";
 
       if (name === "journal") renderJournal();
       if (name === "photos") renderPhotos();
       if (name === "suggest") renderSuggestions();
       if (name === "orga") {
-        try {
-          renderOrga();
-          hydrateAdminSettingsForm();
-        } catch (error) {
-          console.error("Erreur ouverture admin:", error);
-          Toast.error("Ouverture admin partielle: un bloc du panneau a échoué.");
-        }
+        renderOrga();
+        hydrateAdminSettingsForm();
       }
       if (name === "home") updateProgressBar();
     }
@@ -3311,13 +3266,14 @@
       if (adminThemeHealthWellness) adminThemeHealthWellness.checked = !!settings.enabledThemes.health_wellness;
       if (adminThemeHealthBreathing) adminThemeHealthBreathing.checked = !!settings.enabledThemes.health_breathing;
       if (adminThemeHealthYoga) adminThemeHealthYoga.checked = !!settings.enabledThemes.health_yoga;
+
       adminPinInput.value = "";
       if (adminRecoveryEmailInput) adminRecoveryEmailInput.value = getAdminRecoveryEmail();
     }
 
     function saveAdminSettingsFromForm() {
       const currentSettings = getAdminSettings();
-      
+
       const enabledThemes = {
         festival: !!adminThemeFestival?.checked,
         pool: !!adminThemePool?.checked,
@@ -4022,7 +3978,7 @@
         chip.className = "admin-theme-chip" +
           (STATE.activeThemeFilter === themeId ? " is-active" : "") +
           (missions.some(mission => (mission.editRequests || []).length) ? " is-flagged" : "");
-        chip.href = "#";
+        chip.href = `#admin-theme-${theme.id}`;
         chip.textContent = `${theme.icon} ${theme.label}`;
         chip.addEventListener("click", event => {
           event.preventDefault();
@@ -4200,7 +4156,6 @@
         return (themeIndex[a[0]] ?? 999) - (themeIndex[b[0]] ?? 999);
       });
 
-      console.log(`📊 ${orderedGroups.length} groupes de thèmes`);
       renderAdminThemeJump(orderedGroups);
 
       orderedGroups.forEach(([themeId, missions]) => {
@@ -4509,12 +4464,6 @@
       const tabContents = document.querySelectorAll(".admin-tab-content");
       tabBtns.forEach(btn => btn.classList.toggle("active", btn.getAttribute("data-tab") === tabName));
       tabContents.forEach(content => content.classList.toggle("active", content.id === `tab-${tabName}`));
-      
-      // Rafraîchir l'onglet missions quand on y entre
-      if (tabName === "missions") {
-        initAdminThemeButtons();
-        renderAdminMissionList();
-      }
     }
 
     function saveAdminTabOrder(nav) {
@@ -4724,8 +4673,6 @@
 
       renderAdminPhotoReview();
       renderAdminMissionList();
-      initAdminThemeButtons();
-      renderAdminExcludedMissionList();
       renderAdminSuggestionsReview();
     }
 
@@ -4843,7 +4790,6 @@
       adminMissionSearch.addEventListener("input", renderAdminMissionList);
     }
     
-    // Initialiser les event listeners pour les boutons de filtrage
     function initAdminThemeButtons() {
       STATE.activeThemeFilter = null;
     }
@@ -4888,12 +4834,6 @@
     }
 
     init();
-
-    window.addEventListener("hashchange", () => {
-      if (location.hash === "#orga") openAdminAccess();
-      if (location.hash === "#missions") showScreen("missions");
-      if (location.hash === "#photos") showScreen("photos");
-    });
 
     if ("serviceWorker" in navigator) {
       window.addEventListener("load", async () => {
