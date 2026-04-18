@@ -2530,6 +2530,37 @@
       }));
     }
 
+    function buildDailyIntergenerationMissions(startId) {
+      const raw = [
+        { l: 1, t: "Va voir une personne âgée et prends un vrai moment avec elle.", d: "Pas juste un salut rapide. Reste un peu. Écoute, regarde, laisse de la place à la conversation ou au silence.", s: "Choisis une personne : voisin, grand-parent, résident d'un home, connaissance du quartier.", a: "Note une chose que tu as découverte, ressentie ou entendue." },
+        { l: 2, t: "Apporte un petit quelque chose à une personne âgée.", d: "Ça peut être un repas, un goûter, un fruit, du pain, une fleur, un dessin ou une boisson chaude. Le but n'est pas la valeur de ce que tu apportes, mais l'attention portée.", s: "Prépare quelque chose de simple, réaliste, respectueux et adapté.", a: "Observe ce que ce petit geste change dans la rencontre." },
+        { l: 1, t: "Demande à une personne âgée de te raconter un souvenir important de sa vie.", d: "Pose une vraie question simple et laisse la place au récit.", s: "Tu peux demander : « C'est quoi un moment dont vous vous souvenez encore très bien ? »", a: "Garde une phrase, une image ou une émotion de ce qu'elle t'a transmis." },
+        { l: 1, t: "Fais une visite courte mais entière à une personne âgée.", d: "Même 10 à 20 minutes suffisent si tu es vraiment présent, sans téléphone ni dispersion.", s: "Préviens si nécessaire, ou profite d'un passage possible.", a: "Demande-toi si tu étais vraiment là." },
+        { l: 2, t: "Propose un petit service concret à une personne âgée.", d: "Par exemple : porter quelque chose, faire une petite course, lire un papier, aider avec un téléphone, ranger un objet.", s: "Propose sans imposer. Pars de ce qui est réellement utile.", a: "Note ce qui a été vraiment utile, pas juste ce que tu imaginais." },
+        { l: 1, t: "Partage un thé, un café, une tisane ou un goûter avec une personne âgée.", d: "Le but est de créer un moment simple et humain, sans performance ni pression.", s: "Prévois un moment calme, même court.", a: "Observe ce qui se passe quand on prend juste le temps." },
+        { l: 2, t: "Passe un moment avec une personne âgée sans chercher à remplir tous les silences.", d: "Accepte les silences, le rythme plus lent, les détours de parole. Ne cherche pas à animer à tout prix.", s: "Viens avec une vraie disponibilité intérieure.", a: "Observe ton propre rapport au silence et au temps." },
+        { l: 2, t: "Demande à une personne âgée ce qui lui ferait plaisir ces jours.", d: "Ça peut être petit : une visite, une promenade, une photo imprimée, une course, une chanson, un peu de compagnie.", s: "Pose la question simplement, sans promettre trop vite.", a: "Si c'est possible, réalise ensuite une version simple de ce plaisir." },
+        { l: 3, t: "Accompagne une personne âgée pour une petite promenade si c'est possible.", d: "Le but n'est pas la distance. C'est de changer d'air, regarder autour, partager un moment.", s: "Adapte-toi à son rythme, à ses capacités et à son envie.", a: "Note ce que l'extérieur change dans l'échange." },
+        { l: 1, t: "Apporte un peu de beauté dans la journée d'une personne âgée.", d: "Ça peut être une fleur, une chanson, une photo, une histoire, un dessin ou un petit objet doux ou drôle.", s: "Choisis quelque chose de simple et humain.", a: "Observe ce qui touche vraiment." },
+        { l: 2, t: "Demande à une personne âgée de te raconter son ancien métier ou une époque marquante de sa vie.", d: "Le but est de recevoir un morceau de vie, pas juste d'enchaîner des questions.", s: "Tu peux demander : « C'était comment, vos journées, à cette époque ? »", a: "Note une chose qui t'a surpris." },
+        { l: 1, t: "Passe dire bonjour à une personne âgée juste pour montrer qu'elle existe dans ton regard.", d: "Pas besoin de faire long. Parfois, une présence simple et sincère suffit déjà.", s: "Choisis un moment réaliste et respectueux.", a: "Observe la différence entre faire quelque chose et être là." },
+        { l: 3, t: "Aide une personne âgée à envoyer un message, passer un appel ou retrouver une photo.", d: "Le soutien peut être technique ou relationnel. Prends le temps sans imposer ton rythme.", s: "Pars d'un besoin concret ou d'une envie exprimée.", a: "Regarde si cette petite aide ouvre quelque chose de plus grand." },
+        { l: 2, t: "Demande à une personne âgée une phrase ou un conseil qu'elle aimerait transmettre.", d: "C'est une mission de récolte de parole, pas une interview froide.", s: "Tu peux demander : « Si vous aviez une chose à transmettre, ce serait quoi ? »", a: "Écris cette phrase quelque part." },
+        { l: 4, t: "Reviens voir une deuxième fois la même personne âgée.", d: "Le lien change souvent à partir de la deuxième rencontre. Cette fois, il ne s'agit plus juste d'un élan ponctuel.", s: "Choisis une visite simple, sans pression.", a: "Compare la première et la deuxième rencontre." }
+      ];
+      return raw.map((r, i) => createMission({
+        id: startId + i,
+        text: r.t,
+        category: "LIEN",
+        level: r.l,
+        theme: "daily",
+        tags: ["social", "intergénérationnel", "présence"],
+        details: r.d,
+        setup: r.s,
+        after: r.a
+      }));
+    }
+
     const DEFAULT_MISSIONS = [
       createMission({ id: 1, text: "Va parler à quelqu'un que tu n'aurais pas abordé… et reste un vrai moment avec lui", category: "OSE", level: 3, tags: ["rencontre"] }),
       createMission({ id: 2, text: "Regarde quelqu'un dans les yeux et souris", category: "OSE", level: 1, tags: ["simple", "regard"] }),
@@ -2645,7 +2676,8 @@
       ...buildHealthMissions(89),
       ...buildMentalMissions(1000),
       ...buildCommunityMissions(289),
-      ...buildPoolMissions(500)
+      ...buildPoolMissions(500),
+      ...buildDailyIntergenerationMissions(1100)
     ];
 
     let MISSIONS = [];
