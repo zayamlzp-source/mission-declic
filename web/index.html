@@ -1426,17 +1426,16 @@
                 <label for="admin-fun-mode">Mode fun: retirer les missions bateau</label>
               </div>
 
-              <div class="admin-theme-buttons" style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; margin-bottom: 12px;">
-                <button id="admin-theme-btn-festival" class="btn btn-secondary admin-theme-btn" data-theme="festival">🎪 Festi</button>
-                <button id="admin-theme-btn-pool" class="btn btn-secondary admin-theme-btn" data-theme="pool">🏊 Piscine</button>
-                <button id="admin-theme-btn-daily" class="btn btn-secondary admin-theme-btn" data-theme="daily">📅 Quotidien</button>
-                <button id="admin-theme-btn-health-sport" class="btn btn-secondary admin-theme-btn" data-theme="health_sport">⚽ Santé sport</button>
-                <button id="admin-theme-btn-health-mental" class="btn btn-secondary admin-theme-btn" data-theme="health_mental">🧠 Santé mental</button>
-                <button id="admin-theme-btn-health-wellness" class="btn btn-secondary admin-theme-btn" data-theme="health_wellness">💆 Bien-être</button>
-                <button id="admin-theme-btn-health-breathing" class="btn btn-secondary admin-theme-btn" data-theme="health_breathing">💨 Respiration</button>
-                <button id="admin-theme-btn-health-yoga" class="btn btn-secondary admin-theme-btn" data-theme="health_yoga">🧘 Yoga</button>
+              <div class="admin-grid" style="margin-bottom: 8px;">
+                <div class="check-row"><input id="admin-theme-festival" type="checkbox" /><label for="admin-theme-festival">Festival</label></div>
+                <div class="check-row"><input id="admin-theme-pool" type="checkbox" /><label for="admin-theme-pool">Piscine</label></div>
+                <div class="check-row"><input id="admin-theme-daily" type="checkbox" /><label for="admin-theme-daily">Quotidien</label></div>
+                <div class="check-row"><input id="admin-theme-health-sport" type="checkbox" /><label for="admin-theme-health-sport">Santé sport</label></div>
+                <div class="check-row"><input id="admin-theme-health-mental" type="checkbox" /><label for="admin-theme-health-mental">Santé mental</label></div>
+                <div class="check-row"><input id="admin-theme-health-wellness" type="checkbox" /><label for="admin-theme-health-wellness">Bien-être</label></div>
+                <div class="check-row"><input id="admin-theme-health-breathing" type="checkbox" /><label for="admin-theme-health-breathing">Respiration</label></div>
+                <div class="check-row"><input id="admin-theme-health-yoga" type="checkbox" /><label for="admin-theme-health-yoga">Yoga</label></div>
               </div>
-              <button id="admin-all-missions-btn" class="btn btn-secondary" style="width: 100%; margin-bottom: 12px;">🔄 Toutes les missions</button>
 
               <div>
                 <label class="label" for="admin-pin-input">Changer code admin <span class="micro">(laisser vide pour conserver)</span></label>
@@ -3117,6 +3116,14 @@
     const photoVisibilityLock = document.getElementById("photo-visibility-lock");
     const adminAllowCommunityShare = document.getElementById("admin-allow-community-share");
     const adminFunMode = document.getElementById("admin-fun-mode");
+    const adminThemeFestival = document.getElementById("admin-theme-festival");
+    const adminThemePool = document.getElementById("admin-theme-pool");
+    const adminThemeDaily = document.getElementById("admin-theme-daily");
+    const adminThemeHealthSport = document.getElementById("admin-theme-health-sport");
+    const adminThemeHealthMental = document.getElementById("admin-theme-health-mental");
+    const adminThemeHealthWellness = document.getElementById("admin-theme-health-wellness");
+    const adminThemeHealthBreathing = document.getElementById("admin-theme-health-breathing");
+    const adminThemeHealthYoga = document.getElementById("admin-theme-health-yoga");
     const adminPinInput = document.getElementById("admin-pin-input");
     const adminRecoveryEmailInput = document.getElementById("admin-recovery-email-input");
     const themeChoiceLabel = document.getElementById("theme-choice-label");
@@ -3290,10 +3297,14 @@
       const settings = getAdminSettings();
       adminAllowCommunityShare.checked = settings.allowCommunityShare;
       if (adminFunMode) adminFunMode.checked = !!settings.funMode;
-      
-      // Les boutons de thème ne sont pas hydratés - ils restent neutres au démarrage
-      // (Les checkboxes ont été remplacées par des boutons radio-style)
-      
+      if (adminThemeFestival) adminThemeFestival.checked = !!settings.enabledThemes.festival;
+      if (adminThemePool) adminThemePool.checked = !!settings.enabledThemes.pool;
+      if (adminThemeDaily) adminThemeDaily.checked = !!settings.enabledThemes.daily;
+      if (adminThemeHealthSport) adminThemeHealthSport.checked = !!settings.enabledThemes.health_sport;
+      if (adminThemeHealthMental) adminThemeHealthMental.checked = !!settings.enabledThemes.health_mental;
+      if (adminThemeHealthWellness) adminThemeHealthWellness.checked = !!settings.enabledThemes.health_wellness;
+      if (adminThemeHealthBreathing) adminThemeHealthBreathing.checked = !!settings.enabledThemes.health_breathing;
+      if (adminThemeHealthYoga) adminThemeHealthYoga.checked = !!settings.enabledThemes.health_yoga;
       adminPinInput.value = "";
       if (adminRecoveryEmailInput) adminRecoveryEmailInput.value = getAdminRecoveryEmail();
     }
@@ -3301,17 +3312,21 @@
     function saveAdminSettingsFromForm() {
       const currentSettings = getAdminSettings();
       
-      // Tous les thèmes sont activés par défaut (le filtrage se fait via les boutons radio dans Missions)
       const enabledThemes = {
-        festival: true,
-        pool: true,
-        daily: true,
-        health_sport: true,
-        health_mental: true,
-        health_wellness: true,
-        health_breathing: true,
-        health_yoga: true
+        festival: !!adminThemeFestival?.checked,
+        pool: !!adminThemePool?.checked,
+        daily: !!adminThemeDaily?.checked,
+        health_sport: !!adminThemeHealthSport?.checked,
+        health_mental: !!adminThemeHealthMental?.checked,
+        health_wellness: !!adminThemeHealthWellness?.checked,
+        health_breathing: !!adminThemeHealthBreathing?.checked,
+        health_yoga: !!adminThemeHealthYoga?.checked
       };
+
+      if (!Object.values(enabledThemes).some(Boolean)) {
+        Toast.warning("Active au moins un pack de missions.");
+        return;
+      }
 
       saveAdminSettings({
         allowCommunityShare: !!adminAllowCommunityShare.checked,
