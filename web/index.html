@@ -4858,60 +4858,7 @@
     
     // Initialiser les event listeners pour les boutons de filtrage
     function initAdminThemeButtons() {
-      const themeButtons = document.querySelectorAll(".admin-theme-btn");
-      
-      // Détacher les anciens listeners
-      themeButtons.forEach(btn => {
-        const newBtn = btn.cloneNode(true);
-        btn.parentNode.replaceChild(newBtn, btn);
-      });
-      
-      // Réattacher avec de nouveaux listeners
-      document.querySelectorAll(".admin-theme-btn").forEach(btn => {
-        btn.addEventListener("click", (e) => {
-          e.preventDefault();
-          const theme = btn.getAttribute("data-theme");
-          console.log("🎯 Clic bouton thème:", theme);
-          
-          // Mettre à jour l'état
-          STATE.activeThemeFilter = theme;
-          
-          // Mettre à jour l'apparence des boutons
-          document.querySelectorAll(".admin-theme-btn").forEach(b => {
-            b.classList.toggle("active", b === btn);
-          });
-          
-          // Réinitialiser le bouton "Toutes les missions"
-          const allBtn = document.getElementById("admin-all-missions-btn");
-          if (allBtn) allBtn.classList.remove("active");
-          
-          // Rafraîchir la liste
-          renderAdminMissionList();
-        });
-      });
-      
-      const allMissionsBtn = document.getElementById("admin-all-missions-btn");
-      if (allMissionsBtn) {
-        // Cloner pour détacher les anciens listeners
-        const newAllBtn = allMissionsBtn.cloneNode(true);
-        allMissionsBtn.parentNode.replaceChild(newAllBtn, allMissionsBtn);
-        
-        // Attacher le nouveau listener
-        document.getElementById("admin-all-missions-btn").addEventListener("click", (e) => {
-          e.preventDefault();
-          console.log("🔄 Clic 'Toutes les missions'");
-          
-          // Mettre à jour l'état
-          STATE.activeThemeFilter = null;
-          
-          // Réinitialiser l'apparence de tous les boutons
-          document.querySelectorAll(".admin-theme-btn").forEach(b => b.classList.remove("active"));
-          document.getElementById("admin-all-missions-btn").classList.add("active");
-          
-          // Rafraîchir la liste
-          renderAdminMissionList();
-        });
-      }
+      STATE.activeThemeFilter = null;
     }
     
     if (missionModeSelect) {
