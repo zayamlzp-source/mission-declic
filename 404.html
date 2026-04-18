@@ -14,8 +14,8 @@
     <meta property="og:title" content="Missions Déclic">
     <meta property="og:description" content="Laisse-toi surprendre par des missions. Ose, ressens, joue, crée des liens.">
     <meta property="og:type" content="website">
-    <meta property="og:url" content="https://zayamlzp-source.github.io/mission-declic/">
-    <meta property="og:image" content="https://zayamlzp-source.github.io/mission-declic/assets/icons/icon-512.svg">
+    <meta property="og:url" content="https://zayamlzp-source.github.io/missions_declic/">
+    <meta property="og:image" content="https://zayamlzp-source.github.io/missions_declic/assets/icons/icon-512.svg">
     <meta name="twitter:card" content="summary">
     <meta name="twitter:title" content="Missions Déclic">
     <meta name="twitter:description" content="Laisse-toi surprendre par des missions au festival.">
@@ -39,56 +39,23 @@
 
         body {
           margin: 0;
-          font-family: "Avenir Next", "Segoe UI", "Trebuchet MS", "Verdana", sans-serif;
-          background:
-            radial-gradient(1200px 420px at -12% -15%, rgba(183,111,83,0.16), transparent 52%),
-            radial-gradient(920px 360px at 108% -10%, rgba(122,143,111,0.2), transparent 56%),
-            linear-gradient(180deg, var(--bg) 0%, var(--bg-2) 100%);
+          font-family: Arial, sans-serif;
+          background: linear-gradient(180deg, var(--bg) 0%, var(--bg-2) 100%);
           color: var(--text);
           min-height: 100vh;
           padding: 18px;
-          position: relative;
-          overflow-x: hidden;
-        }
-
-        body::before,
-        body::after {
-          content: "";
-          position: fixed;
-          border-radius: 999px;
-          filter: blur(26px);
-          pointer-events: none;
-          z-index: 0;
-        }
-
-        body::before {
-          width: 260px;
-          height: 260px;
-          right: -90px;
-          top: 74px;
-          background: rgba(183,111,83,0.15);
-        }
-
-        body::after {
-          width: 320px;
-          height: 320px;
-          left: -120px;
-          bottom: 42px;
-          background: rgba(122,143,111,0.14);
         }
 
         .app {
           width: 100%;
           max-width: 720px;
           margin: 0 auto;
-          background: linear-gradient(160deg, rgba(255,255,255,0.9), rgba(255,255,255,0.84));
-          backdrop-filter: blur(14px);
+          background: var(--card);
+          backdrop-filter: blur(8px);
           border-radius: 28px;
-          box-shadow: 0 24px 56px rgba(42,33,26,0.14);
+          box-shadow: var(--shadow);
           overflow: hidden;
-          border: 1px solid rgba(255,255,255,0.75);
-          position: relative;
-          z-index: 1;
+          border: 1px solid rgba(255,255,255,0.65);
         }
 
         .topbar {
@@ -98,28 +65,16 @@
           gap: 12px;
           padding: 16px 18px;
           border-bottom: 1px solid var(--line);
-          background: linear-gradient(180deg, rgba(255,255,255,0.86), rgba(255,255,255,0.66));
+          background: rgba(255,255,255,0.65);
           position: sticky;
           top: 0;
           z-index: 5;
-          backdrop-filter: blur(16px);
+          backdrop-filter: blur(10px);
         }
 
         .brand {
-          font-size: 1.02rem;
-          font-weight: 800;
-          letter-spacing: 0.05em;
-          text-transform: uppercase;
-          color: #2e2a23;
-        }
-
-        .brand-subline {
-          margin-top: 2px;
-          font-size: 0.74rem;
-          letter-spacing: 0.04em;
-          text-transform: uppercase;
-          color: #5e6658;
           font-weight: 700;
+          letter-spacing: 0.02em;
         }
 
         .top-actions {
@@ -155,7 +110,7 @@
         }
 
         h1 {
-          font-size: 2.1rem;
+          font-size: 1.9rem;
           line-height: 1.12;
           margin-bottom: 10px;
         }
@@ -181,11 +136,11 @@
         }
 
         .card {
-          background: linear-gradient(180deg, rgba(255,255,255,0.95), rgba(255,255,255,0.88));
-          border: 1px solid rgba(222,213,200,0.62);
+          background: rgba(255,255,255,0.92);
+          border: 1px solid rgba(222,213,200,0.7);
           border-radius: var(--radius);
           padding: 18px;
-          box-shadow: 0 22px 44px rgba(0,0,0,0.09);
+          box-shadow: 0 20px 40px rgba(0,0,0,0.08);
           backdrop-filter: blur(10px);
         }
 
@@ -797,6 +752,12 @@
           color: #8a6423;
         }
 
+        .admin-theme-chip.is-active {
+          background: linear-gradient(135deg, #7a8f6f 0%, #6f7c65 100%);
+          color: #fff;
+          border-color: #6f7c65;
+        }
+
         /* Admin tabs */
         .admin-tabs-container {
           border-radius: 16px;
@@ -1137,58 +1098,6 @@
           }
         }
 
-        /* Wheel overlay */
-        .wheel-overlay {
-          position: fixed;
-          inset: 0;
-          background: rgba(244,237,228,0.97);
-          z-index: 9999;
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          justify-content: center;
-          gap: 20px;
-          padding: 32px 24px;
-        }
-
-        .wheel-overlay h2 {
-          font-size: 1.1rem;
-          font-weight: 700;
-          color: var(--text);
-          margin: 0;
-          text-align: center;
-        }
-
-        .wheel-reel {
-          width: 100%;
-          max-width: 340px;
-          min-height: 80px;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          font-size: 1rem;
-          font-weight: 500;
-          text-align: center;
-          border-radius: 20px;
-          background: #fff;
-          border: 1.5px solid var(--line);
-          padding: 18px 20px;
-          line-height: 1.4;
-          box-shadow: 0 2px 12px rgba(0,0,0,0.06);
-          color: var(--text);
-        }
-
-        .wheel-theme-label {
-          font-size: 2rem;
-          font-weight: 700;
-          text-align: center;
-        }
-
-        .wheel-subtext {
-          font-size: 0.85rem;
-          color: var(--muted);
-          text-align: center;
-        }
     </style>
 </head>
 <body>
@@ -1248,7 +1157,7 @@
 
         <div class="home-admin-access">
           <button id="share-link-btn" class="btn btn-link" type="button">Copier le lien</button>
-          <button id="admin-access-btn" class="btn btn-link" type="button" data-go="orga" onclick="openAdminAccess()">Espace admin</button>
+          <button id="admin-access-btn" class="btn btn-link" type="button">Espace admin</button>
         </div>
       </div>
     </section>
@@ -1317,7 +1226,6 @@
       </div>
     </section>
 
-    <section id="screen-missions" class="screen" style="display: none;"></section>
     <section id="screen-journal" class="screen">
       <div class="stack">
         <div>
@@ -1328,7 +1236,7 @@
       </div>
     </section>
 
-    <section id="screen-photos" class="screen" style="display: none;">
+    <section id="screen-photos" class="screen">
       <div class="stack">
         <div>
           <h2>Photos du festival</h2>
@@ -1426,17 +1334,16 @@
                 <label for="admin-fun-mode">Mode fun: retirer les missions bateau</label>
               </div>
 
-              <div class="admin-theme-buttons" style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; margin-bottom: 12px;">
-                <button id="admin-theme-btn-festival" class="btn btn-secondary admin-theme-btn" data-theme="festival">🎪 Festi</button>
-                <button id="admin-theme-btn-pool" class="btn btn-secondary admin-theme-btn" data-theme="pool">🏊 Piscine</button>
-                <button id="admin-theme-btn-daily" class="btn btn-secondary admin-theme-btn" data-theme="daily">📅 Quotidien</button>
-                <button id="admin-theme-btn-health-sport" class="btn btn-secondary admin-theme-btn" data-theme="health_sport">⚽ Santé sport</button>
-                <button id="admin-theme-btn-health-mental" class="btn btn-secondary admin-theme-btn" data-theme="health_mental">🧠 Santé mental</button>
-                <button id="admin-theme-btn-health-wellness" class="btn btn-secondary admin-theme-btn" data-theme="health_wellness">💆 Bien-être</button>
-                <button id="admin-theme-btn-health-breathing" class="btn btn-secondary admin-theme-btn" data-theme="health_breathing">💨 Respiration</button>
-                <button id="admin-theme-btn-health-yoga" class="btn btn-secondary admin-theme-btn" data-theme="health_yoga">🧘 Yoga</button>
+              <div class="admin-grid" style="margin-bottom: 8px;">
+                <div class="check-row"><input id="admin-theme-festival" type="checkbox" /><label for="admin-theme-festival">Festival</label></div>
+                <div class="check-row"><input id="admin-theme-pool" type="checkbox" /><label for="admin-theme-pool">Piscine</label></div>
+                <div class="check-row"><input id="admin-theme-daily" type="checkbox" /><label for="admin-theme-daily">Quotidien</label></div>
+                <div class="check-row"><input id="admin-theme-health-sport" type="checkbox" /><label for="admin-theme-health-sport">Santé sport</label></div>
+                <div class="check-row"><input id="admin-theme-health-mental" type="checkbox" /><label for="admin-theme-health-mental">Santé mental</label></div>
+                <div class="check-row"><input id="admin-theme-health-wellness" type="checkbox" /><label for="admin-theme-health-wellness">Bien-être</label></div>
+                <div class="check-row"><input id="admin-theme-health-breathing" type="checkbox" /><label for="admin-theme-health-breathing">Respiration</label></div>
+                <div class="check-row"><input id="admin-theme-health-yoga" type="checkbox" /><label for="admin-theme-health-yoga">Yoga</label></div>
               </div>
-              <button id="admin-all-missions-btn" class="btn btn-secondary" style="width: 100%; margin-bottom: 12px;">🔄 Toutes les missions</button>
 
               <div>
                 <label class="label" for="admin-pin-input">Changer code admin <span class="micro">(laisser vide pour conserver)</span></label>
@@ -1624,7 +1531,6 @@
       missions: "festival_missions",
       backendConfig: "festival_backend_config",
       adminSettings: "festival_admin_settings",
-      missionMode: "festival_mission_mode",
       adminPin: "festival_admin_pin",
       adminRecoveryEmail: "festival_admin_recovery_email",
       adminTabOrder: "festival_admin_tab_order",
@@ -1652,11 +1558,18 @@
       { id: "sante", label: "Santé", icon: "❤️‍🩹" }
     ];
 
-    // Mapping catégories → sous-thèmes
+    // Mapping catégories → sous-thèmes (chips affichés dans le sélecteur)
     const CATEGORY_SUBTHEMES = {
-      festival: ["festival", "pool"],
+      festival: ["pool"],
+      quotidien: ["pool", "health_sport", "health_mental", "health_wellness", "health_breathing", "health_yoga"],
+      sante: ["health_sport", "health_mental", "health_wellness", "health_breathing", "health_yoga", "pool"]
+    };
+
+    // Thèmes de base toujours inclus (non affichés comme chips) quand une catégorie est active
+    const CATEGORY_BASE_THEMES = {
+      festival: ["festival"],
       quotidien: ["daily"],
-      sante: ["health_sport", "health_mental", "health_wellness", "health_breathing", "health_yoga"]
+      sante: []
     };
 
     // Tous les sous-thèmes disponibles
@@ -1670,13 +1583,6 @@
       { id: "health_breathing", label: "Respiration", icon: "🫁" },
       { id: "health_yoga",      label: "Yoga",        icon: "🧘" }
     ];
-
-    function getCategoryForThemeId(themeId) {
-      if (themeId === "festival" || themeId === "pool") return "festival";
-      if (themeId === "daily") return "quotidien";
-      if (themeId && themeId.startsWith("health_")) return "sante";
-      return null;
-    }
 
     function getDefaultAdminSettings() {
       return {
@@ -1728,7 +1634,12 @@
     }
 
     function setAdminPin(value) {
-      localStorage.setItem(STORAGE_KEYS.adminPin, value);
+      try {
+        localStorage.setItem(STORAGE_KEYS.adminPin, value);
+      } catch (error) {
+        console.error("Erreur sauvegarde code admin :", error);
+        Toast.error("Impossible d'enregistrer le code admin.");
+      }
     }
 
     function getAdminRecoveryEmail() {
@@ -1736,23 +1647,12 @@
     }
 
     function setAdminRecoveryEmail(value) {
-      localStorage.setItem(STORAGE_KEYS.adminRecoveryEmail, value);
-    }
-
-    function getMissionMode() {
-      // Mode unique: le filtrage se fait via le choix de thème (icônes).
-      return "all";
-    }
-
-    function setMissionMode(mode) {
-      localStorage.setItem(STORAGE_KEYS.missionMode, mode);
-    }
-
-    function missionMatchesSelectedMode(mission, mode) {
-      const theme = mission.theme || "festival";
-      if (mode === "all") return true;
-      if (mode === "health") return theme === "health_sport" || theme === "health_mental" || theme === "health_wellness" || theme === "health_breathing" || theme === "health_yoga";
-      return theme === mode;
+      try {
+        localStorage.setItem(STORAGE_KEYS.adminRecoveryEmail, value);
+      } catch (error) {
+        console.error("Erreur sauvegarde e-mail admin :", error);
+        Toast.error("Impossible d'enregistrer l'e-mail de récupération.");
+      }
     }
 
     function missionAllowedByAdmin(mission, settings = getAdminSettings()) {
@@ -1872,11 +1772,17 @@
     }
 
     function saveJSON(key, value) {
-      localStorage.setItem(key, JSON.stringify(value));
-      if (REMOTE_SYNC_KEYS.has(key)) {
-        queueRemotePush();
+      try {
+        localStorage.setItem(key, JSON.stringify(value));
+        if (REMOTE_SYNC_KEYS.has(key)) {
+          queueRemotePush();
+        }
+        return value;
+      } catch (error) {
+        console.error("Erreur de sauvegarde locale :", error);
+        Toast.error("Impossible de sauvegarder. Stockage local saturé ou indisponible.");
+        return null;
       }
-      return value;
     }
 
     function getBackendConfig() {
@@ -2103,7 +2009,6 @@
     function getMissionPoolForProgression(state) {
       const level = state.internalLevel;
       const allowedLevels = [level, level - 1, level + 1].filter(n => n >= 1 && n <= 8);
-      const mode = getMissionMode();
       const adminSettings = getAdminSettings();
       const selectedSubThemes = STATE?.selectedSubThemes || {};
       const hasSubThemeSelection = Object.values(selectedSubThemes).some(v => v);
@@ -2115,15 +2020,12 @@
         if (m.id === state.currentMissionId) return false;
         if (!missionAllowedByAdmin(m, adminSettings)) return false;
         if (missionBlockedByFunMode(m, adminSettings)) return false;
-        if (!missionMatchesSelectedMode(m, mode)) return false;
-        // Filtre par sous-thèmes sélectionnés
         if (hasSubThemeSelection && !selectedSubThemes[m.theme]) return false;
         return true;
       });
     }
 
     function getFallbackMissionPool(state) {
-      const mode = getMissionMode();
       const adminSettings = getAdminSettings();
       const selectedSubThemes = STATE?.selectedSubThemes || {};
       const hasSubThemeSelection = Object.values(selectedSubThemes).some(v => v);
@@ -2133,7 +2035,6 @@
         m.id !== state.currentMissionId &&
         missionAllowedByAdmin(m, adminSettings) &&
         !missionBlockedByFunMode(m, adminSettings) &&
-        missionMatchesSelectedMode(m, mode) &&
         (!hasSubThemeSelection || selectedSubThemes[m.theme])
       );
     }
@@ -2570,6 +2471,37 @@
       }));
     }
 
+    function buildDailyIntergenerationMissions(startId) {
+      const raw = [
+        { l: 1, t: "Va voir une personne âgée et prends un vrai moment avec elle.", d: "Pas juste un salut rapide. Reste un peu. Écoute, regarde, laisse de la place à la conversation ou au silence.", s: "Choisis une personne : voisin, grand-parent, résident d'un home, connaissance du quartier.", a: "Note une chose que tu as découverte, ressentie ou entendue." },
+        { l: 2, t: "Apporte un petit quelque chose à une personne âgée.", d: "Ça peut être un repas, un goûter, un fruit, du pain, une fleur, un dessin ou une boisson chaude. Le but n'est pas la valeur de ce que tu apportes, mais l'attention portée.", s: "Prépare quelque chose de simple, réaliste, respectueux et adapté.", a: "Observe ce que ce petit geste change dans la rencontre." },
+        { l: 1, t: "Demande à une personne âgée de te raconter un souvenir important de sa vie.", d: "Pose une vraie question simple et laisse la place au récit.", s: "Tu peux demander : « C'est quoi un moment dont vous vous souvenez encore très bien ? »", a: "Garde une phrase, une image ou une émotion de ce qu'elle t'a transmis." },
+        { l: 1, t: "Fais une visite courte mais entière à une personne âgée.", d: "Même 10 à 20 minutes suffisent si tu es vraiment présent, sans téléphone ni dispersion.", s: "Préviens si nécessaire, ou profite d'un passage possible.", a: "Demande-toi si tu étais vraiment là." },
+        { l: 2, t: "Propose un petit service concret à une personne âgée.", d: "Par exemple : porter quelque chose, faire une petite course, lire un papier, aider avec un téléphone, ranger un objet.", s: "Propose sans imposer. Pars de ce qui est réellement utile.", a: "Note ce qui a été vraiment utile, pas juste ce que tu imaginais." },
+        { l: 1, t: "Partage un thé, un café, une tisane ou un goûter avec une personne âgée.", d: "Le but est de créer un moment simple et humain, sans performance ni pression.", s: "Prévois un moment calme, même court.", a: "Observe ce qui se passe quand on prend juste le temps." },
+        { l: 2, t: "Passe un moment avec une personne âgée sans chercher à remplir tous les silences.", d: "Accepte les silences, le rythme plus lent, les détours de parole. Ne cherche pas à animer à tout prix.", s: "Viens avec une vraie disponibilité intérieure.", a: "Observe ton propre rapport au silence et au temps." },
+        { l: 2, t: "Demande à une personne âgée ce qui lui ferait plaisir ces jours.", d: "Ça peut être petit : une visite, une promenade, une photo imprimée, une course, une chanson, un peu de compagnie.", s: "Pose la question simplement, sans promettre trop vite.", a: "Si c'est possible, réalise ensuite une version simple de ce plaisir." },
+        { l: 3, t: "Accompagne une personne âgée pour une petite promenade si c'est possible.", d: "Le but n'est pas la distance. C'est de changer d'air, regarder autour, partager un moment.", s: "Adapte-toi à son rythme, à ses capacités et à son envie.", a: "Note ce que l'extérieur change dans l'échange." },
+        { l: 1, t: "Apporte un peu de beauté dans la journée d'une personne âgée.", d: "Ça peut être une fleur, une chanson, une photo, une histoire, un dessin ou un petit objet doux ou drôle.", s: "Choisis quelque chose de simple et humain.", a: "Observe ce qui touche vraiment." },
+        { l: 2, t: "Demande à une personne âgée de te raconter son ancien métier ou une époque marquante de sa vie.", d: "Le but est de recevoir un morceau de vie, pas juste d'enchaîner des questions.", s: "Tu peux demander : « C'était comment, vos journées, à cette époque ? »", a: "Note une chose qui t'a surpris." },
+        { l: 1, t: "Passe dire bonjour à une personne âgée juste pour montrer qu'elle existe dans ton regard.", d: "Pas besoin de faire long. Parfois, une présence simple et sincère suffit déjà.", s: "Choisis un moment réaliste et respectueux.", a: "Observe la différence entre faire quelque chose et être là." },
+        { l: 3, t: "Aide une personne âgée à envoyer un message, passer un appel ou retrouver une photo.", d: "Le soutien peut être technique ou relationnel. Prends le temps sans imposer ton rythme.", s: "Pars d'un besoin concret ou d'une envie exprimée.", a: "Regarde si cette petite aide ouvre quelque chose de plus grand." },
+        { l: 2, t: "Demande à une personne âgée une phrase ou un conseil qu'elle aimerait transmettre.", d: "C'est une mission de récolte de parole, pas une interview froide.", s: "Tu peux demander : « Si vous aviez une chose à transmettre, ce serait quoi ? »", a: "Écris cette phrase quelque part." },
+        { l: 4, t: "Reviens voir une deuxième fois la même personne âgée.", d: "Le lien change souvent à partir de la deuxième rencontre. Cette fois, il ne s'agit plus juste d'un élan ponctuel.", s: "Choisis une visite simple, sans pression.", a: "Compare la première et la deuxième rencontre." }
+      ];
+      return raw.map((r, i) => createMission({
+        id: startId + i,
+        text: r.t,
+        category: "LIEN",
+        level: r.l,
+        theme: "daily",
+        tags: ["social", "intergénérationnel", "présence"],
+        details: r.d,
+        setup: r.s,
+        after: r.a
+      }));
+    }
+
     const DEFAULT_MISSIONS = [
       createMission({ id: 1, text: "Va parler à quelqu'un que tu n'aurais pas abordé… et reste un vrai moment avec lui", category: "OSE", level: 3, tags: ["rencontre"] }),
       createMission({ id: 2, text: "Regarde quelqu'un dans les yeux et souris", category: "OSE", level: 1, tags: ["simple", "regard"] }),
@@ -2685,7 +2617,8 @@
       ...buildHealthMissions(89),
       ...buildMentalMissions(1000),
       ...buildCommunityMissions(289),
-      ...buildPoolMissions(500)
+      ...buildPoolMissions(500),
+      ...buildDailyIntergenerationMissions(1100)
     ];
 
     let MISSIONS = [];
@@ -3064,8 +2997,6 @@
     const STATE = {
       currentMission: null,
       currentPhotoDataUrl: "",
-      drawMode: null,        // "choose-theme" | "random-theme"
-      selectedTheme: null,   // [DEPRECATED] pour compatibilité
       selectedCategory: null,   // "festival" | "quotidien" | "sante" | null
       selectedSubThemes: {},    // { themeId: boolean }
       adminEditingMissionId: null,
@@ -3078,7 +3009,6 @@
       mission: document.getElementById("screen-mission"),
       validation: document.getElementById("screen-validation"),
       journal: document.getElementById("screen-journal"),
-      missions: document.getElementById("screen-missions"),
       photos: document.getElementById("screen-photos"),
       suggest: document.getElementById("screen-suggest"),
       orga: document.getElementById("screen-orga")
@@ -3103,13 +3033,20 @@
     const suggestCategory = document.getElementById("suggest-category");
     const suggestLevel = document.getElementById("suggest-level");
     const suggestionsList = document.getElementById("suggestions-list");
-    const missionModeSelect = document.getElementById("mission-mode-select");
     const progressBarFill = document.getElementById("progress-bar-fill");
     const progressText = document.getElementById("progress-text");
     const photoVisibilityWrap = document.getElementById("photo-visibility-wrap");
     const photoVisibilityLock = document.getElementById("photo-visibility-lock");
     const adminAllowCommunityShare = document.getElementById("admin-allow-community-share");
     const adminFunMode = document.getElementById("admin-fun-mode");
+    const adminThemeFestival = document.getElementById("admin-theme-festival");
+    const adminThemePool = document.getElementById("admin-theme-pool");
+    const adminThemeDaily = document.getElementById("admin-theme-daily");
+    const adminThemeHealthSport = document.getElementById("admin-theme-health-sport");
+    const adminThemeHealthMental = document.getElementById("admin-theme-health-mental");
+    const adminThemeHealthWellness = document.getElementById("admin-theme-health-wellness");
+    const adminThemeHealthBreathing = document.getElementById("admin-theme-health-breathing");
+    const adminThemeHealthYoga = document.getElementById("admin-theme-health-yoga");
     const adminPinInput = document.getElementById("admin-pin-input");
     const adminRecoveryEmailInput = document.getElementById("admin-recovery-email-input");
     const themeChoiceLabel = document.getElementById("theme-choice-label");
@@ -3131,32 +3068,33 @@
     const adminExcludedMissionsList = document.getElementById("admin-excluded-missions-list");
     const adminSuggestionsReviewList = document.getElementById("admin-suggestions-review-list");
 
-    function dedupeMissionModeOptions() {
-      if (!missionModeSelect) return;
-      const seen = new Set();
-      [...missionModeSelect.options].forEach(opt => {
-        const key = (opt.value || "").trim();
-        if (!key) return;
-        if (seen.has(key)) {
-          opt.remove();
-          return;
-        }
-        seen.add(key);
-      });
-    }
-
     // ===== Navigation =====
     function openAdminAccess() {
-      try {
+      const isLocalFile = window.location.protocol === "file:";
+
+      if (isLocalFile) {
         hydrateAdminSettingsForm();
-      } catch (error) {
-        console.error("Erreur hydration admin:", error);
+        showScreen("orga");
+        return;
       }
 
-      showScreen("orga");
-      if (window.location.hash !== "#orga") {
-        window.location.hash = "#orga";
+      const entered = window.prompt("Code admin:");
+      if (!entered) {
+        const wantsRecovery = window.confirm("Code oublié ? Cliquer sur OK pour lancer la récupération par e-mail.");
+        if (wantsRecovery) recoverAdminPinByEmail();
+        return;
       }
+
+      const storedPin = localStorage.getItem(STORAGE_KEYS.adminPin) || DEFAULT_ADMIN_PIN;
+
+      if (entered !== storedPin) {
+        Toast.error("Code admin incorrect.");
+        const wantsRecovery = window.confirm("Code oublié ? Cliquer sur OK pour lancer la récupération par e-mail.");
+        if (wantsRecovery) recoverAdminPinByEmail();
+        return;
+      }
+      hydrateAdminSettingsForm();
+      showScreen("orga");
     }
 
     async function recoverAdminPinByEmail() {
@@ -3213,24 +3151,16 @@
         return;
       }
       Object.values(screens).forEach(screen => {
-        if (!screen) return;
-        screen.classList.remove("active");
-        screen.style.display = "none";
+        if (screen) screen.classList.remove("active");
       });
       target.classList.add("active");
-      target.style.display = "block";
 
       if (name === "journal") renderJournal();
       if (name === "photos") renderPhotos();
       if (name === "suggest") renderSuggestions();
       if (name === "orga") {
-        try {
-          renderOrga();
-          hydrateAdminSettingsForm();
-        } catch (error) {
-          console.error("Erreur ouverture admin:", error);
-          Toast.error("Ouverture admin partielle: un bloc du panneau a échoué.");
-        }
+        renderOrga();
+        hydrateAdminSettingsForm();
       }
       if (name === "home") updateProgressBar();
     }
@@ -3241,14 +3171,12 @@
 
     function updateProgressBar() {
       const state = getProgressState();
-      const mode = getMissionMode();
       const adminSettings = getAdminSettings();
       const available = MISSIONS.filter(m =>
         m.active &&
         !m.bonus &&
         missionAllowedByAdmin(m, adminSettings) &&
-        !missionBlockedByFunMode(m, adminSettings) &&
-        missionMatchesSelectedMode(m, mode)
+        !missionBlockedByFunMode(m, adminSettings)
       );
       const availableIds = new Set(available.map(m => m.id));
       const totalMissions = available.length;
@@ -3275,36 +3203,41 @@
       displayNameInput.value = profile.displayName || "";
     }
 
-    function hydrateMissionMode() {
-      if (missionModeSelect) missionModeSelect.value = getMissionMode();
-    }
-
     function hydrateAdminSettingsForm() {
       const settings = getAdminSettings();
       adminAllowCommunityShare.checked = settings.allowCommunityShare;
       if (adminFunMode) adminFunMode.checked = !!settings.funMode;
-      
-      // Les boutons de thème ne sont pas hydratés - ils restent neutres au démarrage
-      // (Les checkboxes ont été remplacées par des boutons radio-style)
-      
+      if (adminThemeFestival) adminThemeFestival.checked = !!settings.enabledThemes.festival;
+      if (adminThemePool) adminThemePool.checked = !!settings.enabledThemes.pool;
+      if (adminThemeDaily) adminThemeDaily.checked = !!settings.enabledThemes.daily;
+      if (adminThemeHealthSport) adminThemeHealthSport.checked = !!settings.enabledThemes.health_sport;
+      if (adminThemeHealthMental) adminThemeHealthMental.checked = !!settings.enabledThemes.health_mental;
+      if (adminThemeHealthWellness) adminThemeHealthWellness.checked = !!settings.enabledThemes.health_wellness;
+      if (adminThemeHealthBreathing) adminThemeHealthBreathing.checked = !!settings.enabledThemes.health_breathing;
+      if (adminThemeHealthYoga) adminThemeHealthYoga.checked = !!settings.enabledThemes.health_yoga;
+
       adminPinInput.value = "";
       if (adminRecoveryEmailInput) adminRecoveryEmailInput.value = getAdminRecoveryEmail();
     }
 
     function saveAdminSettingsFromForm() {
       const currentSettings = getAdminSettings();
-      
-      // Tous les thèmes sont activés par défaut (le filtrage se fait via les boutons radio dans Missions)
+
       const enabledThemes = {
-        festival: true,
-        pool: true,
-        daily: true,
-        health_sport: true,
-        health_mental: true,
-        health_wellness: true,
-        health_breathing: true,
-        health_yoga: true
+        festival: !!adminThemeFestival?.checked,
+        pool: !!adminThemePool?.checked,
+        daily: !!adminThemeDaily?.checked,
+        health_sport: !!adminThemeHealthSport?.checked,
+        health_mental: !!adminThemeHealthMental?.checked,
+        health_wellness: !!adminThemeHealthWellness?.checked,
+        health_breathing: !!adminThemeHealthBreathing?.checked,
+        health_yoga: !!adminThemeHealthYoga?.checked
       };
+
+      if (!Object.values(enabledThemes).some(Boolean)) {
+        Toast.warning("Active au moins un pack de missions.");
+        return;
+      }
 
       saveAdminSettings({
         allowCommunityShare: !!adminAllowCommunityShare.checked,
@@ -3328,14 +3261,12 @@
 
     function getAvailableThemesForDraw() {
       if (!MISSIONS.length) loadMissions();
-      const mode = getMissionMode();
       const adminSettings = getAdminSettings();
 
       const available = MISSIONS.filter(m => {
         if (!m.active || m.bonus) return false;
         if (!missionAllowedByAdmin(m, adminSettings)) return false;
         if (missionBlockedByFunMode(m, adminSettings)) return false;
-        if (!missionMatchesSelectedMode(m, mode)) return false;
         return true;
       });
 
@@ -3352,38 +3283,6 @@
       container.style.display = "flex";
       container.style.flexDirection = "column";
       container.style.gap = "12px";
-
-      const quickThemeSection = document.createElement("div");
-      quickThemeSection.style.display = "flex";
-      quickThemeSection.style.flexDirection = "column";
-      quickThemeSection.style.gap = "8px";
-      quickThemeSection.innerHTML = "<div class='micro'>Thèmes directs:</div>";
-
-      const quickThemeBtnContainer = document.createElement("div");
-      quickThemeBtnContainer.className = "theme-list";
-
-      DRAW_THEMES.forEach(theme => {
-        const btn = document.createElement("button");
-        btn.type = "button";
-        btn.className = "theme-btn" + (STATE.selectedSubThemes[theme.id] && Object.values(STATE.selectedSubThemes).filter(Boolean).length === 1 ? " active" : "");
-        btn.innerHTML = `<span class="theme-icon">${theme.icon}</span><span class="theme-label">${theme.label}<span class="theme-checkmark">✓</span></span>`;
-        btn.addEventListener("click", () => {
-          const categoryId = getCategoryForThemeId(theme.id);
-          STATE.selectedCategory = categoryId;
-          STATE.selectedSubThemes = { [theme.id]: true };
-          if (categoryId) {
-            localStorage.setItem(STORAGE_KEYS.selectedCategory, categoryId);
-          } else {
-            localStorage.removeItem(STORAGE_KEYS.selectedCategory);
-          }
-          saveJSON(STORAGE_KEYS.selectedSubThemes, STATE.selectedSubThemes);
-          renderThemePicker();
-        });
-        quickThemeBtnContainer.appendChild(btn);
-      });
-
-      quickThemeSection.appendChild(quickThemeBtnContainer);
-      container.appendChild(quickThemeSection);
 
       // Étape 1: Sélectionner une catégorie
       const categorySection = document.createElement("div");
@@ -3471,18 +3370,20 @@
       }
     }
 
-    function pickMissionWithTheme(selectedSubThemesObj) {
+    function pickMissionFromSelectedFilters(selectedSubThemesObj) {
       const state = getProgressState();
       state.internalLevel = computeInternalLevel(state.doneMissionIds.length);
 
       let pool = getMissionPoolForProgression(state);
       if (!pool.length) pool = getFallbackMissionPool(state);
 
-      // Si des sous-thèmes spécifiques sont choisis, filter par ceux-ci
-      const hasSelection = Object.values(selectedSubThemesObj || {}).some(v => v);
-      if (hasSelection) {
-        const selectedThemeIds = Object.keys(selectedSubThemesObj || {}).filter(k => selectedSubThemesObj[k]);
-        pool = pool.filter(m => selectedThemeIds.includes(m.theme));
+      // Filtrage par catégorie + sous-thèmes sélectionnés
+      const category = STATE.selectedCategory;
+      const baseThemes = (category ? CATEGORY_BASE_THEMES[category] : null) || [];
+      const selectedSubThemeIds = Object.keys(selectedSubThemesObj || {}).filter(k => selectedSubThemesObj[k]);
+      const allAllowed = [...new Set([...baseThemes, ...selectedSubThemeIds])];
+      if (allAllowed.length > 0) {
+        pool = pool.filter(m => allAllowed.includes(m.theme));
       }
 
       // Exclusion récents
@@ -3509,105 +3410,29 @@
       return mission;
     }
 
-    function animateWheel(themeObj, mission, onComplete) {
-      const overlay   = document.getElementById("wheel-overlay");
-      const titleEl   = document.getElementById("wheel-title");
-      const themeEl   = document.getElementById("wheel-theme-label");
-      const reelEl    = document.getElementById("wheel-reel");
-      const subtextEl = document.getElementById("wheel-subtext");
-
-      // Réinitialise
-      titleEl.textContent   = "Tirage en cours…";
-      themeEl.textContent   = "";
-      reelEl.textContent    = "🎲";
-      subtextEl.textContent = "La roue tourne…";
-      overlay.classList.remove("draw-hidden");
-
-      // Phase 1 : défilement du thème (emojis aléatoires) — 1.2 s
-      const ICONS = DRAW_THEMES.map(t => t.icon);
-      let count = 0;
-      const phase1 = setInterval(() => {
-        reelEl.textContent = ICONS[Math.floor(Math.random() * ICONS.length)];
-        count++;
-        if (count >= 14) {
-          clearInterval(phase1);
-          // Affiche le thème retenu
-          themeEl.textContent = themeObj ? `${themeObj.icon} ${themeObj.label}` : "";
-          reelEl.textContent  = themeObj ? themeObj.icon : "🎲";
-          subtextEl.textContent = "Thème trouvé ! Mission en cours…";
-
-          // Phase 2 : défilement des textes de missions — 1.2 s
-          const pool = MISSIONS.filter(m => !themeObj || m.theme === themeObj.id);
-          const texts = shuffleArray(pool.map(m => m.text)).slice(0, 12);
-          let c2 = 0;
-          const phase2 = setInterval(() => {
-            reelEl.textContent = texts[c2 % texts.length] || "…";
-            c2++;
-            if (c2 >= 14) {
-              clearInterval(phase2);
-              reelEl.textContent    = mission ? mission.text : "Mission introuvable.";
-              subtextEl.textContent = "C'est parti !";
-              setTimeout(() => {
-                overlay.classList.add("draw-hidden");
-                onComplete();
-              }, 900);
-            }
-          }, 90);
-        }
-      }, 80);
-    }
-
-    function showDrawModeBox() {
-      renderThemePicker();
-    }
-
-    function hideDrawUI() {
-      return;
-    }
-
     function launchMissionDraw() {
       syncProfileFromInput();
 
-      // Détermine les sous-thèmes actifs
       let activeSubThemes = {};
       const selectedSubThemesWithValues = Object.values(STATE.selectedSubThemes || {}).some(v => v);
-      
+
       if (STATE.selectedCategory && selectedSubThemesWithValues) {
-        // Seulement les sous-thèmes cochés
         activeSubThemes = STATE.selectedSubThemes;
       } else if (STATE.selectedCategory) {
-        // Tous les sous-thèmes de la catégorie
         const themeIds = CATEGORY_SUBTHEMES[STATE.selectedCategory] || [];
         themeIds.forEach(id => { activeSubThemes[id] = true; });
       }
 
-      const available = getAvailableThemesForDraw();
-      let themeObj = null;
+      const mission = STATE.selectedCategory
+        ? pickMissionFromSelectedFilters(activeSubThemes)
+        : getAnotherMission();
 
-      if (STATE.selectedCategory && available.length) {
-        // Tirage parmi les thèmes actifs de la catégorie
-        const categoryThemeIds = Object.keys(activeSubThemes).filter(k => activeSubThemes[k]);
-        const availableInCategory = available.filter(t => categoryThemeIds.includes(t.id));
-        if (availableInCategory.length) {
-          themeObj = availableInCategory[Math.floor(Math.random() * availableInCategory.length)];
-        } else if (available.length) {
-          Toast.warning("Aucun sous-thème de cette catégorie n'a de mission active. Essaie une autre option.");
-          return;
-        }
-      } else if (available.length) {
-        // Surprends-moi : thème aléatoire parmi les disponibles
-        themeObj = available[Math.floor(Math.random() * available.length)];
-      }
-
-      const mission = pickMissionWithTheme(activeSubThemes);
       if (!mission) {
         Toast.warning("Aucune mission disponible pour le moment.");
         return;
       }
 
-      animateWheel(themeObj, mission, () => {
-        renderMission(mission);
-      });
+      renderMission(mission);
     }
 
     // ===== Mission =====
@@ -3623,15 +3448,13 @@
 
     function startGame() {
       syncProfileFromInput();
-      STATE.drawMode = STATE.selectedCategory ? "choose-theme" : "random-theme";
       launchMissionDraw();
     }
 
     function goToAnotherMission() {
-      // Détermine les sous-thèmes actifs
       let activeSubThemes = {};
       const selectedSubThemesWithValues = Object.values(STATE.selectedSubThemes || {}).some(v => v);
-      
+
       if (STATE.selectedCategory && selectedSubThemesWithValues) {
         activeSubThemes = STATE.selectedSubThemes;
       } else if (STATE.selectedCategory) {
@@ -3640,7 +3463,7 @@
       }
 
       const mission = STATE.selectedCategory
-        ? pickMissionWithTheme(activeSubThemes)
+        ? pickMissionFromSelectedFilters(activeSubThemes)
         : getAnotherMission();
       if (!mission) {
         Toast.warning("Aucune autre mission disponible.");
@@ -3985,20 +3808,51 @@
       saveMissions(MISSIONS);
     }
 
-    function renderAdminThemeJump(groups) {
+    function renderAdminThemeJump(groups = []) {
       if (!adminThemeJump) return;
       adminThemeJump.innerHTML = "";
 
+      const allChip = document.createElement("a");
+      allChip.className = "admin-theme-chip" + (STATE.activeThemeFilter === null ? " is-active" : "");
+      allChip.href = "#";
+      allChip.textContent = "🌐 Toutes";
+      allChip.addEventListener("click", event => {
+        event.preventDefault();
+        STATE.activeThemeFilter = null;
+        renderAdminMissionList();
+      });
+      adminThemeJump.appendChild(allChip);
+
+      const groupMap = new Map(groups);
+      DRAW_THEMES.forEach(theme => {
+        const missions = groupMap.get(theme.id) || [];
+        const chip = document.createElement("a");
+        chip.className = "admin-theme-chip" +
+          (STATE.activeThemeFilter === theme.id ? " is-active" : "") +
+          (missions.some(mission => (mission.editRequests || []).length) ? " is-flagged" : "");
+        chip.href = "#";
+        chip.textContent = `${theme.icon} ${theme.label}`;
+        chip.addEventListener("click", event => {
+          event.preventDefault();
+          STATE.activeThemeFilter = theme.id;
+          renderAdminMissionList();
+        });
+        adminThemeJump.appendChild(chip);
+      });
+
       groups.forEach(([themeId, missions]) => {
+        if (DRAW_THEMES.some(theme => theme.id === themeId)) return;
         const theme = getThemePresentation(themeId);
         const chip = document.createElement("a");
-        chip.className = "admin-theme-chip" + (missions.some(mission => (mission.editRequests || []).length) ? " is-flagged" : "");
+        chip.className = "admin-theme-chip" +
+          (STATE.activeThemeFilter === themeId ? " is-active" : "") +
+          (missions.some(mission => (mission.editRequests || []).length) ? " is-flagged" : "");
         chip.href = `#admin-theme-${theme.id}`;
         chip.textContent = `${theme.icon} ${theme.label}`;
         chip.addEventListener("click", event => {
           event.preventDefault();
-          const target = document.getElementById(`admin-theme-${theme.id}`);
-          if (target) target.scrollIntoView({ behavior: "smooth", block: "start" });
+          STATE.activeThemeFilter = themeId;
+          renderAdminMissionList();
         });
         adminThemeJump.appendChild(chip);
       });
@@ -4019,15 +3873,6 @@
       
       // EFFACER COMPLÈTEMENT le DOM d'abord
       adminMissionsList.innerHTML = "";
-      
-      // Si aucun thème n'est sélectionné ET pas de recherche: afficher "0 / total" et retourner
-      if (activeTheme === null && !query) {
-        console.log("📭 Aucun thème sélectionné - affichage initial");
-        if (adminMissionCountEl) {
-          adminMissionCountEl.textContent = `🔍 0 / ${MISSIONS.length}`;
-        }
-        return;
-      }
       
       // Filtrer STRICTEMENT les missions
       let items = MISSIONS.filter(m => {
@@ -4061,11 +3906,7 @@
       if (missionCountEl) {
         const total = MISSIONS.length;
         const shown = items.length;
-        let countText = `${shown}`;
-        if (activeTheme !== null || query) {
-          countText += ` / ${total}`;
-        }
-        missionCountEl.textContent = `🔍 ${countText}`;
+        missionCountEl.textContent = `🔍 ${shown} / ${total}`;
       }
 
       if (!items.length) {
@@ -4184,7 +4025,6 @@
         return (themeIndex[a[0]] ?? 999) - (themeIndex[b[0]] ?? 999);
       });
 
-      console.log(`📊 ${orderedGroups.length} groupes de thèmes`);
       renderAdminThemeJump(orderedGroups);
 
       orderedGroups.forEach(([themeId, missions]) => {
@@ -4493,12 +4333,6 @@
       const tabContents = document.querySelectorAll(".admin-tab-content");
       tabBtns.forEach(btn => btn.classList.toggle("active", btn.getAttribute("data-tab") === tabName));
       tabContents.forEach(content => content.classList.toggle("active", content.id === `tab-${tabName}`));
-      
-      // Rafraîchir l'onglet missions quand on y entre
-      if (tabName === "missions") {
-        initAdminThemeButtons();
-        renderAdminMissionList();
-      }
     }
 
     function saveAdminTabOrder(nav) {
@@ -4708,8 +4542,6 @@
 
       renderAdminPhotoReview();
       renderAdminMissionList();
-      initAdminThemeButtons();
-      renderAdminExcludedMissionList();
       renderAdminSuggestionsReview();
     }
 
@@ -4785,7 +4617,6 @@
     }
     if (clearThemeBtn) {
       clearThemeBtn.addEventListener("click", () => {
-        STATE.selectedTheme = null;
         STATE.selectedCategory = null;
         STATE.selectedSubThemes = {};
         localStorage.removeItem(STORAGE_KEYS.selectedCategory);
@@ -4827,71 +4658,10 @@
       adminMissionSearch.addEventListener("input", renderAdminMissionList);
     }
     
-    // Initialiser les event listeners pour les boutons de filtrage
     function initAdminThemeButtons() {
-      const themeButtons = document.querySelectorAll(".admin-theme-btn");
-      
-      // Détacher les anciens listeners
-      themeButtons.forEach(btn => {
-        const newBtn = btn.cloneNode(true);
-        btn.parentNode.replaceChild(newBtn, btn);
-      });
-      
-      // Réattacher avec de nouveaux listeners
-      document.querySelectorAll(".admin-theme-btn").forEach(btn => {
-        btn.addEventListener("click", (e) => {
-          e.preventDefault();
-          const theme = btn.getAttribute("data-theme");
-          console.log("🎯 Clic bouton thème:", theme);
-          
-          // Mettre à jour l'état
-          STATE.activeThemeFilter = theme;
-          
-          // Mettre à jour l'apparence des boutons
-          document.querySelectorAll(".admin-theme-btn").forEach(b => {
-            b.classList.toggle("active", b === btn);
-          });
-          
-          // Réinitialiser le bouton "Toutes les missions"
-          const allBtn = document.getElementById("admin-all-missions-btn");
-          if (allBtn) allBtn.classList.remove("active");
-          
-          // Rafraîchir la liste
-          renderAdminMissionList();
-        });
-      });
-      
-      const allMissionsBtn = document.getElementById("admin-all-missions-btn");
-      if (allMissionsBtn) {
-        // Cloner pour détacher les anciens listeners
-        const newAllBtn = allMissionsBtn.cloneNode(true);
-        allMissionsBtn.parentNode.replaceChild(newAllBtn, allMissionsBtn);
-        
-        // Attacher le nouveau listener
-        document.getElementById("admin-all-missions-btn").addEventListener("click", (e) => {
-          e.preventDefault();
-          console.log("🔄 Clic 'Toutes les missions'");
-          
-          // Mettre à jour l'état
-          STATE.activeThemeFilter = null;
-          
-          // Réinitialiser l'apparence de tous les boutons
-          document.querySelectorAll(".admin-theme-btn").forEach(b => b.classList.remove("active"));
-          document.getElementById("admin-all-missions-btn").classList.add("active");
-          
-          // Rafraîchir la liste
-          renderAdminMissionList();
-        });
-      }
+      STATE.activeThemeFilter = null;
     }
     
-    if (missionModeSelect) {
-      missionModeSelect.addEventListener("change", () => {
-        setMissionMode(missionModeSelect.value);
-        Toast.info("Mode de missions mis à jour.");
-        updateProgressBar();
-      });
-    }
     photoInput.addEventListener("change", handlePhotoChange);
 
     // ===== Initialisation =====
@@ -4900,8 +4670,6 @@
       await bootstrapRemoteState();
       loadMissions();
       hydrateProfile();
-      dedupeMissionModeOptions();
-      hydrateMissionMode();
       hydrateAdminSettingsForm();
       // Charger la catégorie et sous-thèmes sélectionnés
       STATE.selectedCategory = localStorage.getItem(STORAGE_KEYS.selectedCategory) || null;
@@ -4916,21 +4684,12 @@
       if (location.hash === "#orga") {
         openAdminAccess();
       }
-      if (location.hash === "#missions") {
-        showScreen("missions");
-      }
       if (location.hash === "#photos") {
         showScreen("photos");
       }
     }
 
     init();
-
-    window.addEventListener("hashchange", () => {
-      if (location.hash === "#orga") openAdminAccess();
-      if (location.hash === "#missions") showScreen("missions");
-      if (location.hash === "#photos") showScreen("photos");
-    });
 
     if ("serviceWorker" in navigator) {
       window.addEventListener("load", async () => {
@@ -4994,14 +4753,6 @@
       Toast.success("Connexion rétablie.", 3000);
     });
 </script>
-
-<!-- Roue de tirage (overlay plein écran) -->
-<div id="wheel-overlay" class="wheel-overlay draw-hidden" aria-live="polite">
-  <h2 id="wheel-title">Tirage en cours…</h2>
-  <div id="wheel-theme-label" class="wheel-theme-label"></div>
-  <div id="wheel-reel" class="wheel-reel">🎲</div>
-  <p id="wheel-subtext" class="wheel-subtext">La roue tourne…</p>
-</div>
 
 </body>
 </html>

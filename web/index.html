@@ -1098,58 +1098,6 @@
           }
         }
 
-        /* Wheel overlay */
-        .wheel-overlay {
-          position: fixed;
-          inset: 0;
-          background: rgba(244,237,228,0.97);
-          z-index: 9999;
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          justify-content: center;
-          gap: 20px;
-          padding: 32px 24px;
-        }
-
-        .wheel-overlay h2 {
-          font-size: 1.1rem;
-          font-weight: 700;
-          color: var(--text);
-          margin: 0;
-          text-align: center;
-        }
-
-        .wheel-reel {
-          width: 100%;
-          max-width: 340px;
-          min-height: 80px;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          font-size: 1rem;
-          font-weight: 500;
-          text-align: center;
-          border-radius: 20px;
-          background: #fff;
-          border: 1.5px solid var(--line);
-          padding: 18px 20px;
-          line-height: 1.4;
-          box-shadow: 0 2px 12px rgba(0,0,0,0.06);
-          color: var(--text);
-        }
-
-        .wheel-theme-label {
-          font-size: 2rem;
-          font-weight: 700;
-          text-align: center;
-        }
-
-        .wheel-subtext {
-          font-size: 0.85rem;
-          color: var(--muted);
-          text-align: center;
-        }
     </style>
 </head>
 <body>
@@ -1288,7 +1236,7 @@
       </div>
     </section>
 
-    <section id="screen-photos" class="screen" style="display: none;">
+    <section id="screen-photos" class="screen">
       <div class="stack">
         <div>
           <h2>Photos du festival</h2>
@@ -1686,7 +1634,12 @@
     }
 
     function setAdminPin(value) {
-      localStorage.setItem(STORAGE_KEYS.adminPin, value);
+      try {
+        localStorage.setItem(STORAGE_KEYS.adminPin, value);
+      } catch (error) {
+        console.error("Erreur sauvegarde code admin :", error);
+        Toast.error("Impossible d'enregistrer le code admin.");
+      }
     }
 
     function getAdminRecoveryEmail() {
@@ -1694,7 +1647,12 @@
     }
 
     function setAdminRecoveryEmail(value) {
-      localStorage.setItem(STORAGE_KEYS.adminRecoveryEmail, value);
+      try {
+        localStorage.setItem(STORAGE_KEYS.adminRecoveryEmail, value);
+      } catch (error) {
+        console.error("Erreur sauvegarde e-mail admin :", error);
+        Toast.error("Impossible d'enregistrer l'e-mail de récupération.");
+      }
     }
 
     function missionAllowedByAdmin(mission, settings = getAdminSettings()) {
@@ -1814,11 +1772,17 @@
     }
 
     function saveJSON(key, value) {
-      localStorage.setItem(key, JSON.stringify(value));
-      if (REMOTE_SYNC_KEYS.has(key)) {
-        queueRemotePush();
+      try {
+        localStorage.setItem(key, JSON.stringify(value));
+        if (REMOTE_SYNC_KEYS.has(key)) {
+          queueRemotePush();
+        }
+        return value;
+      } catch (error) {
+        console.error("Erreur de sauvegarde locale :", error);
+        Toast.error("Impossible de sauvegarder. Stockage local saturé ou indisponible.");
+        return null;
       }
-      return value;
     }
 
     function getBackendConfig() {
@@ -3033,7 +2997,6 @@
     const STATE = {
       currentMission: null,
       currentPhotoDataUrl: "",
-      drawMode: null,        // "choose-theme" | "random-theme"
       selectedCategory: null,   // "festival" | "quotidien" | "sante" | null
       selectedSubThemes: {},    // { themeId: boolean }
       adminEditingMissionId: null,
@@ -3407,7 +3370,7 @@
       }
     }
 
-    function pickMissionWithTheme(selectedSubThemesObj) {
+    function pickMissionFromSelectedFilters(selectedSubThemesObj) {
       const state = getProgressState();
       state.internalLevel = computeInternalLevel(state.doneMissionIds.length);
 
@@ -3417,8 +3380,8 @@
       // Filtrage par catégorie + sous-thèmes sélectionnés
       const category = STATE.selectedCategory;
       const baseThemes = (category ? CATEGORY_BASE_THEMES[category] : null) || [];
-      const selectedThemeIds = Object.keys(selectedSubThemesObj || {}).filter(k => selectedSubThemesObj[k]);
-      const allAllowed = [...new Set([...baseThemes, ...selectedThemeIds])];
+      const selectedSubThemeIds = Object.keys(selectedSubThemesObj || {}).filter(k => selectedSubThemesObj[k]);
+      const allAllowed = [...new Set([...baseThemes, ...selectedSubThemeIds])];
       if (allAllowed.length > 0) {
         pool = pool.filter(m => allAllowed.includes(m.theme));
       }
@@ -3447,97 +3410,29 @@
       return mission;
     }
 
-    function animateWheel(themeObj, mission, onComplete) {
-      const overlay   = document.getElementById("wheel-overlay");
-      const titleEl   = document.getElementById("wheel-title");
-      const themeEl   = document.getElementById("wheel-theme-label");
-      const reelEl    = document.getElementById("wheel-reel");
-      const subtextEl = document.getElementById("wheel-subtext");
-
-      // Réinitialise
-      titleEl.textContent   = "Tirage en cours…";
-      themeEl.textContent   = "";
-      reelEl.textContent    = "🎲";
-      subtextEl.textContent = "La roue tourne…";
-      overlay.classList.remove("draw-hidden");
-
-      // Phase 1 : défilement du thème (emojis aléatoires) — 1.2 s
-      const ICONS = DRAW_THEMES.map(t => t.icon);
-      let count = 0;
-      const phase1 = setInterval(() => {
-        reelEl.textContent = ICONS[Math.floor(Math.random() * ICONS.length)];
-        count++;
-        if (count >= 14) {
-          clearInterval(phase1);
-          // Affiche le thème retenu
-          themeEl.textContent = themeObj ? `${themeObj.icon} ${themeObj.label}` : "";
-          reelEl.textContent  = themeObj ? themeObj.icon : "🎲";
-          subtextEl.textContent = "Thème trouvé ! Mission en cours…";
-
-          // Phase 2 : défilement des textes de missions — 1.2 s
-          const pool = MISSIONS.filter(m => !themeObj || m.theme === themeObj.id);
-          const texts = shuffleArray(pool.map(m => m.text)).slice(0, 12);
-          let c2 = 0;
-          const phase2 = setInterval(() => {
-            reelEl.textContent = texts[c2 % texts.length] || "…";
-            c2++;
-            if (c2 >= 14) {
-              clearInterval(phase2);
-              reelEl.textContent    = mission ? mission.text : "Mission introuvable.";
-              subtextEl.textContent = "C'est parti !";
-              setTimeout(() => {
-                overlay.classList.add("draw-hidden");
-                onComplete();
-              }, 900);
-            }
-          }, 90);
-        }
-      }, 80);
-    }
-
     function launchMissionDraw() {
       syncProfileFromInput();
 
-      // Détermine les sous-thèmes actifs
       let activeSubThemes = {};
       const selectedSubThemesWithValues = Object.values(STATE.selectedSubThemes || {}).some(v => v);
-      
+
       if (STATE.selectedCategory && selectedSubThemesWithValues) {
-        // Seulement les sous-thèmes cochés
         activeSubThemes = STATE.selectedSubThemes;
       } else if (STATE.selectedCategory) {
-        // Tous les sous-thèmes de la catégorie
         const themeIds = CATEGORY_SUBTHEMES[STATE.selectedCategory] || [];
         themeIds.forEach(id => { activeSubThemes[id] = true; });
       }
 
-      const available = getAvailableThemesForDraw();
-      let themeObj = null;
+      const mission = STATE.selectedCategory
+        ? pickMissionFromSelectedFilters(activeSubThemes)
+        : getAnotherMission();
 
-      if (STATE.selectedCategory && available.length) {
-        // Tirage parmi les thèmes actifs de la catégorie
-        const categoryThemeIds = Object.keys(activeSubThemes).filter(k => activeSubThemes[k]);
-        const availableInCategory = available.filter(t => categoryThemeIds.includes(t.id));
-        if (availableInCategory.length) {
-          themeObj = availableInCategory[Math.floor(Math.random() * availableInCategory.length)];
-        } else if (available.length) {
-          Toast.warning("Aucun sous-thème de cette catégorie n'a de mission active. Essaie une autre option.");
-          return;
-        }
-      } else if (available.length) {
-        // Surprends-moi : thème aléatoire parmi les disponibles
-        themeObj = available[Math.floor(Math.random() * available.length)];
-      }
-
-      const mission = pickMissionWithTheme(activeSubThemes);
       if (!mission) {
         Toast.warning("Aucune mission disponible pour le moment.");
         return;
       }
 
-      animateWheel(themeObj, mission, () => {
-        renderMission(mission);
-      });
+      renderMission(mission);
     }
 
     // ===== Mission =====
@@ -3553,15 +3448,13 @@
 
     function startGame() {
       syncProfileFromInput();
-      STATE.drawMode = STATE.selectedCategory ? "choose-theme" : "random-theme";
       launchMissionDraw();
     }
 
     function goToAnotherMission() {
-      // Détermine les sous-thèmes actifs
       let activeSubThemes = {};
       const selectedSubThemesWithValues = Object.values(STATE.selectedSubThemes || {}).some(v => v);
-      
+
       if (STATE.selectedCategory && selectedSubThemesWithValues) {
         activeSubThemes = STATE.selectedSubThemes;
       } else if (STATE.selectedCategory) {
@@ -3570,7 +3463,7 @@
       }
 
       const mission = STATE.selectedCategory
-        ? pickMissionWithTheme(activeSubThemes)
+        ? pickMissionFromSelectedFilters(activeSubThemes)
         : getAnotherMission();
       if (!mission) {
         Toast.warning("Aucune autre mission disponible.");
@@ -4791,9 +4684,6 @@
       if (location.hash === "#orga") {
         openAdminAccess();
       }
-      if (location.hash === "#missions") {
-        showScreen("missions");
-      }
       if (location.hash === "#photos") {
         showScreen("photos");
       }
@@ -4863,14 +4753,6 @@
       Toast.success("Connexion rétablie.", 3000);
     });
 </script>
-
-<!-- Roue de tirage (overlay plein écran) -->
-<div id="wheel-overlay" class="wheel-overlay draw-hidden" aria-live="polite">
-  <h2 id="wheel-title">Tirage en cours…</h2>
-  <div id="wheel-theme-label" class="wheel-theme-label"></div>
-  <div id="wheel-reel" class="wheel-reel">🎲</div>
-  <p id="wheel-subtext" class="wheel-subtext">La roue tourne…</p>
-</div>
 
 </body>
 </html>

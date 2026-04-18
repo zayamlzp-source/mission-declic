@@ -6,19 +6,16 @@
     <meta http-equiv="cache-control" content="no-cache, no-store, must-revalidate">
     <meta http-equiv="pragma" content="no-cache">
     <meta http-equiv="expires" content="0">
-    <meta name="theme-color" content="#7a8f6f">
-    <link rel="manifest" href="./manifest.webmanifest">
-    <link rel="icon" href="./assets/icons/icon-192.svg" type="image/svg+xml">
-    <link rel="apple-touch-icon" href="./assets/icons/icon-192.svg">
     <title>Festival — Missions</title>
-    <meta property="og:title" content="Festival — Missions">
-    <meta property="og:description" content="Laisse-toi surprendre par des missions. Ose, ressens, joue, crée des liens.">
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="https://zayamlzp-source.github.io/festival-missions/">
-    <meta property="og:image" content="https://zayamlzp-source.github.io/festival-missions/assets/icons/icon-512.svg">
-    <meta name="twitter:card" content="summary">
-    <meta name="twitter:title" content="Festival — Missions">
-    <meta name="twitter:description" content="Laisse-toi surprendre par des missions au festival.">
+    <script>
+      // Safety shim: if Pages is accidentally serving repository root, route to /web.
+      (function () {
+        const target = new URL("./web/index.html", window.location.href);
+        target.search = window.location.search;
+        target.hash = window.location.hash;
+        window.location.replace(target.toString());
+      })();
+    </script>
     <style>
         * { box-sizing: border-box; }
 
@@ -251,28 +248,6 @@
           display: grid;
           gap: 10px;
           margin-top: 8px;
-        }
-
-        .home-admin-access {
-          display: flex;
-          justify-content: center;
-          margin-top: 8px;
-          opacity: 0.82;
-        }
-
-        .home-admin-access .btn {
-          font-size: 0.82rem;
-          padding: 8px 12px;
-          font-weight: 600;
-          background: rgba(255, 255, 255, 0.65);
-          border-color: rgba(0, 0, 0, 0.06);
-          box-shadow: none;
-          color: var(--muted);
-        }
-
-        .home-admin-access .btn:hover {
-          color: var(--text);
-          opacity: 1;
         }
 
         .pill {
@@ -553,525 +528,6 @@
           margin-top: 4px;
           color: var(--muted);
         }
-
-        .admin-grid {
-          display: grid;
-          gap: 10px;
-          grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-        }
-
-        .check-row {
-          display: flex;
-          gap: 8px;
-          align-items: center;
-          padding: 10px 12px;
-          border: 1px solid var(--line);
-          border-radius: 12px;
-          background: #fff;
-        }
-
-        .admin-form-grid {
-          display: grid;
-          gap: 10px;
-          grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-        }
-
-        .admin-list {
-          display: grid;
-          gap: 10px;
-        }
-
-        .admin-item {
-          display: grid;
-          gap: 10px;
-          padding: 12px;
-          border: 1px solid var(--line);
-          border-radius: 14px;
-          background: #fff;
-        }
-
-        .admin-item-top {
-          display: flex;
-          gap: 12px;
-          align-items: flex-start;
-        }
-
-        .admin-item-main {
-          flex: 1;
-          min-width: 0;
-        }
-
-        .admin-item-actions {
-          display: flex;
-          gap: 8px;
-          flex-wrap: wrap;
-        }
-
-        .admin-thumb {
-          width: 72px;
-          height: 72px;
-          object-fit: cover;
-          border-radius: 12px;
-          border: 1px solid var(--line);
-          background: var(--soft);
-          flex: 0 0 auto;
-        }
-
-        .status-badge {
-          display: inline-flex;
-          align-items: center;
-          gap: 6px;
-          padding: 4px 8px;
-          border-radius: 999px;
-          background: var(--soft);
-          border: 1px solid var(--line);
-          font-size: 0.78rem;
-          color: var(--muted);
-        }
-
-        .admin-list-scroll {
-          max-height: 70vh;
-          overflow-y: auto;
-          padding-right: 6px;
-        }
-
-        .admin-toolbar {
-          position: sticky;
-          top: 0;
-          z-index: 2;
-          display: grid;
-          gap: 10px;
-          padding: 10px;
-          margin: 0 0 6px 0;
-          border: 1px solid var(--line);
-          border-radius: 14px;
-          background: rgba(247, 243, 235, 0.96);
-          backdrop-filter: blur(6px);
-        }
-
-        .admin-theme-jump {
-          display: flex;
-          gap: 8px;
-          overflow-x: auto;
-          padding-bottom: 2px;
-          scrollbar-width: thin;
-        }
-
-        .admin-theme-jump::-webkit-scrollbar {
-          height: 6px;
-        }
-
-        .admin-theme-chip {
-          flex: 0 0 auto;
-          border: 1px solid var(--line);
-          border-radius: 999px;
-          padding: 8px 12px;
-          background: #fff;
-          color: var(--text);
-          font-size: 0.82rem;
-          font-weight: 600;
-          text-decoration: none;
-          white-space: nowrap;
-        }
-
-        .admin-theme-chip.is-flagged {
-          border-color: #e4c898;
-          background: #fff4df;
-          color: #8a6423;
-        }
-
-        /* Admin tabs */
-        .admin-tabs-container {
-          border-radius: 16px;
-          background: #fff;
-          overflow: hidden;
-          border: 1px solid var(--line);
-          box-shadow: 0 10px 24px rgba(30, 20, 10, 0.06);
-        }
-
-        .admin-tabs-nav {
-          display: flex;
-          gap: 6px;
-          flex-wrap: nowrap;
-          border-bottom: 2px solid var(--line);
-          overflow-x: auto;
-          overflow-y: hidden;
-          position: sticky;
-          top: 64px;
-          z-index: 4;
-          background: linear-gradient(180deg, #fbf7ef 0%, #f6efdf 100%);
-          box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-          padding: 8px;
-          margin: 0;
-        }
-
-        .admin-tab-btn {
-          flex: 0 0 auto;
-          min-width: 120px;
-          padding: 11px 14px;
-          border: 1px solid rgba(0, 0, 0, 0.05);
-          border-radius: 12px;
-          background: rgba(255, 255, 255, 0.85);
-          color: var(--muted);
-          font-size: 0.9rem;
-          font-weight: 600;
-          cursor: pointer;
-          position: relative;
-          white-space: nowrap;
-          transition: transform 0.16s ease, color 0.2s, background 0.2s, box-shadow 0.2s;
-          box-shadow: 0 1px 0 rgba(0, 0, 0, 0.04);
-        }
-
-        .admin-tab-btn:hover {
-          background: #ffffff;
-          color: var(--text);
-          transform: translateY(-1px);
-          box-shadow: 0 6px 14px rgba(32, 18, 9, 0.08);
-        }
-
-        .admin-tab-btn.active {
-          color: #2a4a2a;
-          border-color: rgba(122, 143, 111, 0.35);
-          background: linear-gradient(180deg, #eef7e8 0%, #e7f1df 100%);
-          box-shadow: 0 8px 16px rgba(122, 143, 111, 0.18);
-        }
-
-        .admin-tab-btn.is-dragging {
-          opacity: 0.7;
-          transform: scale(0.98);
-          box-shadow: 0 10px 18px rgba(0, 0, 0, 0.15);
-        }
-
-        .admin-tabs-controls {
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-          gap: 10px;
-          padding: 8px 12px;
-          border-bottom: 1px solid var(--line);
-          background: #fff;
-        }
-
-        .admin-tabs-controls .micro {
-          color: var(--muted);
-        }
-
-        .admin-tabs-controls .btn {
-          white-space: nowrap;
-        }
-
-        .admin-tab-content {
-          display: none;
-          padding: 20px;
-          animation: fadeIn 0.25s ease;
-        }
-
-        .admin-tab-content.active {
-          display: block;
-        }
-
-        .admin-theme-group {
-          display: grid;
-          gap: 10px;
-        }
-
-        .admin-theme-header {
-          position: sticky;
-          top: 0;
-          z-index: 1;
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-          gap: 10px;
-          padding: 8px 10px;
-          border: 1px solid var(--line);
-          border-radius: 12px;
-          background: #f7f3eb;
-        }
-
-        .admin-theme-meta {
-          color: var(--muted);
-          font-size: 0.82rem;
-        }
-
-        .flag-badge {
-          display: inline-flex;
-          align-items: center;
-          gap: 6px;
-          padding: 4px 8px;
-          border-radius: 999px;
-          background: #fff4df;
-          border: 1px solid #e4c898;
-          color: #8a6423;
-          font-size: 0.78rem;
-          font-weight: 700;
-        }
-
-        /* ===== Draw / Tirage ===== */
-        .draw-hidden { display: none !important; }
-
-        .draw-mode-box {
-          margin-top: 4px;
-          display: flex;
-          flex-direction: column;
-          gap: 10px;
-        }
-
-        .draw-mode-box h3 {
-          font-size: 0.95rem;
-          font-weight: 600;
-          color: var(--text);
-          margin: 0 0 4px 0;
-        }
-
-        .theme-list {
-          display: grid;
-          grid-template-columns: 1fr 1fr;
-          gap: 10px;
-          margin: 8px 0 4px 0;
-        }
-
-        .theme-btn {
-          padding: 12px 14px;
-          border-radius: 16px;
-          border: 2px solid var(--line);
-          background: linear-gradient(135deg, #fff 0%, #fafaf8 100%);
-          cursor: pointer;
-          text-align: left;
-          font-size: 0.87rem;
-          line-height: 1.35;
-          font-weight: 500;
-          transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-          position: relative;
-          overflow: hidden;
-          box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
-        }
-
-        .theme-btn::before {
-          content: '';
-          position: absolute;
-          top: 0;
-          left: -100%;
-          width: 100%;
-          height: 100%;
-          background: rgba(122, 143, 111, 0.05);
-          transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-          pointer-events: none;
-        }
-
-        .theme-btn:hover {
-          transform: translateY(-2px);
-          box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
-          border-color: #d4c9be;
-        }
-
-        .theme-btn:hover::before {
-          left: 0;
-        }
-
-        .theme-btn .theme-icon { 
-          font-size: 1.3rem; 
-          display: block; 
-          margin-bottom: 6px;
-          transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-        
-        .theme-btn .theme-label { 
-          font-weight: 600; 
-          color: var(--text);
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-        }
-
-        .theme-btn .theme-checkmark {
-          display: none;
-          color: var(--accent);
-          font-size: 1rem;
-          font-weight: 700;
-        }
-
-        .theme-btn.active {
-          border-color: var(--accent);
-          background: linear-gradient(135deg, #f0f5ec 0%, #eaf0e5 100%);
-          box-shadow: 0 8px 20px rgba(122, 143, 111, 0.15);
-          color: var(--accent);
-        }
-
-        .theme-btn.active .theme-icon {
-          transform: scale(1.15) rotate(5deg);
-        }
-
-        .theme-btn.active .theme-checkmark {
-          display: inline;
-          animation: checkPulse 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-        }
-
-        @keyframes checkPulse {
-          0% {
-            opacity: 0;
-            transform: scale(0);
-          }
-          50% {
-            transform: scale(1.2);
-          }
-          100% {
-            opacity: 1;
-            transform: scale(1);
-          }
-        }
-
-        @media (max-width: 700px) {
-          .admin-list-scroll {
-            max-height: 62vh;
-            padding-right: 2px;
-          }
-
-          .admin-tabs-nav {
-            top: 56px;
-          }
-
-          .admin-theme-header {
-            align-items: flex-start;
-            flex-direction: column;
-          }
-
-          .admin-item-actions {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-          }
-
-          .admin-item-actions .btn {
-            width: 100%;
-            justify-content: center;
-          }
-
-          .admin-tab-btn {
-            min-width: 100px;
-            padding: 10px 12px;
-            font-size: 0.85rem;
-          }
-
-          .admin-tabs-nav {
-            gap: 5px;
-            padding: 7px;
-          }
-
-          .admin-tab-content {
-            padding: 16px;
-          }
-        }
-
-        @media (max-width: 560px) {
-          .admin-toolbar {
-            padding: 8px;
-            margin-bottom: 8px;
-          }
-
-          .admin-tabs-nav {
-            top: 52px;
-          }
-
-          .admin-tabs-controls {
-            flex-direction: column;
-            align-items: flex-start;
-          }
-
-          .admin-form-grid {
-            grid-template-columns: 1fr;
-          }
-
-          .admin-item {
-            padding: 10px;
-          }
-
-          .admin-item-top {
-            flex-direction: column;
-          }
-
-          .admin-thumb {
-            width: 100%;
-            height: auto;
-            max-height: 220px;
-          }
-
-          .admin-item-actions {
-            grid-template-columns: 1fr;
-          }
-
-          .admin-theme-chip {
-            padding: 7px 10px;
-            font-size: 0.78rem;
-          }
-
-          .theme-list {
-            grid-template-columns: 1fr;
-            gap: 12px;
-          }
-
-          .theme-btn {
-            padding: 14px 16px;
-            font-size: 0.92rem;
-          }
-
-          .theme-btn .theme-icon {
-            font-size: 1.5rem;
-            margin-bottom: 8px;
-          }
-        }
-
-        /* Wheel overlay */
-        .wheel-overlay {
-          position: fixed;
-          inset: 0;
-          background: rgba(244,237,228,0.97);
-          z-index: 9999;
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          justify-content: center;
-          gap: 20px;
-          padding: 32px 24px;
-        }
-
-        .wheel-overlay h2 {
-          font-size: 1.1rem;
-          font-weight: 700;
-          color: var(--text);
-          margin: 0;
-          text-align: center;
-        }
-
-        .wheel-reel {
-          width: 100%;
-          max-width: 340px;
-          min-height: 80px;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          font-size: 1rem;
-          font-weight: 500;
-          text-align: center;
-          border-radius: 20px;
-          background: #fff;
-          border: 1.5px solid var(--line);
-          padding: 18px 20px;
-          line-height: 1.4;
-          box-shadow: 0 2px 12px rgba(0,0,0,0.06);
-          color: var(--text);
-        }
-
-        .wheel-theme-label {
-          font-size: 2rem;
-          font-weight: 700;
-          text-align: center;
-        }
-
-        .wheel-subtext {
-          font-size: 0.85rem;
-          color: var(--muted);
-          text-align: center;
-        }
     </style>
 </head>
 <body>
@@ -1082,7 +538,6 @@
         <div class="brand">Festival — Missions</div>
       </div>
       <div class="top-actions">
-        <button id="install-btn" class="btn btn-secondary" style="display:none;">Installer l'app</button>
         <button class="btn btn-link" data-go="home">Accueil</button>
         <button class="btn btn-link" data-go="suggest">Proposer</button>
       </div>
@@ -1090,14 +545,6 @@
 
     <section id="screen-home" class="screen active">
       <div class="stack">
-        <div class="progress-section">
-          <div class="micro">Ta jauge progression</div>
-          <div class="progress-bar">
-            <div id="progress-bar-fill" class="progress-bar-fill" style="width: 0%;"></div>
-          </div>
-          <div id="progress-text" class="progress-text">0 mission validée</div>
-        </div>
-
         <div class="home-hero">
           <h1>Commence simplement. Le reste suivra.</h1>
           <p class="sub">Laisse-toi surprendre.</p>
@@ -1109,15 +556,6 @@
             <input id="display-name-input" class="input" type="text" placeholder="Ex. Léo" maxlength="40" />
           </div>
 
-          <div id="theme-picker-box" class="draw-mode-box">
-            <div class="row" style="justify-content:space-between;align-items:center;">
-              <h3>Choisis un thème</h3>
-              <button id="clear-theme-btn" type="button" class="btn btn-link">Surprends-moi</button>
-            </div>
-            <div id="theme-list" class="theme-list"></div>
-            <div id="theme-choice-label" class="micro">Aucun thème imposé: tirage libre.</div>
-          </div>
-
           <div class="home-actions">
             <button id="start-btn" class="btn btn-primary">Je joue</button>
             <button id="journal-btn" class="btn btn-secondary">Mon journal</button>
@@ -1126,10 +564,6 @@
 
         <div class="hint-box">
           Les photos peuvent rester <strong>juste pour toi</strong> ou être <strong>partagées avec les participants</strong> qui ont le lien du festival. Rien n'est partagé automatiquement.
-        </div>
-
-        <div class="home-admin-access">
-          <button id="admin-access-btn" class="btn btn-link" type="button">Espace admin</button>
         </div>
       </div>
     </section>
@@ -1144,7 +578,6 @@
 
         <div class="row">
           <button id="validate-mission-btn" class="btn btn-primary">Valider</button>
-          <button id="flag-mission-edit-btn" class="btn btn-secondary">À modifier</button>
           <button id="another-mission-btn" class="btn btn-secondary">Autre mission</button>
         </div>
       </div>
@@ -1167,21 +600,6 @@
           <div id="photo-preview-wrap" class="stack" style="display:none;">
             <img id="photo-preview" alt="Aperçu" class="thumb" style="width:120px;height:120px;" />
           </div>
-
-          <div id="photo-visibility-wrap" class="stack" style="display:none;">
-            <label class="label">Partage de la photo</label>
-            <div class="radio-group">
-              <label class="radio-option">
-                <input type="radio" name="photo-visibility" value="private" checked />
-                <span>Privée (seulement dans mon journal)</span>
-              </label>
-              <label class="radio-option">
-                <input type="radio" name="photo-visibility" value="participants" />
-                <span>Partagée à la commu</span>
-              </label>
-            </div>
-            <div id="photo-visibility-lock" class="micro" style="display:none;">Le partage commu est désactivé par l'admin.</div>
-          </div>
         </div>
 
         <div class="card stack">
@@ -1198,7 +616,6 @@
       </div>
     </section>
 
-    <section id="screen-missions" class="screen" style="display: none;"></section>
     <section id="screen-journal" class="screen">
       <div class="stack">
         <div>
@@ -1274,175 +691,35 @@
     <section id="screen-orga" class="screen">
       <div class="stack">
         <div>
-          <h2>Espace admin</h2>
-          <p class="sub">Gestion festival: missions, modération, statistiques.</p>
+          <h2>Vue orga</h2>
+          <p class="sub">Stats locales de démonstration. À brancher ensuite à Supabase pour les vraies données partagées.</p>
         </div>
 
-        <div class="admin-tabs-container">
-          <div class="admin-tabs-nav">
-            <button class="admin-tab-btn active" data-tab="settings">⚙️ Réglages</button>
-            <button class="admin-tab-btn" data-tab="missions">📋 Missions</button>
-            <button class="admin-tab-btn" data-tab="moderation">📸 Modération</button>
-            <button class="admin-tab-btn" data-tab="suggestions">💡 Propositions</button>
-            <button class="admin-tab-btn" data-tab="stats">📊 Statistiques</button>
-          </div>
+        <div class="card stack">
+          <h3>Synthèse pratique</h3>
+          <div id="orga-summary" class="muted-list"></div>
+        </div>
 
-          <div class="admin-tabs-controls">
-            <div class="micro">Astuce: glisse-dépose les onglets pour changer leur ordre.</div>
-            <button id="admin-reset-tab-order-btn" class="btn btn-link" type="button">Réinitialiser l'ordre</button>
-          </div>
+        <div id="orga-stats" class="orga-grid"></div>
 
-          <!-- TAB: RÉGLAGES -->
-          <div class="admin-tab-content active" id="tab-settings">
-            <div class="card stack">
-              <h3>Réglages admin</h3>
-              <div class="check-row">
-                <input id="admin-allow-community-share" type="checkbox" />
-                <label for="admin-allow-community-share">Autoriser le partage photo à la commu</label>
-              </div>
+        <div class="card stack">
+          <h3>Top missions</h3>
+          <div id="top-missions" class="muted-list"></div>
+        </div>
 
-              <div class="admin-grid">
-                <label class="check-row"><input id="admin-theme-festival" type="checkbox" /> Mission festi</label>
-                <label class="check-row"><input id="admin-theme-pool" type="checkbox" /> Piscine</label>
-                <label class="check-row"><input id="admin-theme-daily" type="checkbox" /> Vie quotidienne</label>
-                <label class="check-row"><input id="admin-theme-health-sport" type="checkbox" /> Santé sport</label>
-                <label class="check-row"><input id="admin-theme-health-mental" type="checkbox" /> Santé mental</label>
-                <label class="check-row"><input id="admin-theme-health-wellness" type="checkbox" /> Bien-être</label>
-                <label class="check-row"><input id="admin-theme-health-breathing" type="checkbox" /> Respiration</label>
-                <label class="check-row"><input id="admin-theme-health-yoga" type="checkbox" /> Yoga</label>
-              </div>
+        <div class="card stack">
+          <h3>Missions les mieux notées</h3>
+          <div id="top-rated" class="muted-list"></div>
+        </div>
 
-              <div>
-                <label class="label" for="admin-pin-input">Changer code admin <span class="micro">(laisser vide pour conserver)</span></label>
-                <input id="admin-pin-input" class="input" type="password" maxlength="24" placeholder="Nouveau code" />
-              </div>
+        <div class="card stack">
+          <h3>Enchaînements les plus fréquents</h3>
+          <div id="top-sequences" class="muted-list"></div>
+        </div>
 
-              <div>
-                <label class="label" for="admin-recovery-email-input">E-mail de récupération <span class="micro">(code envoyé par mail via Supabase)</span></label>
-                <input id="admin-recovery-email-input" class="input" type="email" maxlength="120" placeholder="nom@exemple.com" />
-              </div>
-
-              <div class="row">
-                <button id="admin-save-settings-btn" class="btn btn-primary">Enregistrer réglages</button>
-              </div>
-            </div>
-          </div>
-
-          <!-- TAB: MISSIONS -->
-          <div class="admin-tab-content" id="tab-missions">
-            <div class="card stack">
-              <h3>Gestion des missions</h3>
-              <div class="admin-form-grid">
-                <div style="grid-column: 1 / -1;">
-                  <label class="label" for="admin-mission-text">Mission</label>
-                  <textarea id="admin-mission-text" class="textarea" placeholder="Texte de la mission..."></textarea>
-                </div>
-                <div>
-                  <label class="label" for="admin-mission-category">Catégorie</label>
-                  <select id="admin-mission-category" class="select">
-                    <option value="OSE">OSE</option>
-                    <option value="ENTRAÎNE">ENTRAÎNE</option>
-                    <option value="RESSENS">RESSENS</option>
-                    <option value="LIEN">LIEN</option>
-                    <option value="JOUE">JOUE</option>
-                  </select>
-                </div>
-                <div>
-                  <label class="label" for="admin-mission-level">Niveau</label>
-                  <select id="admin-mission-level" class="select">
-                    <option value="1">1</option>
-                    <option value="2">2</option>
-                    <option value="3">3</option>
-                    <option value="4">4</option>
-                    <option value="5">5</option>
-                    <option value="6">6</option>
-                    <option value="7">7</option>
-                    <option value="8">8</option>
-                    <option value="9">9</option>
-                    <option value="10">10</option>
-                  </select>
-                </div>
-                <div>
-                  <label class="label" for="admin-mission-theme">Thème</label>
-                  <select id="admin-mission-theme" class="select">
-                    <option value="festival">Festival</option>
-                    <option value="pool">Piscine</option>
-                    <option value="daily">Quotidien</option>
-                    <option value="health_sport">Santé sport</option>
-                    <option value="health_mental">Santé mental</option>
-                    <option value="health_wellness">Bien-être</option>
-                    <option value="health_breathing">Respiration</option>
-                    <option value="health_yoga">Yoga</option>
-                  </select>
-                </div>
-                <div style="grid-column: 1 / -1;">
-                  <label class="label" for="admin-mission-note">Note interne <span class="micro">(facultatif)</span></label>
-                  <input id="admin-mission-note" class="input" type="text" placeholder="Ex. mission ajoutée par l'orga" />
-                </div>
-              </div>
-              <div class="row">
-                <button id="admin-save-mission-btn" class="btn btn-primary">Ajouter la mission</button>
-                <button id="admin-cancel-mission-edit-btn" class="btn btn-secondary">Annuler l'édition</button>
-                <button id="admin-reset-missions-btn" class="btn btn-secondary">Réinitialiser les missions par défaut</button>
-              </div>
-              <div class="admin-toolbar">
-                <div>
-                  <label class="label" for="admin-mission-search">Rechercher une mission</label>
-                  <input id="admin-mission-search" class="input" type="text" placeholder="Texte, thème, catégorie..." />
-                </div>
-                <div id="admin-theme-jump" class="admin-theme-jump"></div>
-              </div>
-              <div id="admin-missions-list" class="admin-list admin-list-scroll"></div>
-            </div>
-          </div>
-
-          <!-- TAB: MODÉRATION -->
-          <div class="admin-tab-content" id="tab-moderation">
-            <div class="card stack">
-              <h3>Modération photos</h3>
-              <p class="sub">Valider, refuser ou repasser en privé les photos partagées par les participants.</p>
-              <div id="admin-photo-review-list" class="admin-list"></div>
-            </div>
-          </div>
-
-          <!-- TAB: PROPOSITIONS -->
-          <div class="admin-tab-content" id="tab-suggestions">
-            <div class="card stack">
-              <h3>Propositions à traiter</h3>
-              <p class="sub">Transformer une suggestion en mission active ou la refuser.</p>
-              <div id="admin-suggestions-review-list" class="admin-list"></div>
-            </div>
-          </div>
-
-          <!-- TAB: STATISTIQUES -->
-          <div class="admin-tab-content" id="tab-stats">
-            <div class="card stack">
-              <h3>Statistiques</h3>
-              <div id="orga-summary" class="muted-list"></div>
-            </div>
-
-            <div id="orga-stats" class="orga-grid"></div>
-
-            <div class="card stack">
-              <h3>Top missions</h3>
-              <div id="top-missions" class="muted-list"></div>
-            </div>
-
-            <div class="card stack">
-              <h3>Missions les mieux notées</h3>
-              <div id="top-rated" class="muted-list"></div>
-            </div>
-
-            <div class="card stack">
-              <h3>Enchaînements les plus fréquents</h3>
-              <div id="top-sequences" class="muted-list"></div>
-            </div>
-
-            <div class="card stack">
-              <h3>Messages orgas</h3>
-              <div id="orga-messages" class="muted-list"></div>
-            </div>
-          </div>
+        <div class="card stack">
+          <h3>Messages orgas</h3>
+          <div id="orga-messages" class="muted-list"></div>
         </div>
       </div>
     </section>
@@ -1486,16 +763,8 @@
       progress: "festival_progress_state",
       sessionId: "festival_session_id",
       missions: "festival_missions",
-      backendConfig: "festival_backend_config",
-      adminSettings: "festival_admin_settings",
-      missionMode: "festival_mission_mode",
-      adminPin: "festival_admin_pin",
-      adminRecoveryEmail: "festival_admin_recovery_email",
-      adminTabOrder: "festival_admin_tab_order"
+      backendConfig: "festival_backend_config"
     };
-
-    const DEFAULT_ADMIN_PIN = "7777";
-    const DEFAULT_ADMIN_RECOVERY_EMAIL = "l5ddlm@hotmail.com";
 
     const REMOTE_SYNC_KEYS = new Set([
       STORAGE_KEYS.missions,
@@ -1504,96 +773,6 @@
     ]);
     let remoteSyncTimer = null;
 
-    const THEME_KEYS = ["festival", "pool", "daily", "health_sport", "health_mental", "health_wellness", "health_breathing", "health_yoga"];
-
-    // Thèmes affichés dans le sélecteur de tirage
-    const DRAW_THEMES = [
-      { id: "festival",         label: "Festival",    icon: "🎪" },
-      { id: "pool",             label: "Piscine",     icon: "🏊" },
-      { id: "daily",            label: "Quotidien",   icon: "☀️" },
-      { id: "health_sport",     label: "Sport",       icon: "💪" },
-      { id: "health_mental",    label: "Mental",      icon: "🧠" },
-      { id: "health_wellness",  label: "Bien-être",   icon: "🌿" },
-      { id: "health_breathing", label: "Respiration", icon: "🫁" },
-      { id: "health_yoga",      label: "Yoga",        icon: "🧘" }
-    ];
-
-    function getDefaultAdminSettings() {
-      return {
-        allowCommunityShare: true,
-        enabledThemes: {
-          festival: true,
-          pool: true,
-          daily: true,
-          health_sport: true,
-          health_mental: true,
-          health_wellness: true,
-          health_breathing: true,
-          health_yoga: true
-        }
-      };
-    }
-
-    function getAdminSettings() {
-      const raw = loadJSON(STORAGE_KEYS.adminSettings, null) || {};
-      const defaults = getDefaultAdminSettings();
-      return {
-        allowCommunityShare: raw.allowCommunityShare !== false,
-        enabledThemes: {
-          festival: raw.enabledThemes?.festival ?? defaults.enabledThemes.festival,
-          pool: raw.enabledThemes?.pool ?? defaults.enabledThemes.pool,
-          daily: raw.enabledThemes?.daily ?? defaults.enabledThemes.daily,
-          health_sport: raw.enabledThemes?.health_sport ?? defaults.enabledThemes.health_sport,
-          health_mental: raw.enabledThemes?.health_mental ?? defaults.enabledThemes.health_mental,
-          health_wellness: raw.enabledThemes?.health_wellness ?? defaults.enabledThemes.health_wellness,
-          health_breathing: raw.enabledThemes?.health_breathing ?? defaults.enabledThemes.health_breathing,
-          health_yoga: raw.enabledThemes?.health_yoga ?? defaults.enabledThemes.health_yoga
-        }
-      };
-    }
-
-    function saveAdminSettings(settings) {
-      return saveJSON(STORAGE_KEYS.adminSettings, settings);
-    }
-
-    function getAdminPin() {
-      return localStorage.getItem(STORAGE_KEYS.adminPin) || DEFAULT_ADMIN_PIN;
-    }
-
-    function setAdminPin(value) {
-      localStorage.setItem(STORAGE_KEYS.adminPin, value);
-    }
-
-    function getAdminRecoveryEmail() {
-      return localStorage.getItem(STORAGE_KEYS.adminRecoveryEmail) || DEFAULT_ADMIN_RECOVERY_EMAIL;
-    }
-
-    function setAdminRecoveryEmail(value) {
-      localStorage.setItem(STORAGE_KEYS.adminRecoveryEmail, value);
-    }
-
-    function getMissionMode() {
-      // Mode unique: le filtrage se fait via le choix de thème (icônes).
-      return "all";
-    }
-
-    function setMissionMode(mode) {
-      localStorage.setItem(STORAGE_KEYS.missionMode, mode);
-    }
-
-    function missionMatchesSelectedMode(mission, mode) {
-      const theme = mission.theme || "festival";
-      if (mode === "all") return true;
-      if (mode === "health") return theme === "health_sport" || theme === "health_mental" || theme === "health_wellness" || theme === "health_breathing" || theme === "health_yoga";
-      return theme === mode;
-    }
-
-    function missionAllowedByAdmin(mission, settings = getAdminSettings()) {
-      const theme = mission.theme || "festival";
-      if (!THEME_KEYS.includes(theme)) return true;
-      return !!settings.enabledThemes[theme];
-    }
-
     // ===== Mission normalization =====
     function normalizeMissionLevel(value) {
       const n = Number(value);
@@ -1601,26 +780,11 @@
     }
 
     function normalizeMissionRecord(mission) {
-      const editRequests = Array.isArray(mission.editRequests)
-        ? mission.editRequests
-            .filter(Boolean)
-            .map(request => ({
-              id: request.id || uid(),
-              sessionId: request.sessionId || "",
-              displayName: request.displayName || "",
-              note: request.note || "",
-              createdAt: request.createdAt || nowIso()
-            }))
-            .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
-        : [];
-
       return {
         ...mission,
         level: normalizeMissionLevel(mission.level),
         active: mission.active !== false,
-        bonus: !!mission.bonus,
-        theme: mission.theme || "festival",
-        editRequests
+        bonus: !!mission.bonus
       };
     }
 
@@ -1631,6 +795,7 @@
 
     function resetMissions() {
       saveMissions(DEFAULT_MISSIONS.map(m => ({ ...m })));
+      Toast.success("Missions réinitialisées.");
     }
 
     function addMissionToList({ text, category, level, note }) {
@@ -1694,50 +859,6 @@
         apikey: config.supabaseAnonKey,
         Authorization: `Bearer ${config.supabaseAnonKey}`
       };
-    }
-
-    async function supabaseAuthRequest(path, body, config = getBackendConfig()) {
-      if (!isSupabaseEnabled(config)) {
-        throw new Error("Supabase n'est pas configuré sur cet appareil.");
-      }
-
-      const url = `${config.supabaseUrl.replace(/\/$/, "")}/auth/v1/${path}`;
-      const response = await fetch(url, {
-        method: "POST",
-        headers: supabaseHeaders(config),
-        body: JSON.stringify(body)
-      });
-
-      if (response.ok) {
-        const text = await response.text();
-        return text ? JSON.parse(text) : null;
-      }
-
-      let message = `Erreur auth (${response.status})`;
-      try {
-        const payload = await response.json();
-        message = payload.error_description || payload.msg || payload.message || message;
-      } catch (error) {
-        const text = await response.text();
-        if (text) message = text;
-      }
-      throw new Error(message);
-    }
-
-    async function requestAdminRecoveryOtp(email) {
-      return supabaseAuthRequest("otp", {
-        email,
-        create_user: true,
-        data: { role: "admin_recovery" }
-      });
-    }
-
-    async function verifyAdminRecoveryOtp(email, token) {
-      return supabaseAuthRequest("verify", {
-        email,
-        token,
-        type: "email"
-      });
     }
 
     async function pullRemoteState() {
@@ -1894,30 +1015,18 @@
     function getMissionPoolForProgression(state) {
       const level = state.internalLevel;
       const allowedLevels = [level, level - 1, level + 1].filter(n => n >= 1 && n <= 8);
-      const mode = getMissionMode();
-      const adminSettings = getAdminSettings();
 
       return MISSIONS.filter(m => {
         if (!m.active) return false;
         if (m.bonus) return false;
         if (!allowedLevels.includes(normalizeMissionLevel(m.level))) return false;
         if (m.id === state.currentMissionId) return false;
-        if (!missionAllowedByAdmin(m, adminSettings)) return false;
-        if (!missionMatchesSelectedMode(m, mode)) return false;
         return true;
       });
     }
 
     function getFallbackMissionPool(state) {
-      const mode = getMissionMode();
-      const adminSettings = getAdminSettings();
-      return MISSIONS.filter(m =>
-        m.active &&
-        !m.bonus &&
-        m.id !== state.currentMissionId &&
-        missionAllowedByAdmin(m, adminSettings) &&
-        missionMatchesSelectedMode(m, mode)
-      );
+      return MISSIONS.filter(m => m.active && !m.bonus && m.id !== state.currentMissionId);
     }
     function createMission({
       id,
@@ -1931,11 +1040,7 @@
       active = true,
       bonus = false,
       tags = [],
-      note = "",
-      details = "",
-      setup = "",
-      after = "",
-      editRequests = []
+      note = ""
     }) {
       return {
         id,
@@ -1949,382 +1054,8 @@
         active,
         bonus,
         tags,
-        note,
-        details,
-        setup,
-        after,
-        editRequests
+        note
       };
-    }
-
-    function buildHealthMissions(startId) {
-      const CAT = { sport: "ENTRAÎNE", wellbeing: "RESSENS", breath: "RESSENS", yoga: "JOUE" };
-      const THM = { sport: "health_sport", wellbeing: "health_wellness", breath: "health_breathing", yoga: "health_yoga" };
-      const raw = [
-        // --- SPORT ---
-        { m:"sport",l:1,t:"Marche 5 minutes sans téléphone.",d:"Sors ou marche chez toi sans écran, en gardant ton attention sur ton corps et ton environnement.",s:"Prévois 5 minutes libres et laisse ton téléphone de côté.",a:"Note si ton énergie a changé, même légèrement." },
-        { m:"sport",l:1,t:"Fais 10 squats lents.",d:"Descends doucement, remonte en contrôlant ton mouvement, sans chercher la vitesse.",s:"Tiens-toi debout, pieds largeur des hanches.",a:"Observe les jambes, le souffle, et ton équilibre." },
-        { m:"sport",l:1,t:"Monte un étage à pied.",d:"Choisis volontairement les escaliers au lieu de l'ascenseur ou de l'escalator.",s:"Repère un escalier accessible.",a:"Observe si ton souffle s'accélère ou non." },
-        { m:"sport",l:1,t:"Danse 2 minutes.",d:"Bouge librement sans chercher à bien faire. Le but est d'activer le corps.",s:"Lance une musique ou fais-le en silence.",a:"Note ton humeur après avoir bougé." },
-        { m:"sport",l:1,t:"Fais 1 minute de marche sur place.",d:"Lève les pieds régulièrement et garde un rythme simple.",s:"Place-toi dans un espace dégagé.",a:"Observe si cela t'a réveillé un peu." },
-        { m:"sport",l:2,t:"Marche 10 minutes à bon rythme.",d:"Marche un peu plus vite que d'habitude, sans être essoufflé excessivement.",s:"Prévois un trajet simple ou un aller-retour court.",a:"Observe ta température corporelle et ton souffle." },
-        { m:"sport",l:2,t:"Fais 15 squats.",d:"Garde les pieds stables et le dos aussi droit que possible.",s:"Place-toi sur un sol stable.",a:"Note si le mouvement devient plus facile après quelques répétitions." },
-        { m:"sport",l:2,t:"Fais 10 pompes contre un mur.",d:"Incline ton corps vers le mur et pousse avec contrôle.",s:"Place tes mains à hauteur de poitrine contre un mur.",a:"Observe les bras, les épaules et le haut du corps." },
-        { m:"sport",l:2,t:"Tiens 20 secondes en gainage.",d:"Cherche une ligne simple et stable, sans creuser le bas du dos.",s:"Choisis gainage au sol ou incliné selon ton niveau.",a:"Observe le ventre, les épaules et ta stabilité." },
-        { m:"sport",l:2,t:"Fais 20 jumping jacks modérés.",d:"Reste souple dans les articulations et adapte l'amplitude si besoin.",s:"Prévois un peu d'espace autour de toi.",a:"Note si ton rythme cardiaque a augmenté." },
-        { m:"sport",l:3,t:"Marche 15 minutes rapidement.",d:"Garde un rythme soutenu mais encore confortable.",s:"Choisis un trajet sans trop d'interruptions.",a:"Observe si tu te sens plus réveillé." },
-        { m:"sport",l:3,t:"Fais 20 squats.",d:"Reste régulier du début à la fin.",s:"Stabilise tes appuis au sol.",a:"Observe la chauffe dans les jambes." },
-        { m:"sport",l:3,t:"Fais 10 fentes alternées.",d:"Avance une jambe puis l'autre, en gardant le contrôle.",s:"Prévois un petit espace dégagé.",a:"Note l'équilibre entre jambe droite et gauche." },
-        { m:"sport",l:3,t:"Tiens 30 secondes en gainage.",d:"Cherche la stabilité sans crispation excessive.",s:"Place-toi en position adaptée à ton niveau.",a:"Observe si tu tiens mieux qu'au niveau précédent." },
-        { m:"sport",l:3,t:"Monte 4 étages cumulés à pied.",d:"Tu peux les faire d'un coup ou répartis dans la journée.",s:"Repère les escaliers disponibles.",a:"Observe ton souffle et tes jambes." },
-        { m:"sport",l:4,t:"Marche 20 minutes.",d:"Garde une marche volontaire et régulière.",s:"Prévois un trajet ou un créneau dédié.",a:"Observe si ton mental s'est éclairci." },
-        { m:"sport",l:4,t:"Cours ou trottine 5 minutes.",d:"Le but n'est pas la performance mais l'activation.",s:"Choisis un terrain simple et sûr.",a:"Observe ton souffle et tes appuis." },
-        { m:"sport",l:4,t:"Fais 25 squats.",d:"Garde un rythme stable du début à la fin.",s:"Ancre bien les pieds au sol.",a:"Observe la fatigue musculaire et ta posture." },
-        { m:"sport",l:4,t:"Fais 12 pompes inclinées.",d:"Adapte l'inclinaison pour garder une exécution propre.",s:"Utilise un mur, une table solide ou un support stable.",a:"Observe les bras et la poitrine." },
-        { m:"sport",l:4,t:"Tiens 40 secondes en chaise contre un mur.",d:"Descends jusqu'à une position supportable et tiens.",s:"Place ton dos contre un mur.",a:"Observe les cuisses et le mental." },
-        { m:"sport",l:5,t:"Marche rapide 25 minutes.",d:"Garde un rythme soutenu mais tenable.",s:"Prévois chaussures et trajet adaptés.",a:"Observe l'effet sur ton énergie." },
-        { m:"sport",l:5,t:"Cours 8 minutes.",d:"Reste souple, sans forcer inutilement.",s:"Choisis une surface confortable.",a:"Observe si ton souffle revient vite ou lentement." },
-        { m:"sport",l:5,t:"Fais 30 squats.",d:"Reste stable, régulier, sans précipitation.",s:"Pieds largeur des hanches.",a:"Note si les dernières répétitions restent propres." },
-        { m:"sport",l:5,t:"Fais 15 fentes par jambe.",d:"Cherche le contrôle plus que la vitesse.",s:"Prévois un espace dégagé.",a:"Observe si une jambe fatigue plus que l'autre." },
-        { m:"sport",l:5,t:"Fais un mini-circuit de 8 minutes.",d:"Enchaîne 2 ou 3 exercices simples sans trop de pause.",s:"Choisis à l'avance tes exercices.",a:"Observe ta récupération après l'effort." },
-        { m:"sport",l:6,t:"Marche rapide ou footing 30 minutes.",d:"Choisis l'option adaptée à ton état du jour.",s:"Prends des chaussures adaptées.",a:"Observe la durée réelle de récupération." },
-        { m:"sport",l:6,t:"Fais 35 squats.",d:"Garde une amplitude régulière.",s:"Prépare ton espace.",a:"Observe si la technique reste stable." },
-        { m:"sport",l:6,t:"Fais 15 pompes inclinées ou 8 au sol.",d:"Choisis la version qui te permet une exécution propre.",s:"Prépare ton support ou le sol.",a:"Observe les bras, les poignets et le haut du corps." },
-        { m:"sport",l:6,t:"Tiens 1 minute en gainage.",d:"Reste stable et respire régulièrement.",s:"Choisis une variante de gainage adaptée.",a:"Observe si tu compenses ou non." },
-        { m:"sport",l:6,t:"Fais 15 burpees lents.",d:"Privilégie le contrôle plutôt que la vitesse.",s:"Prévois un espace sécurisé.",a:"Observe le cardio et la qualité de mouvement." },
-        { m:"sport",l:7,t:"Cours 15 minutes.",d:"Garde un effort stable sans partir trop vite.",s:"Choisis un parcours simple.",a:"Observe la régularité de ton souffle." },
-        { m:"sport",l:7,t:"Fais 40 squats.",d:"Reste concentré jusqu'aux dernières répétitions.",s:"Ancre bien tes pieds.",a:"Observe si ton bassin reste stable." },
-        { m:"sport",l:7,t:"Fais 20 fentes alternées.",d:"Reste fluide et équilibré.",s:"Prévois de l'espace devant toi.",a:"Observe la jambe la plus solide." },
-        { m:"sport",l:7,t:"Fais 50 jumping jacks.",d:"Garde un rythme constant et modéré.",s:"Dégage l'espace autour de toi.",a:"Observe le cardio et la coordination." },
-        { m:"sport",l:7,t:"Monte 10 étages cumulés.",d:"Tu peux répartir l'effort sur la journée.",s:"Repère les escaliers accessibles.",a:"Observe souffle, jambes, motivation." },
-        { m:"sport",l:8,t:"Bouge 35 minutes sans longue pause.",d:"Marche rapide, footing, circuit ou mélange : l'essentiel est la continuité.",s:"Prévois ton créneau et ton format.",a:"Observe si tu restes régulier sur la durée." },
-        { m:"sport",l:8,t:"Cours 20 minutes.",d:"Trouve un rythme tenable du début à la fin.",s:"Choisis un terrain adapté.",a:"Observe l'endurance et la récupération." },
-        { m:"sport",l:8,t:"Fais 20 pompes inclinées ou 12 au sol.",d:"Choisis la version la plus exigeante que tu peux garder propre.",s:"Prépare ton support ou le sol.",a:"Observe la qualité des dernières répétitions." },
-        { m:"sport",l:8,t:"Tiens 1 minute 20 en gainage.",d:"Respire et garde le corps aligné.",s:"Choisis une variante adaptée.",a:"Observe le ventre, les épaules et le bas du dos." },
-        { m:"sport",l:8,t:"Fais un circuit de 12 minutes.",d:"Enchaîne plusieurs exercices simples avec peu de repos.",s:"Prépare ton circuit avant de commencer.",a:"Observe le niveau de fatigue globale." },
-        { m:"sport",l:9,t:"Bouge 45 minutes dans la journée.",d:"Tu peux fractionner, mais garde une vraie intention physique.",s:"Planifie les temps de mouvement.",a:"Observe ton niveau d'énergie général." },
-        { m:"sport",l:9,t:"Cours 25 minutes.",d:"Reste stable et gère ton allure.",s:"Choisis un moment favorable.",a:"Observe endurance et souffle." },
-        { m:"sport",l:9,t:"Fais 50 squats.",d:"Garde une technique cohérente jusqu'au bout.",s:"Prépare ton espace.",a:"Observe jambes et posture." },
-        { m:"sport",l:9,t:"Fais 25 burpees.",d:"Reste propre et régulier plutôt que rapide.",s:"Prévois un sol stable.",a:"Observe le cardio et la capacité de récupération." },
-        { m:"sport",l:9,t:"Enchaîne cardio + renforcement 15 minutes.",d:"Mélange mouvement dynamique et exercice musculaire.",s:"Prépare 2 ou 3 exercices à l'avance.",a:"Observe le niveau de fatigue complet." },
-        { m:"sport",l:10,t:"Bouge 60 minutes dans la journée.",d:"Marche, course, circuit ou combinaison : vise une vraie densité de mouvement.",s:"Répartis ou regroupe selon ton organisation.",a:"Observe ta discipline et ton état général." },
-        { m:"sport",l:10,t:"Cours 30 minutes.",d:"Trouve une allure stable du début à la fin.",s:"Prévois chaussures et moment adapté.",a:"Observe endurance, souffle et mental." },
-        { m:"sport",l:10,t:"Fais 60 squats.",d:"Reste attentif à la qualité du mouvement malgré le volume.",s:"Prends un appui stable si besoin.",a:"Observe contrôle, fatigue et solidité." },
-        { m:"sport",l:10,t:"Tiens 2 minutes en gainage.",d:"Respire, reste aligné et gère l'effort sans t'effondrer.",s:"Choisis une variante adaptée à ton niveau réel.",a:"Observe la gestion mentale et physique." },
-        { m:"sport",l:10,t:"Fais une séance complète : échauffement, effort, retour au calme.",d:"Structure volontairement ton temps de mouvement au lieu de juste empiler des exercices.",s:"Prévois ton déroulé avant de commencer.",a:"Observe la différence entre séance pensée et effort improvisé." },
-        // --- BIEN-ÊTRE ---
-        { m:"wellbeing",l:1,t:"Bois un verre d'eau lentement.",d:"Prends le temps de boire en conscience, sans faire autre chose en même temps.",s:"Prépare un verre d'eau à portée de main.",a:"Observe si ton corps semble plus réveillé." },
-        { m:"wellbeing",l:1,t:"Ouvre une fenêtre 2 minutes.",d:"Laisse entrer un peu d'air et change l'atmosphère du lieu.",s:"Va à une fenêtre ou sors brièvement si possible.",a:"Observe l'effet sur ta sensation d'espace." },
-        { m:"wellbeing",l:1,t:"Ferme les yeux 30 secondes.",d:"Arrête toute stimulation visuelle pendant un court instant.",s:"Assieds-toi ou reste debout dans un endroit stable.",a:"Observe si ton système se calme légèrement." },
-        { m:"wellbeing",l:1,t:"Relâche les épaules 5 fois.",d:"Monte-les légèrement puis laisse-les retomber ou desserre-les consciemment.",s:"Prends quelques secondes pour sentir ton haut du corps.",a:"Observe les tensions résiduelles." },
-        { m:"wellbeing",l:1,t:"Assieds-toi 2 minutes sans écran.",d:"Reste simplement là, sans distraction immédiate.",s:"Éloigne ton téléphone et ton ordinateur.",a:"Observe ton niveau d'agitation intérieure." },
-        { m:"wellbeing",l:2,t:"Bois 2 verres d'eau de plus dans la journée.",d:"Ajoute volontairement un peu d'hydratation à ta routine.",s:"Prévois une bouteille ou un verre visible.",a:"Observe si tu te sens moins sec ou plus clair." },
-        { m:"wellbeing",l:2,t:"Range un petit coin autour de toi.",d:"Choisis un espace réduit mais réel : table, sac, étagère, coin bureau.",s:"Définis un espace précis à alléger.",a:"Observe l'effet du rangement sur ton esprit." },
-        { m:"wellbeing",l:2,t:"Fais 5 minutes sans téléphone.",d:"Laisse ton téléphone à distance et fais une courte pause hors sollicitation.",s:"Active le mode silencieux si besoin.",a:"Observe si l'envie de le reprendre est forte ou faible." },
-        { m:"wellbeing",l:2,t:"Écoute une musique apaisante.",d:"Choisis un morceau qui adoucit vraiment ton état, pas juste une habitude sonore.",s:"Trouve un morceau ou une ambiance calme.",a:"Observe l'effet émotionnel." },
-        { m:"wellbeing",l:2,t:"Va prendre l'air 5 minutes.",d:"Sors quelques minutes, même juste devant chez toi ou près d'une fenêtre ouverte.",s:"Prévois une courte coupure.",a:"Observe si ton corps respire différemment." },
-        { m:"wellbeing",l:3,t:"Fais une vraie pause de 10 minutes.",d:"Pause sans scroll, sans tâche secondaire, sans remplissage automatique.",s:"Bloque 10 minutes réelles.",a:"Observe si tu repars autrement." },
-        { m:"wellbeing",l:3,t:"Mange un repas sans écran.",d:"Prends un repas ou une collation en gardant ton attention sur ce que tu fais.",s:"Éteins ou éloigne les écrans.",a:"Observe le rythme auquel tu manges." },
-        { m:"wellbeing",l:3,t:"Écris 3 choses qui t'ont fait du bien aujourd'hui.",d:"Reste simple et concret, même pour de petites choses.",s:"Prends une feuille ou ouvre une note.",a:"Observe si cela change ta perception de la journée." },
-        { m:"wellbeing",l:3,t:"Couche-toi 15 minutes plus tôt.",d:"Anticipe légèrement le sommeil au lieu d'attendre l'épuisement.",s:"Réduis un peu l'activité du soir.",a:"Observe la différence le lendemain si possible." },
-        { m:"wellbeing",l:3,t:"Fais 5 minutes d'étirements doux.",d:"Cherche surtout le relâchement, pas la performance.",s:"Prévois un petit espace calme.",a:"Observe les zones qui se détendent le plus." },
-        { m:"wellbeing",l:4,t:"Bois 1,5 litre d'eau sur la journée.",d:"Répartis l'eau sur la journée plutôt que tout d'un coup.",s:"Prévois une gourde ou un repère visuel.",a:"Observe ton énergie ou ton confort corporel." },
-        { m:"wellbeing",l:4,t:"Fais une marche calme de 15 minutes.",d:"Ne cherche pas la vitesse, cherche l'apaisement.",s:"Choisis un moment où tu peux marcher sans pression.",a:"Observe l'effet sur ton agitation mentale." },
-        { m:"wellbeing",l:4,t:"Range un espace qui te surcharge.",d:"Choisis un endroit qui te pèse vraiment visuellement ou mentalement.",s:"Délimite clairement la zone.",a:"Observe si ton esprit respire mieux." },
-        { m:"wellbeing",l:4,t:"Écris ce qui t'épuise aujourd'hui.",d:"N'analyse pas trop : liste ce qui te vide concrètement.",s:"Prends 3 à 5 minutes pour écrire.",a:"Observe si nommer les choses change quelque chose." },
-        { m:"wellbeing",l:4,t:"Coupe les écrans 20 minutes avant de dormir.",d:"Laisse le système nerveux ralentir un peu avant le sommeil.",s:"Prévois une activité calme de remplacement.",a:"Observe l'endormissement ou le calme du soir." },
-        { m:"wellbeing",l:5,t:"Prépare un repas simple et nourrissant.",d:"Cherche quelque chose qui soutient vraiment ton corps, sans sophistication inutile.",s:"Choisis une base simple avant de commencer.",a:"Observe la sensation après le repas." },
-        { m:"wellbeing",l:5,t:"Garde 20 minutes pour toi sans culpabiliser.",d:"Considère ce temps comme légitime, pas comme un reste.",s:"Bloque ce créneau à l'avance.",a:"Observe les résistances internes éventuelles." },
-        { m:"wellbeing",l:5,t:"Fais une douche ou un bain vraiment réparateur.",d:"Ralentis, respire, et transforme ce moment en récupération réelle.",s:"Prévois un moment où tu ne seras pas pressé.",a:"Observe le relâchement corporel." },
-        { m:"wellbeing",l:5,t:"Écris une limite saine à poser.",d:"Choisis une limite réaliste, concrète, et liée à ton énergie.",s:"Prends quelques minutes seul.",a:"Observe si la limite t'allège ou te tend." },
-        { m:"wellbeing",l:5,t:"Fais une soirée plus calme que d'habitude.",d:"Réduis volontairement stimulation, bruit ou surcharge.",s:"Choisis à l'avance ce que tu simplifies.",a:"Observe la différence sur ton système." },
-        { m:"wellbeing",l:6,t:"Fais une marche bien-être de 25 minutes.",d:"Marche pour réguler, pas pour performer.",s:"Prévois un moment dédié.",a:"Observe ce qui a bougé intérieurement." },
-        { m:"wellbeing",l:6,t:"Garde 25 minutes de récupération réelle.",d:"Pas de multitâche, pas de faux repos rempli.",s:"Coupe les sollicitations pendant ce temps.",a:"Observe si tu ressens une vraie récupération." },
-        { m:"wellbeing",l:6,t:"Coupe une source de stress évitable.",d:"Choisis une source identifiable que tu peux réduire aujourd'hui.",s:"Repère ce qui te parasite le plus.",a:"Observe l'espace gagné." },
-        { m:"wellbeing",l:6,t:"Fais un automassage de 5 minutes.",d:"Mains, visage, nuque, épaules ou pieds : choisis une zone utile.",s:"Installe-toi au calme.",a:"Observe les zones qui se relâchent vraiment." },
-        { m:"wellbeing",l:6,t:"Organise ta soirée pour mieux dormir.",d:"Prépare en avance ce qui peut simplifier la fin de journée.",s:"Décide d'une ou deux actions concrètes.",a:"Observe si la soirée devient moins lourde." },
-        { m:"wellbeing",l:7,t:"Sanctuarise 30 minutes pour toi.",d:"Traite ce temps comme non négociable aujourd'hui.",s:"Bloque le créneau dans ta journée.",a:"Observe si cela change ton rapport au reste." },
-        { m:"wellbeing",l:7,t:"Réduis une charge mentale concrète.",d:"Fais une action qui enlève un poids réel de ton esprit.",s:"Choisis une source précise de surcharge.",a:"Observe le soulagement ou non." },
-        { m:"wellbeing",l:7,t:"Fais une sieste courte ou un repos yeux fermés.",d:"Même 10 à 20 minutes peuvent suffire si le repos est réel.",s:"Trouve un endroit calme.",a:"Observe si ton système redescend." },
-        { m:"wellbeing",l:7,t:"Crée un petit rituel de fin de journée.",d:"Choisis quelque chose de simple à répéter : lumière douce, tisane, silence, respiration.",s:"Décide du rituel avant le soir.",a:"Observe si cela marque une vraie transition." },
-        { m:"wellbeing",l:7,t:"Observe honnêtement ton niveau de fatigue.",d:"Sans te juger, demande-toi où tu en es vraiment aujourd'hui.",s:"Prends une minute seul.",a:"Observe si tu ajustes tes choix ensuite." },
-        { m:"wellbeing",l:8,t:"Organise ta journée en fonction de ton énergie réelle.",d:"Adapte au moins une partie de ta journée à ton état, pas à l'automatisme.",s:"Prends un moment pour évaluer ton niveau d'énergie.",a:"Observe si cela te respecte davantage." },
-        { m:"wellbeing",l:8,t:"Garde 40 minutes pour te régénérer.",d:"Ce temps doit vraiment restaurer ton système.",s:"Bloque ce temps à l'avance.",a:"Observe si cela change ton état de fond." },
-        { m:"wellbeing",l:8,t:"Mets une vraie limite à une surcharge.",d:"Refuse, reporte, réduis ou restructure une pression inutile.",s:"Identifie la surcharge la plus claire.",a:"Observe le mélange éventuel de soulagement et de peur." },
-        { m:"wellbeing",l:8,t:"Fais 15 minutes d'étirements ou de relaxation.",d:"Choisis ce qui aide le plus ton corps aujourd'hui.",s:"Prépare un espace calme.",a:"Observe le niveau de détente obtenu." },
-        { m:"wellbeing",l:8,t:"Coupe les écrans 1 heure avant le sommeil.",d:"Laisse ton système ralentir sans stimulation numérique.",s:"Prévois une alternative calme.",a:"Observe le calme du soir." },
-        { m:"wellbeing",l:9,t:"Consacre 45 minutes à ta récupération.",d:"Considère ce temps comme un vrai besoin, pas comme un luxe.",s:"Bloque-le dans la journée.",a:"Observe si ton système décroche vraiment." },
-        { m:"wellbeing",l:9,t:"Supprime un engagement inutile aujourd'hui.",d:"Retire quelque chose qui te prend plus qu'il ne t'apporte.",s:"Choisis clairement ce que tu enlèves.",a:"Observe l'espace que cela crée." },
-        { m:"wellbeing",l:9,t:"Prépare une soirée très sobre en stimulations.",d:"Moins de bruit, moins d'écran, moins de remplissage.",s:"Décide à l'avance ce que tu simplifies.",a:"Observe ton état en fin de soirée." },
-        { m:"wellbeing",l:9,t:"Fais un moment nature ou ciel de 20 minutes.",d:"Va dehors ou mets-toi au contact d'un horizon plus large que ton quotidien immédiat.",s:"Choisis un lieu simple d'accès.",a:"Observe la différence sur ton système mental." },
-        { m:"wellbeing",l:9,t:"Choisis le repos plutôt que la surproduction.",d:"Renonce à faire plus juste pour cocher ou remplir.",s:"Repère où tu peux desserrer.",a:"Observe ce que cela te fait intérieurement." },
-        { m:"wellbeing",l:10,t:"Organise une journée entière plus respectueuse de ton énergie.",d:"Pense ta journée avec plus de cohérence énergétique que d'habitude.",s:"Prends quelques minutes pour poser un cadre.",a:"Observe si la journée a changé de texture." },
-        { m:"wellbeing",l:10,t:"Garde 1 heure pour restaurer ton système.",d:"Consacre une vraie heure à quelque chose de profondément récupérateur.",s:"Bloque ce temps comme un rendez-vous.",a:"Observe la qualité du changement." },
-        { m:"wellbeing",l:10,t:"Fais 20 minutes de relaxation profonde.",d:"Allongé, guidé ou non, cherche un vrai ralentissement.",s:"Prépare un espace calme.",a:"Observe le tonus global du corps." },
-        { m:"wellbeing",l:10,t:"Écris ce que tu refuses désormais pour te préserver.",d:"Nommer clairement ce qui te détruit ou t'use change déjà quelque chose.",s:"Prends un temps d'écriture au calme.",a:"Observe la force ou la difficulté de ce constat." },
-        { m:"wellbeing",l:10,t:"Fais de ton bien-être une priorité visible aujourd'hui.",d:"Pose au moins un choix concret qui montre cette priorité.",s:"Décide d'une action claire dès le début de journée.",a:"Observe si cette priorité est restée réelle ou théorique." },
-        // --- RESPIRATION ---
-        { m:"breath",l:1,t:"Fais 3 respirations lentes.",d:"Ralentis volontairement le rythme respiratoire sur trois cycles.",s:"Arrête-toi quelques secondes.",a:"Observe si ton système redescend un peu." },
-        { m:"breath",l:1,t:"Inspire par le nez, expire doucement par la bouche.",d:"Laisse l'expiration sortir sans la forcer brutalement.",s:"Prends une posture simple et stable.",a:"Observe la détente éventuelle dans le haut du corps." },
-        { m:"breath",l:1,t:"Pose une main sur le ventre en respirant.",d:"Sens si le ventre bouge un peu avec l'inspiration et l'expiration.",s:"Assieds-toi ou allonge-toi confortablement.",a:"Observe si le souffle descend davantage." },
-        { m:"breath",l:1,t:"Fais une expiration longue 3 fois.",d:"Essaie juste de souffler un peu plus longtemps que d'habitude.",s:"Ralentis quelques secondes.",a:"Observe l'effet sur les épaules ou la mâchoire." },
-        { m:"breath",l:1,t:"Observe ton souffle 30 secondes.",d:"Ne corrige rien au début, regarde seulement ce qui est là.",s:"Prends un moment d'arrêt.",a:"Observe si tu respirais vite, haut, court ou calme." },
-        { m:"breath",l:2,t:"Fais 1 minute de respiration calme.",d:"Ralentis volontairement sans chercher la performance.",s:"Mets-toi dans une position confortable.",a:"Observe ton rythme intérieur." },
-        { m:"breath",l:2,t:"Inspire 4 secondes, expire 4 secondes.",d:"Cherche une régularité simple sur plusieurs cycles.",s:"Compte mentalement sans te crisper.",a:"Observe si la respiration se stabilise." },
-        { m:"breath",l:2,t:"Fais 6 respirations abdominales.",d:"Laisse le ventre s'ouvrir légèrement sans forcer.",s:"Pose une main sur le ventre si utile.",a:"Observe si le souffle descend mieux." },
-        { m:"breath",l:2,t:"Relâche les épaules à chaque expiration.",d:"Associe la sortie de l'air à une détente corporelle.",s:"Prends une posture assise ou debout stable.",a:"Observe les tensions du haut du corps." },
-        { m:"breath",l:2,t:"Respire avant de répondre à quelqu'un.",d:"Prends un vrai cycle respiratoire avant de parler ou réagir.",s:"Repère un moment concret dans la journée.",a:"Observe si cela change ta réponse." },
-        { m:"breath",l:3,t:"Respire 2 minutes en conscience.",d:"Reste présent au souffle sans partir trop vite ailleurs.",s:"Prends un moment calme.",a:"Observe la qualité de présence obtenue." },
-        { m:"breath",l:3,t:"Inspire 4, expire 6 pendant plusieurs cycles.",d:"Allonge légèrement l'expiration pour apaiser le système.",s:"Compte doucement.",a:"Observe si le rythme interne ralentit." },
-        { m:"breath",l:3,t:"Fais 10 respirations abdominales.",d:"Cherche plus d'ampleur basse, sans forcer la cage thoracique.",s:"Assieds-toi ou allonge-toi.",a:"Observe le ventre, le dos et les côtes." },
-        { m:"breath",l:3,t:"Respire assis, le dos bien droit.",d:"Une posture plus stable peut clarifier le souffle.",s:"Assieds-toi sans t'affaisser.",a:"Observe la différence avec une posture relâchée." },
-        { m:"breath",l:3,t:"Fais une pause souffle avant un moment stressant.",d:"Utilise le souffle comme sas avant une situation tendue.",s:"Repère un moment concret à venir.",a:"Observe si cela change ton entrée dans la situation." },
-        { m:"breath",l:4,t:"Respire 3 minutes lentement.",d:"Reste simple, stable, sans te crisper sur la durée.",s:"Choisis un moment sans interruption.",a:"Observe ton état avant/après." },
-        { m:"breath",l:4,t:"Inspire 5, expire 5 pendant 3 minutes.",d:"Travaille une respiration régulière et équilibrée.",s:"Compte calmement.",a:"Observe la stabilité obtenue." },
-        { m:"breath",l:4,t:"Fais 12 respirations abdominales profondes.",d:"Cherche une amplitude douce mais réelle.",s:"Place une main sur le ventre si utile.",a:"Observe si le bas du corps respire davantage." },
-        { m:"breath",l:4,t:"Respire au réveil pendant 2 minutes.",d:"Commence la journée en installant du souffle plutôt que de partir directement dans le rythme.",s:"Fais-le avant de prendre ton téléphone.",a:"Observe le ton de ton démarrage." },
-        { m:"breath",l:4,t:"Respire avant de dormir pendant 2 minutes.",d:"Utilise le souffle pour créer une transition vers le repos.",s:"Allonge-toi ou assieds-toi au calme.",a:"Observe le relâchement du soir." },
-        { m:"breath",l:5,t:"Fais 5 minutes de respiration consciente.",d:"Tiens un vrai temps de pratique, sans remplir avec autre chose.",s:"Prévois un créneau clair.",a:"Observe la qualité de recentrage." },
-        { m:"breath",l:5,t:"Inspire 5, expire 5 pendant 5 minutes.",d:"Vise la cohérence régulière, sans rigidité.",s:"Compte en silence ou avec un minuteur doux.",a:"Observe si le rythme devient naturel." },
-        { m:"breath",l:5,t:"Essaie une respiration en carré 4-4-4-4 si c'est confortable.",d:"Inspire, garde, expire, garde, sans forcer. Réduis si besoin.",s:"Pratique seulement si cela reste confortable.",a:"Observe si cela te calme ou te tend." },
-        { m:"breath",l:5,t:"Pratique avant un moment de tension.",d:"Utilise le souffle comme régulation préventive.",s:"Repère un moment concret où tu montes facilement.",a:"Observe l'impact réel." },
-        { m:"breath",l:5,t:"Observe l'effet avant / après.",d:"Prends quelques secondes pour mesurer ce qui change dans le corps ou la tête.",s:"Note mentalement ton état avant de commencer.",a:"Compare avec ton état après." },
-        { m:"breath",l:6,t:"Fais 6 minutes de respiration consciente.",d:"Tiens une durée un peu plus longue sans quitter la pratique.",s:"Prévois un espace calme.",a:"Observe stabilité, agitation ou relâchement." },
-        { m:"breath",l:6,t:"Inspire 5, expire 6 sur plusieurs minutes.",d:"Allonge un peu plus l'expiration si cela reste confortable.",s:"Compte doucement.",a:"Observe si l'apaisement augmente." },
-        { m:"breath",l:6,t:"Pratique matin et soir.",d:"Installe deux points d'ancrage respiratoires dans la journée.",s:"Décide quand précisément tu les fais.",a:"Observe si le souffle devient plus disponible." },
-        { m:"breath",l:6,t:"Fais 20 respirations abdominales lentes.",d:"Va vers la lenteur et la douceur, pas vers l'effort.",s:"Assieds-toi ou allonge-toi confortablement.",a:"Observe le ventre et le calme mental." },
-        { m:"breath",l:6,t:"Utilise le souffle pour ralentir le mental.",d:"Quand le mental accélère, ramène ton attention au rythme respiratoire.",s:"Repère un moment où ton esprit part vite.",a:"Observe si le souffle reprend la main." },
-        { m:"breath",l:7,t:"Fais 8 minutes de respiration consciente.",d:"Approfondis la durée sans transformer cela en performance.",s:"Prévois un temps protégé.",a:"Observe ta capacité à rester avec le souffle." },
-        { m:"breath",l:7,t:"Inspire 5, expire 7 sur plusieurs cycles.",d:"Allonge l'expiration uniquement si cela reste fluide.",s:"Compte sans tension.",a:"Observe le niveau d'apaisement." },
-        { m:"breath",l:7,t:"Pratique 3 fois dans la journée.",d:"Installe plusieurs rappels respiratoires courts ou longs.",s:"Choisis matin, milieu de journée, soir ou autre.",a:"Observe si le souffle devient un réflexe d'appui." },
-        { m:"breath",l:7,t:"Respire avant une discussion sensible.",d:"Prends quelques cycles avant d'entrer dans l'échange.",s:"Repère la discussion en question.",a:"Observe si ton entrée dans l'échange change." },
-        { m:"breath",l:7,t:"Respire après une émotion forte.",d:"Ne cherche pas à faire disparaître l'émotion, mais à accompagner ton système.",s:"Dès qu'un pic arrive, reviens au souffle.",a:"Observe si le corps redescend." },
-        { m:"breath",l:8,t:"Fais 10 minutes de respiration consciente.",d:"Maintiens ta pratique dans une vraie continuité.",s:"Prévois un créneau dédié.",a:"Observe la densité de présence obtenue." },
-        { m:"breath",l:8,t:"Inspire 5, expire 8 sans forcer.",d:"N'allonge l'expiration que si cela reste paisible.",s:"Pratique assis ou allongé.",a:"Observe l'effet sur le système nerveux." },
-        { m:"breath",l:8,t:"Pratique matin, milieu de journée et soir.",d:"Fais du souffle un fil rouge réel dans la journée.",s:"Pose trois moments précis.",a:"Observe si cela structure ton état intérieur." },
-        { m:"breath",l:8,t:"Fais 30 respirations lentes.",d:"Compte les cycles sans te raidir.",s:"Prends une posture stable.",a:"Observe la concentration obtenue." },
-        { m:"breath",l:8,t:"Reviens au souffle dès que tu te disperses.",d:"Fais du souffle ton point d'ancrage principal.",s:"Rappelle-toi cette consigne sur la journée.",a:"Observe combien de fois tu y reviens réellement." },
-        { m:"breath",l:9,t:"Fais 12 minutes de respiration consciente.",d:"Maintiens une pratique longue et stable.",s:"Choisis un moment sans interruption.",a:"Observe ton niveau de présence." },
-        { m:"breath",l:9,t:"Garde une respiration silencieuse et stable.",d:"Laisse le souffle devenir plus fin, plus calme, plus posé.",s:"Prends une posture confortable.",a:"Observe la qualité du calme." },
-        { m:"breath",l:9,t:"Installe un vrai rituel respiratoire.",d:"Choisis une forme simple que tu pourrais répéter.",s:"Décide durée, moment et posture.",a:"Observe si cela devient concret ou reste abstrait." },
-        { m:"breath",l:9,t:"Respire avant et après toute montée de tension.",d:"Encadre les pics de stress avec le souffle.",s:"Rappelle-toi cette consigne toute la journée.",a:"Observe si cela change tes transitions émotionnelles." },
-        { m:"breath",l:9,t:"Observe l'effet sur ta présence mentale.",d:"Après la pratique, regarde si ton mental est plus clair, plus lent ou plus stable.",s:"Prends quelques secondes pour faire le constat.",a:"Note mentalement ou par écrit ce que tu observes." },
-        { m:"breath",l:10,t:"Fais 15 minutes de respiration consciente.",d:"Tiens une pratique longue avec régularité et présence.",s:"Bloque un vrai créneau.",a:"Observe la qualité de profondeur obtenue." },
-        { m:"breath",l:10,t:"Pratique 3 à 4 moments dans la journée.",d:"Fais du souffle un outil central, pas un moment isolé.",s:"Répartis les moments dans la journée.",a:"Observe si cela transforme ta journée." },
-        { m:"breath",l:10,t:"Fais 50 cycles cohérents.",d:"Cherche une respiration régulière, stable et douce.",s:"Prends le temps nécessaire sans te presser.",a:"Observe l'endurance de ton attention." },
-        { m:"breath",l:10,t:"Utilise le souffle comme base de régulation aujourd'hui.",d:"Avant, pendant et après les moments sensibles, reviens consciemment à la respiration.",s:"Décide dès le matin que le souffle est ton appui principal.",a:"Observe si cette base a vraiment tenu." },
-        { m:"breath",l:10,t:"Termine par 1 minute d'immobilité totale.",d:"Après le souffle, reste simplement là, immobile, sans rien ajouter.",s:"Choisis une posture stable.",a:"Observe le silence intérieur ou l'agitation résiduelle." },
-        // --- YOGA ---
-        { m:"yoga",l:1,t:"Tiens la posture de la montagne 30 secondes.",d:"Reste debout, ancré, stable, avec une attention simple à la verticalité.",s:"Place tes pieds au sol et allonge la colonne.",a:"Observe l'ancrage et la posture." },
-        { m:"yoga",l:1,t:"Fais le chat-vache 5 fois.",d:"Alterne doucement dos rond et dos creux en suivant le souffle.",s:"Place-toi à quatre pattes si c'est confortable.",a:"Observe la mobilité de la colonne." },
-        { m:"yoga",l:1,t:"Tiens la posture de l'enfant 30 secondes.",d:"Laisse le corps se déposer sans chercher une forme parfaite.",s:"Installe-toi au sol confortablement.",a:"Observe le relâchement du dos et du souffle." },
-        { m:"yoga",l:1,t:"Fais une pince debout douce.",d:"Laisse tomber le haut du corps sans forcer l'étirement.",s:"Garde les genoux souples si besoin.",a:"Observe l'arrière du corps." },
-        { m:"yoga",l:1,t:"Allonge-toi et respire 1 minute.",d:"Termine par une minute de présence simple au sol.",s:"Installe-toi confortablement sur le dos.",a:"Observe le calme obtenu." },
-        { m:"yoga",l:2,t:"Tiens la montagne 1 minute.",d:"Reste stable et attentif à tes appuis.",s:"Pieds au sol, nuque longue, épaules relâchées.",a:"Observe ta posture naturelle." },
-        { m:"yoga",l:2,t:"Fais 3 salutations au soleil simplifiées.",d:"Enchaîne lentement les mouvements avec le souffle.",s:"Prévois un peu d'espace autour de toi.",a:"Observe l'échauffement global du corps." },
-        { m:"yoga",l:2,t:"Tiens l'enfant 1 minute.",d:"Laisse le corps se déposer un peu plus longtemps.",s:"Ajuste genoux et bras pour ton confort.",a:"Observe dos, souffle et nuque." },
-        { m:"yoga",l:2,t:"Essaie le chien tête en bas 20 secondes.",d:"Plie les genoux si nécessaire et cherche surtout la longueur du dos.",s:"Pars à quatre pattes ou depuis une planche adaptée.",a:"Observe épaules, jambes, souffle." },
-        { m:"yoga",l:2,t:"Termine par 2 minutes de relaxation.",d:"Laisse le corps intégrer la pratique sans rien ajouter.",s:"Allonge-toi confortablement.",a:"Observe l'effet global de la mini-séance." },
-        { m:"yoga",l:3,t:"Fais 5 minutes de yoga doux.",d:"Enchaîne quelques mouvements simples sans te presser.",s:"Prépare un espace calme.",a:"Observe la fluidité corporelle." },
-        { m:"yoga",l:3,t:"Fais 4 salutations au soleil lentes.",d:"Coordonne mouvement et respiration sans chercher la vitesse.",s:"Laisse assez d'espace devant et derrière toi.",a:"Observe le rythme interne créé." },
-        { m:"yoga",l:3,t:"Tiens le chien tête en bas 30 secondes.",d:"Cherche l'allongement et la stabilité.",s:"Ajuste la posture à ton niveau réel.",a:"Observe épaules, dos et jambes." },
-        { m:"yoga",l:3,t:"Tiens la planche 15 secondes.",d:"Garde une ligne simple sans creuser le dos.",s:"Pars du sol ou d'une version adaptée.",a:"Observe ventre, bras, épaules." },
-        { m:"yoga",l:3,t:"Essaie l'arbre 20 secondes par jambe.",d:"Travaille l'équilibre avec calme et concentration.",s:"Fixe un point devant toi.",a:"Observe stabilité et différence entre les côtés." },
-        { m:"yoga",l:4,t:"Fais 8 minutes de yoga.",d:"Enchaîne plusieurs postures avec continuité.",s:"Prévois un tapis ou un sol confortable.",a:"Observe le ressenti global." },
-        { m:"yoga",l:4,t:"Fais 5 salutations au soleil.",d:"Reste régulier et attentif au souffle.",s:"Prépare ton espace.",a:"Observe échauffement, souffle et fluidité." },
-        { m:"yoga",l:4,t:"Tiens la chaise 30 secondes.",d:"Cherche la stabilité dans les jambes et le tronc.",s:"Pieds ancrés au sol.",a:"Observe jambes et respiration." },
-        { m:"yoga",l:4,t:"Fais un triangle simple de chaque côté.",d:"Travaille l'ouverture latérale et l'ancrage.",s:"Écarte les pieds largement.",a:"Observe les côtés du corps." },
-        { m:"yoga",l:4,t:"Garde 2 minutes de relaxation finale.",d:"Laisse le corps intégrer la pratique en silence.",s:"Allonge-toi confortablement.",a:"Observe le calme final." },
-        { m:"yoga",l:5,t:"Fais 10 minutes de yoga.",d:"Maintiens une pratique un peu plus longue et cohérente.",s:"Prévois un créneau sans interruption.",a:"Observe ton niveau d'engagement." },
-        { m:"yoga",l:5,t:"Fais 6 salutations au soleil.",d:"Coordonne souffle et mouvement avec régularité.",s:"Prépare ton espace.",a:"Observe l'endurance douce." },
-        { m:"yoga",l:5,t:"Tiens la planche 30 secondes.",d:"Garde une ligne stable et respirante.",s:"Choisis une variante adaptée.",a:"Observe le centre du corps." },
-        { m:"yoga",l:5,t:"Fais guerrier 1 et 2 de chaque côté.",d:"Travaille ancrage, ouverture et stabilité.",s:"Prévois assez d'espace autour de toi.",a:"Observe les jambes, le bassin et la présence." },
-        { m:"yoga",l:5,t:"Tiens la pince assise 1 minute.",d:"Cherche l'étirement sans forcer ni t'effondrer.",s:"Assieds-toi au sol ou sur un support si besoin.",a:"Observe l'arrière des jambes et le dos." },
-        { m:"yoga",l:6,t:"Fais 12 minutes de yoga.",d:"Garde une pratique construite et stable.",s:"Prends un vrai créneau dédié.",a:"Observe la qualité de continuité." },
-        { m:"yoga",l:6,t:"Fais 8 salutations au soleil.",d:"Travaille rythme, souffle et endurance douce.",s:"Prépare ton espace.",a:"Observe le souffle et la chauffe corporelle." },
-        { m:"yoga",l:6,t:"Tiens le chien tête en bas 1 minute.",d:"Reste dans la posture en ajustant genoux et talons si besoin.",s:"Entre progressivement dans la posture.",a:"Observe épaules, dos, jambes." },
-        { m:"yoga",l:6,t:"Tiens la chaise 45 secondes.",d:"Reste solide sans te raidir.",s:"Ancre les pieds et engage le centre.",a:"Observe stabilité et jambes." },
-        { m:"yoga",l:6,t:"Garde 4 minutes de relaxation ou souffle final.",d:"Termine en intégrant la séance avec lenteur.",s:"Choisis relaxation allongée ou respiration assise.",a:"Observe le changement de tonus." },
-        { m:"yoga",l:7,t:"Fais 15 minutes de yoga.",d:"Tiens une pratique plus installée dans le temps.",s:"Bloque un vrai moment.",a:"Observe discipline et présence." },
-        { m:"yoga",l:7,t:"Fais 10 salutations au soleil.",d:"Reste fluide et régulier sans te précipiter.",s:"Prépare ton espace.",a:"Observe endurance douce et concentration." },
-        { m:"yoga",l:7,t:"Tiens l'arbre 1 minute par jambe.",d:"Travaille l'équilibre et la stabilité mentale.",s:"Fixe un point stable devant toi.",a:"Observe la jambe la plus stable." },
-        { m:"yoga",l:7,t:"Fais une séquence complète debout + sol.",d:"Crée une vraie continuité entre ancrage, mobilité et relâchement.",s:"Prépare 4 à 6 postures à enchaîner.",a:"Observe la cohérence de la séance." },
-        { m:"yoga",l:7,t:"Termine par 4 minutes d'immobilité allongée.",d:"Laisse la séance se déposer sans rien ajouter.",s:"Allonge-toi confortablement.",a:"Observe la profondeur du calme." },
-        { m:"yoga",l:8,t:"Fais 18 minutes de yoga.",d:"Tiens une séance plus longue avec présence.",s:"Prévois un créneau sans interruption.",a:"Observe la tenue de l'attention." },
-        { m:"yoga",l:8,t:"Tiens la planche 1 minute.",d:"Reste stable et respirant malgré l'effort.",s:"Choisis la variante adaptée.",a:"Observe centre, bras, volonté." },
-        { m:"yoga",l:8,t:"Tiens le chien tête en bas 1 minute 30.",d:"Cherche la longueur plus que la forme parfaite.",s:"Ajuste la posture si nécessaire.",a:"Observe la chaîne postérieure et les épaules." },
-        { m:"yoga",l:8,t:"Garde une ouverture de hanches prolongée.",d:"Choisis une posture adaptée et reste dans le souffle.",s:"Prépare un support si besoin.",a:"Observe les tensions profondes." },
-        { m:"yoga",l:8,t:"Fais 5 minutes de relaxation finale.",d:"Termine avec une vraie intégration du corps et du souffle.",s:"Allonge-toi au calme.",a:"Observe le niveau global de relâchement." },
-        { m:"yoga",l:9,t:"Fais 20 minutes de yoga.",d:"Garde une vraie continuité de séance.",s:"Prépare ton enchaînement à l'avance si utile.",a:"Observe engagement et qualité de présence." },
-        { m:"yoga",l:9,t:"Fais 14 salutations au soleil.",d:"Tiens le volume avec régularité.",s:"Prévois suffisamment d'espace et un bon rythme.",a:"Observe souffle et endurance." },
-        { m:"yoga",l:9,t:"Tiens la chaise 1 minute 15.",d:"Reste stable malgré l'intensité croissante.",s:"Ancre les pieds et engage le centre.",a:"Observe les jambes et le souffle." },
-        { m:"yoga",l:9,t:"Ajoute une posture d'équilibre plus fine.",d:"Choisis une variante qui demande plus de précision sans te mettre en danger.",s:"Prévois un mur ou un appui si besoin.",a:"Observe la concentration et le contrôle." },
-        { m:"yoga",l:9,t:"Observe les asymétries de ton corps pendant la séance.",d:"Regarde sans juger ce qui est plus ouvert, plus stable ou plus tendu d'un côté.",s:"Reste attentif pendant toute la pratique.",a:"Note ce que tu remarques." },
-        { m:"yoga",l:10,t:"Fais 25 minutes de yoga.",d:"Tiens une séance complète avec présence et cohérence.",s:"Prévois un vrai créneau.",a:"Observe la profondeur de pratique." },
-        { m:"yoga",l:10,t:"Fais 15 salutations au soleil.",d:"Maintiens rythme, souffle et stabilité sur la durée.",s:"Prépare ton espace.",a:"Observe endurance et concentration." },
-        { m:"yoga",l:10,t:"Tiens la planche 1 minute 30.",d:"Reste aligné et respirant malgré l'effort.",s:"Choisis la version adaptée à ton niveau.",a:"Observe centre, épaules et mental." },
-        { m:"yoga",l:10,t:"Enchaîne une vraie séquence complète avec présence.",d:"Pense le yoga comme une pratique entière, pas comme une addition de postures.",s:"Prépare ton déroulé : début, milieu, fin.",a:"Observe la cohérence de l'ensemble." },
-        { m:"yoga",l:10,t:"Termine par 5 minutes de relaxation profonde.",d:"Laisse le corps intégrer pleinement la séance.",s:"Allonge-toi dans un espace calme.",a:"Observe le niveau final de calme et d'intégration." }
-      ];
-      const TAGS = { sport: ["santé", "sport"], wellbeing: ["santé", "bien-être"], breath: ["santé", "respiration"], yoga: ["santé", "yoga"] };
-      return raw.map((r, i) => createMission({
-        id: startId + i,
-        text: r.t,
-        category: CAT[r.m],
-        theme: THM[r.m],
-        level: r.l,
-        tags: TAGS[r.m],
-        details: r.d,
-        setup: r.s,
-        after: r.a
-      }));
-    }
-
-    function buildCommunityMissions(startId) {
-      const CATEGORY_MAP = {
-        social: "LIEN",
-        decale: "JOUE",
-        courage: "OSE",
-        photo: "JOUE",
-        creativite: "JOUE",
-        observation: "RESSENS",
-        entraide: "LIEN",
-        cooperation: "ENTRAÎNE",
-        mouvement: "ENTRAÎNE",
-        emotion: "RESSENS",
-        jeu: "JOUE",
-        introspection: "RESSENS"
-      };
-
-      const raw = [
-        { c: "social", l: 1, t: "Parler 2 minutes avec une personne inconnue", d: "Lance un échange simple, naturel et respectueux. Le but est d'oser le contact, pas de performer." },
-        { c: "social", l: 1, t: "Faire un compliment sincère à une personne", d: "Choisis quelque chose de vrai, simple et direct. Évite les compliments forcés ou flous." },
-        { c: "social", l: 2, t: "Demander à quelqu'un ce qui lui fait du bien en ce moment", d: "Pose la question avec douceur. Accueille la réponse sans chercher à la relancer à tout prix." },
-        { c: "social", l: 2, t: "Demander à une personne de te proposer une mini-mission", d: "Accepte une mission légère, faisable dans le moment. Si elle est irrespectueuse, refuse-la." },
-        { c: "social", l: 3, t: "Créer un échange vrai de 3 minutes avec une personne inconnue", d: "Vise un moment authentique, pas une discussion automatique. Le but est la qualité de présence." },
-        { c: "social", l: 3, t: "Dire à quelqu'un : \"Aujourd'hui j'essaie d'oser un peu plus\"", d: "Dis-le simplement, sans te justifier. Observe ce que ça change dans la relation." },
-
-        { c: "decale", l: 1, t: "Faire un chifoumi à distance avec un inconnu", d: "Cherche une interaction légère et drôle, sans insister si la personne ne suit pas." },
-        { c: "decale", l: 1, t: "Poser comme une statue à côté d'une vraie statue", d: "Prends la même posture et fais une photo si possible." },
-        { c: "decale", l: 2, t: "Présenter un lieu banal comme s'il était légendaire", d: "Parle pendant 20 à 30 secondes comme un guide passionné d'un endroit complètement ordinaire." },
-        { c: "decale", l: 2, t: "Inventer une fonction sacrée à un objet banal", d: "Choisis un objet simple et raconte à quoi il sert dans un monde imaginaire." },
-        { c: "decale", l: 3, t: "Poser une question absurde mais douce à un inconnu", d: "Exemple : \"Tu dirais que cette journée a quelle couleur ?\" Le ton doit rester léger et respectueux." },
-        { c: "decale", l: 3, t: "Faire semblant d'être guide touristique d'un lieu sans intérêt", d: "Crée une mini-présentation théâtrale et assumée, même très courte." },
-
-        { c: "courage", l: 1, t: "Demander de l'aide pour quelque chose de léger", d: "Choisis une petite demande simple, même si tu pourrais te débrouiller seul." },
-        { c: "courage", l: 1, t: "Dire non à une petite chose acceptée par automatisme", d: "Repère un réflexe d'acceptation et remplace-le par un non calme et clair." },
-        { c: "courage", l: 2, t: "Oser proposer un mini-jeu à quelqu'un", d: "Propose un chifoumi, un mime ou un défi de 10 secondes. N'insiste pas en cas de refus." },
-        { c: "courage", l: 2, t: "Dire une vérité simple sur ton état du moment", d: "Exemple : \"Je suis un peu stressé mais je le fais quand même.\"" },
-        { c: "courage", l: 3, t: "Chanter 20 secondes dans un lieu public", d: "Le but n'est pas de bien chanter, mais de traverser un petit inconfort." },
-        { c: "courage", l: 3, t: "Demander quelque chose que tu n'oses pas demander d'habitude", d: "Reste dans quelque chose de respectueux, simple et sans pression." },
-
-        { c: "photo", l: 1, t: "Photographier 3 détails beaux dans un lieu banal", d: "Cherche des textures, lumières, couleurs ou formes inattendues." },
-        { c: "photo", l: 1, t: "Faire une photo drôle avec une statue", d: "Interagis avec la statue comme si elle faisait partie de la scène." },
-        { c: "photo", l: 2, t: "Créer une photo qui raconte une mini-histoire", d: "Une seule image, mais avec une intention claire, comme une scène de film." },
-        { c: "photo", l: 2, t: "Faire une photo avant/après d'un lieu ou d'un objet", d: "Montre une transformation, un contraste ou un changement de regard." },
-        { c: "photo", l: 3, t: "Faire une photo avec le plus de monde possible dans un espace exigu", d: "Cherche l'effet de groupe, le défi logistique et l'humour visuel." },
-        { c: "photo", l: 3, t: "Faire une photo collective improvisée avec des inconnus volontaires", d: "Propose une pose simple et ludique. Le consentement est indispensable." },
-
-        { c: "creativite", l: 1, t: "Donner un nouveau nom poétique à un lieu", d: "Choisis une rue, un coin ou un banc et rebaptise-le selon ce qu'il t'inspire." },
-        { c: "creativite", l: 1, t: "Inventer une micro-histoire à partir d'un objet", d: "L'histoire peut durer 20 secondes. Va à l'essentiel." },
-        { c: "creativite", l: 2, t: "Écrire une phrase mystérieuse et la donner à quelqu'un", d: "La phrase doit intriguer ou faire sourire, pas mettre mal à l'aise." },
-        { c: "creativite", l: 2, t: "Créer une mission pour un inconnu", d: "Invente une petite mission drôle, faisable et respectueuse." },
-        { c: "creativite", l: 3, t: "Transformer une situation banale en scène de film", d: "Ajoute un ton dramatique, épique ou absurde à ce que tu es en train de vivre." },
-        { c: "creativite", l: 3, t: "Raconter une micro-histoire en moins de 30 secondes à quelqu'un", d: "L'objectif est d'oser créer sur le vif, sans préparer." },
-
-        { c: "observation", l: 1, t: "Trouver 5 détails que personne ne regarde d'habitude", d: "Observe les coins, textures, reflets, sons ou petits signes autour de toi." },
-        { c: "observation", l: 1, t: "Repérer un détail drôle dans un environnement sérieux", d: "Cherche ce qui crée un léger décalage." },
-        { c: "observation", l: 2, t: "Observer un lieu 10 minutes sans téléphone", d: "Ne cherche rien de spécial au début. Laisse émerger ce que tu remarques." },
-        { c: "observation", l: 2, t: "Trouver 3 choses belles dans un lieu que tu trouves moche", d: "Le but est de déplacer ton regard." },
-        { c: "observation", l: 3, t: "Repérer une énergie différente chez 3 personnes", d: "Observe les rythmes, postures ou présences, sans juger." },
-        { c: "observation", l: 3, t: "Identifier le coin le plus apaisant d'un lieu public", d: "Appuie-toi sur ce que tu ressens réellement, pas seulement sur l'apparence." },
-
-        { c: "entraide", l: 1, t: "Dire merci d'une façon inhabituelle mais sincère", d: "Sois précis, humain et concret." },
-        { c: "entraide", l: 1, t: "Laisser un mot positif à quelqu'un", d: "Le mot peut être anonyme ou direct, mais il doit être simple et vrai." },
-        { c: "entraide", l: 2, t: "Rendre un petit service sans qu'on te le demande", d: "Choisis quelque chose d'utile et discret." },
-        { c: "entraide", l: 2, t: "Proposer ton aide une fois, sans insister", d: "Laisse l'autre libre d'accepter ou non." },
-        { c: "entraide", l: 3, t: "Faire quelque chose de gentil anonymement", d: "Ne cherche pas à être vu ni remercié." },
-        { c: "entraide", l: 3, t: "Offrir un vrai moment d'écoute de 2 minutes", d: "Ne coupe pas, ne conseille pas tout de suite, sois juste présent." },
-
-        { c: "cooperation", l: 1, t: "Faire deviner une émotion sans parler", d: "Utilise uniquement ton corps, ton visage ou ta posture." },
-        { c: "cooperation", l: 1, t: "Construire une mini-histoire à plusieurs, chacun un mot", d: "Laisse la logique émerger du groupe." },
-        { c: "cooperation", l: 2, t: "Réussir une mission à deux sans parler", d: "Choisis une action courte qui demande un minimum de coordination." },
-        { c: "cooperation", l: 2, t: "Faire une photo collective absurde", d: "Chacun ajoute un détail ou une posture pour enrichir la scène." },
-        { c: "cooperation", l: 3, t: "Faire un mini-défi de coordination avec un inconnu volontaire", d: "Exemple : reproduire un geste en miroir ou réussir une action synchronisée." },
-        { c: "cooperation", l: 3, t: "Créer une chaîne de 3 personnes pour accomplir une tâche", d: "Le défi doit rester simple, court et compréhensible." },
-
-        { c: "mouvement", l: 1, t: "Faire une pause statue de 10 secondes à trois endroits", d: "Choisis des lieux différents et tiens la pose sans surjouer." },
-        { c: "mouvement", l: 1, t: "Inventer un mini-rituel gestuel de victoire", d: "Crée un geste court que tu pourras réutiliser plus tard." },
-        { c: "mouvement", l: 2, t: "Traverser un lieu avec une démarche imposée", d: "Exemple : démarche royale, discrète, ralentie ou ultra-déterminée." },
-        { c: "mouvement", l: 2, t: "Mimer une émotion uniquement avec le corps", d: "Pas de parole, pas d'explication." },
-        { c: "mouvement", l: 3, t: "Marcher comme si le sol changeait de matière", d: "Passe du sable imaginaire à la glace, puis à la boue ou au ressort." },
-        { c: "mouvement", l: 3, t: "Faire un salut théâtral à un lieu ou un objet", d: "Assume le geste quelques secondes, puis repars normalement." },
-
-        { c: "emotion", l: 1, t: "Décrire ton humeur avec une couleur", d: "Choisis une couleur qui te ressemble aujourd'hui et explique-la si besoin." },
-        { c: "emotion", l: 1, t: "Dire ce qui te met en joie aujourd'hui", d: "Reste concret et simple." },
-        { c: "emotion", l: 2, t: "Dire ce que tu aimerais oser plus souvent", d: "Choisis une personne ou note-le à voix haute pour toi." },
-        { c: "emotion", l: 2, t: "Partager une peur légère avec quelqu'un", d: "Pas besoin d'aller dans l'intime profond. Le but est l'authenticité." },
-        { c: "emotion", l: 3, t: "Demander à quelqu'un ce qui le touche en ce moment", d: "Pose la question avec douceur et respecte son envie ou non de répondre." },
-        { c: "emotion", l: 3, t: "Dire : \"Là, je suis un peu stressé mais je le fais quand même\"", d: "Nommer ce qui est là peut déjà changer la mission." },
-
-        { c: "jeu", l: 1, t: "Faire un chifoumi collectif", d: "Lance le jeu avec quelques personnes prêtes à participer." },
-        { c: "jeu", l: 1, t: "Proposer un mime minute", d: "Choisis une règle simple et rapide." },
-        { c: "jeu", l: 2, t: "Faire un défi chrono de 30 secondes", d: "Le défi doit être compréhensible instantanément." },
-        { c: "jeu", l: 2, t: "Créer une règle absurde pour un jeu existant", d: "Modifie un détail du jeu pour le rendre plus drôle ou plus étrange." },
-        { c: "jeu", l: 3, t: "Organiser un mini-jeu express avec 2 ou 3 personnes", d: "Tu dois lancer le cadre, expliquer vite, puis faire jouer." },
-        { c: "jeu", l: 3, t: "Transformer un espace en terrain de jeu symbolique", d: "Définis des zones, une règle et un objectif en moins d'une minute." },
-
-        { c: "introspection", l: 1, t: "Écrire 10 rêves sans autocensure", d: "N'essaie pas d'être réaliste. Laisse venir." },
-        { c: "introspection", l: 1, t: "T'asseoir 10 minutes sans téléphone", d: "Observe ce qui monte en toi sans chercher à l'effacer." },
-        { c: "introspection", l: 2, t: "Noter 3 choses que tu évites trop souvent", d: "Va au concret. Pas besoin de faire une grande analyse." },
-        { c: "introspection", l: 2, t: "Faire une action seul que tu attends toujours de faire avec d'autres", d: "Choisis quelque chose de simple mais symbolique." },
-        { c: "introspection", l: 3, t: "Écrire une promesse simple à toi-même", d: "Formule-la de façon claire, réaliste et engageante." },
-        { c: "introspection", l: 3, t: "Noter ce que cette journée te raconte sur toi", d: "Cherche une phrase simple, pas un texte long." }
-      ];
-
-      return raw.map((r, i) => createMission({
-        id: startId + i,
-        text: r.t,
-        category: CATEGORY_MAP[r.c] || "JOUE",
-        level: r.l,
-        theme: "festival",
-        tags: ["communauté", r.c],
-        details: r.d
-      }));
-    }
-
-    function buildPoolMissions(startId) {
-      const raw = [
-        { c: "JOUE", l: 1, t: "Fais 2 longueurs tranquillement, focus sur la technique.", d: "Cherche la fluidité plutôt que la vitesse.", s: "Échauffe les épaules avant d'entrer dans l'eau.", a: "Observe ton souffle à la fin." },
-        { c: "RESSENS", l: 1, t: "Fais 1 minute de flottaison calme (sur le dos si possible).", d: "Laisse l'eau te porter et relâche les épaules.", s: "Choisis une zone calme du bassin.", a: "Note le niveau de détente ressenti." },
-        { c: "ENTRAÎNE", l: 2, t: "Propose à quelqu'un un mini défi aquatique de 2 minutes.", d: "Exemple: aller-retour en douceur, sans pression.", s: "Demande d'abord si la personne est partante.", a: "Garde un ton fun et bienveillant." },
-        { c: "JOUE", l: 2, t: "Traverse le bassin avec un style inventé.", d: "Ajoute une touche créative, sans te mettre en danger.", s: "Vérifie que l'espace est libre.", a: "Partage ton style avec un sourire." },
-        { c: "OSE", l: 3, t: "Demande à un inconnu son meilleur conseil nage.", d: "Lance un échange simple et respectueux.", s: "Choisis quelqu'un qui semble dispo.", a: "Teste son conseil sur 1 longueur." },
-        { c: "ENTRAÎNE", l: 3, t: "Fais 4 longueurs en rythme constant.", d: "Reste régulier du début à la fin.", s: "Trouve ton rythme avant de démarrer.", a: "Observe si la 4e longueur reste propre." },
-        { c: "JOUE", l: 4, t: "Crée une choré aquatique à 2 (20 secondes).", d: "Synchronisez 2 ou 3 mouvements simples.", s: "Choisissez des gestes faciles à répéter.", a: "Refaites-la une 2e fois plus fluide." },
-        { c: "RESSENS", l: 4, t: "Fais 3 cycles respiration: 4 secondes inspire / 6 secondes expire dans l'eau.", d: "Garde le contrôle, sans forcer l'apnée.", s: "Position stable au bord du bassin.", a: "Observe ton calme après l'exercice." },
-        { c: "LIEN", l: 4, t: "Apprends un mouvement de nage à quelqu'un (ou l'inverse).", d: "Transmission courte, claire, et positive.", s: "Concentrez-vous sur un seul point technique.", a: "Faites 1 essai immédiat." },
-        { c: "JOUE", l: 5, t: "Fais un relais improvisé avec 2 personnes.", d: "Une distance courte suffit, le but est l'énergie collective.", s: "Fixez une règle simple avant de partir.", a: "Célébrez la fin ensemble." },
-        { c: "ENTRAÎNE", l: 5, t: "Fais 6 longueurs avec 20 secondes de récupération max.", d: "Reste stable et gère ton effort.", s: "Commence modéré sur les 2 premières longueurs.", a: "Observe ta récupération cardiaque." },
-        { c: "OSE", l: 6, t: "Teste 1 longueur plus rapide que ton rythme habituel.", d: "Accélère proprement sans casser la technique.", s: "Garde de la marge sur la respiration.", a: "Compare avec ton rythme normal." },
-        { c: "JOUE", l: 6, t: "Fais une photo d'équipe aquatique originale.", d: "Position créative, sécurité d'abord.", s: "Vérifie que tout le monde est d'accord.", a: "Rejouez la meilleure pose." },
-        { c: "ENTRAÎNE", l: 7, t: "Enchaîne 8 longueurs avec allure progressive.", d: "Commence facile, finis plus tonique.", s: "Planifie ton intensité avant de partir.", a: "Note ta meilleure partie de série." },
-        { c: "OSE", l: 8, t: "Organise un mini challenge collectif piscine (3 min).", d: "Règle simple, fun, inclusive, sans pression.", s: "Annonce clairement début/fin et sécurité.", a: "Félicite tout le groupe à la fin." }
-      ];
-
-      return raw.map((r, i) => createMission({
-        id: startId + i,
-        text: r.t,
-        category: r.c,
-        level: r.l,
-        theme: "pool",
-        place: ["pool"],
-        tags: ["piscine", "aquatique"],
-        note: "piscine",
-        details: r.d,
-        setup: r.s,
-        after: r.a
-      }));
     }
 
     const DEFAULT_MISSIONS = [
@@ -2410,25 +1141,7 @@
       createMission({ id: 73, text: "Convaincs un groupe de faire une action ensemble", category: "ENTRAÎNE", level: 5, peopleMin: 3, tags: ["collectif", "lien"] }),
       createMission({ id: 74, text: "Compose une mini choré avec 3 inconnus", category: "JOUE", level: 5, peopleMin: 3, tags: ["danse", "collectif"] }),
       createMission({ id: 75, text: "Organise un téléphone arabe en mode danse (en ligne : chacun refait le mouvement jusqu'au dernier)", category: "JOUE", level: 5, peopleMin: 4, tags: ["danse", "collectif"] }),
-      createMission({ id: 76, text: "Fais sauter 5 personnes en même temps", category: "ENTRAÎNE", level: 5, peopleMin: 5, tags: ["collectif", "fun"] }),
-
-      createMission({ id: 77, text: "Rends service à quelqu'un aujourd'hui (petit geste concret)", category: "RESSENS", level: 1, theme: "daily", tags: ["quotidien", "entraide"] }),
-      createMission({ id: 78, text: "Range un espace en 5 minutes chrono", category: "JOUE", level: 1, theme: "daily", tags: ["quotidien", "focus"] }),
-      createMission({ id: 79, text: "Envoie un message de gratitude à une personne", category: "LIEN", level: 1, theme: "daily", tags: ["quotidien", "lien"] }),
-      createMission({ id: 80, text: "Fais une tâche que tu repousses depuis plusieurs jours", category: "OSE", level: 3, theme: "daily", tags: ["quotidien", "discipline"] }),
-
-      createMission({ id: 81, text: "Fais 20 squats ou 10 pompes selon ton niveau", category: "ENTRAÎNE", level: 2, theme: "health_sport", tags: ["santé", "sport"] }),
-      createMission({ id: 82, text: "Marche 12 minutes à rythme régulier", category: "RESSENS", level: 1, theme: "health_sport", tags: ["santé", "sport"] }),
-      createMission({ id: 83, text: "Fais 2 minutes de mobilité (nuque, épaules, hanches)", category: "JOUE", level: 1, theme: "health_sport", tags: ["santé", "sport"] }),
-      createMission({ id: 84, text: "Bois un grand verre d'eau maintenant", category: "RESSENS", level: 1, theme: "health_sport", tags: ["santé", "récup"] }),
-
-      createMission({ id: 85, text: "Prends 2 minutes de respiration lente (4 sec in / 6 sec out)", category: "RESSENS", level: 1, theme: "health_mental", tags: ["santé", "mental"] }),
-      createMission({ id: 86, text: "Note 3 choses positives de ta journée", category: "RESSENS", level: 1, theme: "health_mental", tags: ["santé", "mental"] }),
-      createMission({ id: 87, text: "Fais 5 minutes sans écran et observe simplement", category: "OSE", level: 2, theme: "health_mental", tags: ["santé", "mental"] }),
-      createMission({ id: 88, text: "Écris une intention simple pour la suite de ta journée", category: "LIEN", level: 1, theme: "health_mental", tags: ["santé", "mental"] }),
-      ...buildHealthMissions(89),
-      ...buildCommunityMissions(289),
-      ...buildPoolMissions(500)
+      createMission({ id: 76, text: "Fais sauter 5 personnes en même temps", category: "ENTRAÎNE", level: 5, peopleMin: 5, tags: ["collectif", "fun"] })
     ];
 
     let MISSIONS = [];
@@ -2509,22 +1222,11 @@
 
     // ===== Résultats =====
     function getResults() {
-      return loadJSON(STORAGE_KEYS.results, []).map(normalizeResultRecord);
+      return loadJSON(STORAGE_KEYS.results, []);
     }
 
     function saveResults(results) {
-      return saveJSON(STORAGE_KEYS.results, results.map(normalizeResultRecord));
-    }
-
-    function normalizeResultRecord(result) {
-      const normalized = { ...result };
-      normalized.visibility = normalized.visibility || "private";
-      if (!normalized.photoUrl) {
-        normalized.reviewStatus = "none";
-      } else if (!normalized.reviewStatus) {
-        normalized.reviewStatus = normalized.visibility === "participants" ? "approved" : "private";
-      }
-      return normalized;
+      return saveJSON(STORAGE_KEYS.results, results);
     }
 
     function createMissionResult({
@@ -2534,7 +1236,6 @@
       status = "done",
       photoUrl = "",
       visibility = "private",
-      reviewStatus = null,
       orgaMessage = "",
       rating = null,
       displayName = "",
@@ -2548,7 +1249,6 @@
         status,
         photoUrl,
         visibility,
-        reviewStatus: reviewStatus || (photoUrl ? (visibility === "participants" ? "pending" : "private") : "none"),
         orgaMessage,
         rating,
         displayName,
@@ -2568,15 +1268,6 @@
       const item = results.find(r => r.id === resultId);
       if (!item) return null;
       item.rating = rating;
-      saveResults(results);
-      return item;
-    }
-
-    function updateResultReview(resultId, updates) {
-      const results = getResults();
-      const item = results.find(r => r.id === resultId);
-      if (!item) return null;
-      Object.assign(item, updates, { adminReviewedAt: nowIso() });
       saveResults(results);
       return item;
     }
@@ -2605,16 +1296,6 @@
     function saveSuggestion(item) {
       const suggestions = getSuggestions();
       suggestions.push(item);
-      saveSuggestions(suggestions);
-      return item;
-    }
-
-    function updateSuggestionStatus(id, status) {
-      const suggestions = getSuggestions();
-      const item = suggestions.find(s => s.id === id);
-      if (!item) return null;
-      item.status = status;
-      item.updatedAt = nowIso();
       saveSuggestions(suggestions);
       return item;
     }
@@ -2695,11 +1376,7 @@
     }
 
     function countSharedPhotos(results) {
-      return results.filter(r => !!r.photoUrl && r.visibility === "participants" && r.reviewStatus === "approved").length;
-    }
-
-    function countPendingPhotos(results) {
-      return results.filter(r => !!r.photoUrl && r.visibility === "participants" && r.reviewStatus === "pending").length;
+      return results.filter(r => !!r.photoUrl && r.visibility === "participants").length;
     }
 
     function countOrgaMessages(results) {
@@ -2740,7 +1417,7 @@
       return avg;
     }
 
-    // ===== Photo upload + compression =====
+    // ===== Simu upload locale =====
     function fileToLocalDataUrl(file) {
       return new Promise((resolve, reject) => {
         const reader = new FileReader();
@@ -2750,38 +1427,10 @@
       });
     }
 
-    async function compressPhoto(file, maxDim = 900, quality = 0.78) {
-      const dataUrl = await fileToLocalDataUrl(file);
-      return new Promise((resolve) => {
-        const img = new Image();
-        img.onload = () => {
-          let { width, height } = img;
-          if (width <= maxDim && height <= maxDim) {
-            resolve(dataUrl);
-            return;
-          }
-          const ratio = Math.min(maxDim / width, maxDim / height);
-          width = Math.round(width * ratio);
-          height = Math.round(height * ratio);
-          const canvas = document.createElement("canvas");
-          canvas.width = width;
-          canvas.height = height;
-          const ctx = canvas.getContext("2d");
-          ctx.drawImage(img, 0, 0, width, height);
-          resolve(canvas.toDataURL("image/jpeg", quality));
-        };
-        img.onerror = () => resolve(dataUrl);
-        img.src = dataUrl;
-      });
-    }
-
     // ===== État UI =====
     const STATE = {
       currentMission: null,
-      currentPhotoDataUrl: "",
-      drawMode: null,        // "choose-theme" | "random-theme"
-      selectedTheme: null,   // thème choisi par l'utilisateur
-      adminEditingMissionId: null
+      currentPhotoDataUrl: ""
     };
 
     // ===== DOM =====
@@ -2790,7 +1439,6 @@
       mission: document.getElementById("screen-mission"),
       validation: document.getElementById("screen-validation"),
       journal: document.getElementById("screen-journal"),
-      missions: document.getElementById("screen-missions"),
       photos: document.getElementById("screen-photos"),
       suggest: document.getElementById("screen-suggest"),
       orga: document.getElementById("screen-orga")
@@ -2815,118 +1463,8 @@
     const suggestCategory = document.getElementById("suggest-category");
     const suggestLevel = document.getElementById("suggest-level");
     const suggestionsList = document.getElementById("suggestions-list");
-    const missionModeSelect = document.getElementById("mission-mode-select");
-    const progressBarFill = document.getElementById("progress-bar-fill");
-    const progressText = document.getElementById("progress-text");
-    const photoVisibilityWrap = document.getElementById("photo-visibility-wrap");
-    const photoVisibilityLock = document.getElementById("photo-visibility-lock");
-    const adminAllowCommunityShare = document.getElementById("admin-allow-community-share");
-    const adminThemeFestival = document.getElementById("admin-theme-festival");
-    const adminThemePool = document.getElementById("admin-theme-pool");
-    const adminThemeDaily = document.getElementById("admin-theme-daily");
-    const adminThemeHealthSport = document.getElementById("admin-theme-health-sport");
-    const adminThemeHealthMental = document.getElementById("admin-theme-health-mental");
-    const adminThemeHealthWellness = document.getElementById("admin-theme-health-wellness");
-    const adminThemeHealthBreathing = document.getElementById("admin-theme-health-breathing");
-    const adminThemeHealthYoga = document.getElementById("admin-theme-health-yoga");
-    const adminPinInput = document.getElementById("admin-pin-input");
-    const adminRecoveryEmailInput = document.getElementById("admin-recovery-email-input");
-    const themeChoiceLabel = document.getElementById("theme-choice-label");
-    const clearThemeBtn = document.getElementById("clear-theme-btn");
-    const flagMissionEditBtn = document.getElementById("flag-mission-edit-btn");
-    const adminPhotoReviewList = document.getElementById("admin-photo-review-list");
-    const adminMissionText = document.getElementById("admin-mission-text");
-    const adminMissionCategory = document.getElementById("admin-mission-category");
-    const adminMissionLevel = document.getElementById("admin-mission-level");
-    const adminMissionTheme = document.getElementById("admin-mission-theme");
-    const adminMissionNote = document.getElementById("admin-mission-note");
-    const adminSaveMissionBtn = document.getElementById("admin-save-mission-btn");
-    const adminCancelMissionEditBtn = document.getElementById("admin-cancel-mission-edit-btn");
-    const adminResetMissionsBtn = document.getElementById("admin-reset-missions-btn");
-    const adminMissionSearch = document.getElementById("admin-mission-search");
-    const adminThemeJump = document.getElementById("admin-theme-jump");
-    const adminMissionsList = document.getElementById("admin-missions-list");
-    const adminSuggestionsReviewList = document.getElementById("admin-suggestions-review-list");
-
-    function dedupeMissionModeOptions() {
-      if (!missionModeSelect) return;
-      const seen = new Set();
-      [...missionModeSelect.options].forEach(opt => {
-        const key = (opt.value || "").trim();
-        if (!key) return;
-        if (seen.has(key)) {
-          opt.remove();
-          return;
-        }
-        seen.add(key);
-      });
-    }
 
     // ===== Navigation =====
-    function openAdminAccess() {
-      const entered = window.prompt("Code admin:");
-      if (!entered) {
-        const wantsRecovery = window.confirm("Code oublié ? Cliquer sur OK pour lancer la récupération par e-mail.");
-        if (wantsRecovery) recoverAdminPinByEmail();
-        return;
-      }
-      if (entered !== getAdminPin()) {
-        Toast.error("Code admin incorrect.");
-        const wantsRecovery = window.confirm("Code oublié ? Cliquer sur OK pour lancer la récupération par e-mail.");
-        if (wantsRecovery) recoverAdminPinByEmail();
-        return;
-      }
-      hydrateAdminSettingsForm();
-      showScreen("orga");
-    }
-
-    async function recoverAdminPinByEmail() {
-      const config = getBackendConfig();
-      if (!isSupabaseEnabled(config)) {
-        Toast.error("Récupération e-mail indisponible: configure d'abord Supabase dans orga.html.");
-        return;
-      }
-
-      const enteredEmail = (window.prompt("E-mail de récupération admin :") || "").trim().toLowerCase();
-      if (!enteredEmail) return;
-
-      if (enteredEmail !== getAdminRecoveryEmail().trim().toLowerCase()) {
-        Toast.error("E-mail de récupération incorrect.");
-        return;
-      }
-
-      try {
-        await requestAdminRecoveryOtp(enteredEmail);
-      } catch (error) {
-        Toast.error(`Envoi impossible: ${error.message}`);
-        return;
-      }
-
-      Toast.info("Un code de vérification a été envoyé par e-mail.", 4500);
-
-      const token = (window.prompt("Entre le code reçu par e-mail :") || "").trim();
-      if (!token) {
-        Toast.warning("Aucun code saisi.");
-        return;
-      }
-
-      try {
-        await verifyAdminRecoveryOtp(enteredEmail, token);
-      } catch (error) {
-        Toast.error(`Code invalide: ${error.message}`);
-        return;
-      }
-
-      const newPin = (window.prompt("Nouveau code admin :", DEFAULT_ADMIN_PIN) || "").trim();
-      if (!newPin) {
-        Toast.warning("Le code admin n'a pas été modifié.");
-        return;
-      }
-
-      setAdminPin(newPin);
-      Toast.success("Code admin mis à jour via l'e-mail de récupération.");
-    }
-
     function showScreen(name) {
       const target = screens[name];
       if (!target) {
@@ -2941,10 +1479,7 @@
       if (name === "journal") renderJournal();
       if (name === "photos") renderPhotos();
       if (name === "suggest") renderSuggestions();
-      if (name === "orga") {
-        renderOrga();
-        hydrateAdminSettingsForm();
-      }
+      if (name === "orga") renderOrga();
       if (name === "home") updateProgressBar();
     }
 
@@ -2953,24 +1488,12 @@
     });
 
     function updateProgressBar() {
+      // Progression masquée à l'utilisateur, mais logique interne conservée
       const state = getProgressState();
-      const mode = getMissionMode();
-      const adminSettings = getAdminSettings();
-      const available = MISSIONS.filter(m =>
-        m.active &&
-        !m.bonus &&
-        missionAllowedByAdmin(m, adminSettings) &&
-        missionMatchesSelectedMode(m, mode)
-      );
-      const availableIds = new Set(available.map(m => m.id));
-      const totalMissions = available.length;
-      const done = state.doneMissionIds.filter(id => availableIds.has(id)).length;
+      const totalMissions = MISSIONS.filter(m => m.active && !m.bonus).length;
+      const done = state.doneMissionIds.length;
       const percent = totalMissions ? Math.round((done / totalMissions) * 100) : 0;
-      if (progressBarFill) progressBarFill.style.width = `${percent}%`;
-      if (progressText) {
-        const label = done <= 1 ? "mission validée" : "missions validées";
-        progressText.textContent = `${done} ${label} · ${percent}%`;
-      }
+      // Éléments DOM supprimés pour interface simplifiée
     }
 
     // ===== Profil =====
@@ -2987,234 +1510,26 @@
       displayNameInput.value = profile.displayName || "";
     }
 
-    function hydrateMissionMode() {
-      if (missionModeSelect) missionModeSelect.value = getMissionMode();
-    }
-
-    function hydrateAdminSettingsForm() {
-      const settings = getAdminSettings();
-      adminAllowCommunityShare.checked = settings.allowCommunityShare;
-      adminThemeFestival.checked = !!settings.enabledThemes.festival;
-      adminThemePool.checked = !!settings.enabledThemes.pool;
-      adminThemeDaily.checked = !!settings.enabledThemes.daily;
-      adminThemeHealthSport.checked = !!settings.enabledThemes.health_sport;
-      adminThemeHealthMental.checked = !!settings.enabledThemes.health_mental;
-      adminThemeHealthWellness.checked = !!settings.enabledThemes.health_wellness;
-      adminThemeHealthBreathing.checked = !!settings.enabledThemes.health_breathing;
-      adminThemeHealthYoga.checked = !!settings.enabledThemes.health_yoga;
-      adminPinInput.value = "";
-      if (adminRecoveryEmailInput) adminRecoveryEmailInput.value = getAdminRecoveryEmail();
-    }
-
-    function saveAdminSettingsFromForm() {
-      const enabledThemes = {
-        festival: !!adminThemeFestival.checked,
-        pool: !!adminThemePool.checked,
-        daily: !!adminThemeDaily.checked,
-        health_sport: !!adminThemeHealthSport.checked,
-        health_mental: !!adminThemeHealthMental.checked,
-        health_wellness: !!adminThemeHealthWellness.checked,
-        health_breathing: !!adminThemeHealthBreathing.checked,
-        health_yoga: !!adminThemeHealthYoga.checked
-      };
-
-      if (!Object.values(enabledThemes).some(Boolean)) {
-        Toast.warning("Active au moins un pack de missions.");
-        return;
-      }
-
-      saveAdminSettings({
-        allowCommunityShare: !!adminAllowCommunityShare.checked,
-        enabledThemes
-      });
-
-      const newPin = adminPinInput.value.trim();
-      if (newPin) setAdminPin(newPin);
-
-      const recoveryEmail = adminRecoveryEmailInput?.value.trim().toLowerCase() || DEFAULT_ADMIN_RECOVERY_EMAIL;
-      setAdminRecoveryEmail(recoveryEmail);
-
-      updateProgressBar();
-      renderThemePicker();
-      Toast.success("Réglages admin enregistrés.");
-    }
-
-    // ===== Tirage thématique =====
-
-    function getAvailableThemesForDraw() {
-      if (!MISSIONS.length) loadMissions();
-      const mode = getMissionMode();
-      const adminSettings = getAdminSettings();
-
-      const available = MISSIONS.filter(m => {
-        if (!m.active || m.bonus) return false;
-        if (!missionAllowedByAdmin(m, adminSettings)) return false;
-        if (!missionMatchesSelectedMode(m, mode)) return false;
-        return true;
-      });
-
-      const presentThemeIds = new Set(available.map(m => m.theme).filter(Boolean));
-      return DRAW_THEMES.filter(t => presentThemeIds.has(t.id));
-    }
-
-    function renderThemePicker() {
-      const list = document.getElementById("theme-list");
-      if (!list) return;
-      list.innerHTML = "";
-
-      DRAW_THEMES.forEach(theme => {
-        const btn = document.createElement("button");
-        btn.type = "button";
-        btn.className = "theme-btn" + (STATE.selectedTheme === theme.id ? " active" : "");
-        btn.innerHTML = `<span class="theme-icon">${theme.icon}</span><span class="theme-label">${theme.label}<span class="theme-checkmark">✓</span></span>`;
-        btn.addEventListener("click", () => {
-          STATE.selectedTheme = theme.id;
-          list.querySelectorAll(".theme-btn").forEach(b => b.classList.remove("active"));
-          btn.classList.add("active");
-        });
-        list.appendChild(btn);
-      });
-
-      if (themeChoiceLabel) {
-        const selected = DRAW_THEMES.find(theme => theme.id === STATE.selectedTheme);
-        themeChoiceLabel.textContent = selected
-          ? `Thème choisi: ${selected.label}.`
-          : "Aucun thème imposé: tirage libre.";
-      }
-    }
-
-    function pickMissionWithTheme(themeId) {
-      const state = getProgressState();
-      state.internalLevel = computeInternalLevel(state.doneMissionIds.length);
-
-      let pool = getMissionPoolForProgression(state);
-      if (!pool.length) pool = getFallbackMissionPool(state);
-
-      // Filtre par thème demandé, avec fallback sans thème
-      let themed = themeId ? pool.filter(m => m.theme === themeId) : pool;
-      if (!themed.length) themed = pool;
-
-      // Exclusion récents
-      const recentIds = getRecentMissionIds(state, 6);
-      let candidates = themed.filter(m => !recentIds.includes(m.id) && m.id !== state.lastMissionId);
-      if (!candidates.length) candidates = themed.filter(m => m.id !== state.lastMissionId);
-      if (!candidates.length) candidates = themed;
-      if (!candidates.length) return null;
-
-      // Tirage pondéré
-      const level = state.internalLevel;
-      const weighted = [];
-      candidates.forEach(m => {
-        const ml = normalizeMissionLevel(m.level);
-        const w = ml === level ? 5 : ml === level + 1 ? 3 : 2;
-        for (let i = 0; i < w; i++) weighted.push(m);
-      });
-
-      const mission = weighted[Math.floor(Math.random() * weighted.length)];
-      state.currentMissionId = mission.id;
-      state.lastMissionId = mission.id;
-      state.shownMissionIds.push(mission.id);
-      saveProgressState(state);
-      return mission;
-    }
-
-    function animateWheel(themeObj, mission, onComplete) {
-      const overlay   = document.getElementById("wheel-overlay");
-      const titleEl   = document.getElementById("wheel-title");
-      const themeEl   = document.getElementById("wheel-theme-label");
-      const reelEl    = document.getElementById("wheel-reel");
-      const subtextEl = document.getElementById("wheel-subtext");
-
-      // Réinitialise
-      titleEl.textContent   = "Tirage en cours…";
-      themeEl.textContent   = "";
-      reelEl.textContent    = "🎲";
-      subtextEl.textContent = "La roue tourne…";
-      overlay.classList.remove("draw-hidden");
-
-      // Phase 1 : défilement du thème (emojis aléatoires) — 1.2 s
-      const ICONS = DRAW_THEMES.map(t => t.icon);
-      let count = 0;
-      const phase1 = setInterval(() => {
-        reelEl.textContent = ICONS[Math.floor(Math.random() * ICONS.length)];
-        count++;
-        if (count >= 14) {
-          clearInterval(phase1);
-          // Affiche le thème retenu
-          themeEl.textContent = themeObj ? `${themeObj.icon} ${themeObj.label}` : "";
-          reelEl.textContent  = themeObj ? themeObj.icon : "🎲";
-          subtextEl.textContent = "Thème trouvé ! Mission en cours…";
-
-          // Phase 2 : défilement des textes de missions — 1.2 s
-          const pool = MISSIONS.filter(m => !themeObj || m.theme === themeObj.id);
-          const texts = shuffleArray(pool.map(m => m.text)).slice(0, 12);
-          let c2 = 0;
-          const phase2 = setInterval(() => {
-            reelEl.textContent = texts[c2 % texts.length] || "…";
-            c2++;
-            if (c2 >= 14) {
-              clearInterval(phase2);
-              reelEl.textContent    = mission ? mission.text : "Mission introuvable.";
-              subtextEl.textContent = "C'est parti !";
-              setTimeout(() => {
-                overlay.classList.add("draw-hidden");
-                onComplete();
-              }, 900);
-            }
-          }, 90);
-        }
-      }, 80);
-    }
-
-    function showDrawModeBox() {
-      renderThemePicker();
-    }
-
-    function hideDrawUI() {
-      return;
-    }
-
-    function launchMissionDraw() {
-      syncProfileFromInput();
-
-      const available = getAvailableThemesForDraw();
-      let themeObj = null;
-
-      if (STATE.drawMode === "choose-theme" && STATE.selectedTheme) {
-        themeObj = DRAW_THEMES.find(t => t.id === STATE.selectedTheme) || null;
-      } else {
-        // Surprends-moi : thème aléatoire parmi les disponibles
-        if (available.length) {
-          themeObj = available[Math.floor(Math.random() * available.length)];
-        }
-      }
-
-      const mission = pickMissionWithTheme(themeObj ? themeObj.id : null);
-      if (!mission) {
-        Toast.warning("Aucune mission disponible pour le moment.");
-        return;
-      }
-
-      animateWheel(themeObj, mission, () => {
-        renderMission(mission);
-      });
-    }
-
     // ===== Mission =====
     function renderMission(mission) {
       STATE.currentMission = mission;
       missionText.textContent = mission ? mission.text : "Aucune mission disponible pour le moment.";
-      if (flagMissionEditBtn) {
-        const alreadyFlagged = !!mission?.editRequests?.some(request => request.sessionId === getOrCreateSessionId());
-        flagMissionEditBtn.textContent = alreadyFlagged ? "Modifier mon signalement" : "À modifier";
-      }
       showScreen("mission");
     }
 
     function startGame() {
       syncProfileFromInput();
-      STATE.drawMode = STATE.selectedTheme ? "choose-theme" : "random-theme";
-      launchMissionDraw();
+      let mission = pickNextMission();
+      if (!mission) {
+        // If local missions were corrupted/disabled, restore defaults once and retry.
+        loadMissions();
+        mission = pickNextMission();
+      }
+      if (!mission) {
+        Toast.warning("Aucune mission disponible pour le moment.");
+        return;
+      }
+      renderMission(mission);
     }
 
     function goToAnotherMission() {
@@ -3234,19 +1549,11 @@
       STATE.currentPhotoDataUrl = "";
       photoPreview.src = "";
       photoPreviewWrap.style.display = "none";
-      photoVisibilityWrap.style.display = "none";
-      photoVisibilityLock.style.display = "none";
-      const privateChoice = document.querySelector('input[name="photo-visibility"][value="private"]');
-      if (privateChoice) privateChoice.checked = true;
     }
 
     function openValidation() {
       if (!STATE.currentMission) return;
       resetValidationForm();
-      const adminSettings = getAdminSettings();
-      if (!adminSettings.allowCommunityShare) {
-        photoVisibilityLock.style.display = "block";
-      }
       showScreen("validation");
     }
 
@@ -3255,26 +1562,21 @@
       if (!file) {
         STATE.currentPhotoDataUrl = "";
         photoPreviewWrap.style.display = "none";
-        photoVisibilityWrap.style.display = "none";
         fileNameDisplay.textContent = "";
         return;
       }
 
       try {
         fileNameDisplay.textContent = file.name;
-        const dataUrl = await compressPhoto(file);
+        const dataUrl = await fileToLocalDataUrl(file);
         STATE.currentPhotoDataUrl = dataUrl;
         photoPreview.src = dataUrl;
         photoPreviewWrap.style.display = "grid";
-        const adminSettings = getAdminSettings();
-        photoVisibilityWrap.style.display = "grid";
-        photoVisibilityLock.style.display = adminSettings.allowCommunityShare ? "none" : "block";
       } catch (error) {
         console.error("Erreur lors du chargement de la photo:", error);
         Toast.error("Erreur lors du chargement de la photo");
         STATE.currentPhotoDataUrl = "";
         photoPreviewWrap.style.display = "none";
-        photoVisibilityWrap.style.display = "none";
         fileNameDisplay.textContent = "";
       }
     }
@@ -3289,12 +1591,7 @@
         ? progress.doneMissionIds[progress.doneMissionIds.length - 1]
         : null;
 
-      const adminSettings = getAdminSettings();
-      let visibility = "private";
-      if (STATE.currentPhotoDataUrl && adminSettings.allowCommunityShare) {
-        const selectedVisibility = document.querySelector('input[name="photo-visibility"]:checked');
-        visibility = selectedVisibility ? selectedVisibility.value : "private";
-      }
+      const visibility = STATE.currentPhotoDataUrl ? "private" : "private";
 
       saveResult(
         createMissionResult({
@@ -3314,39 +1611,6 @@
       updateProgressBar();
       goToAnotherMission();
       Toast.success("Mission validée !");
-    }
-
-    function flagCurrentMissionForEdit() {
-      if (!STATE.currentMission) return;
-      const mission = getMissionById(STATE.currentMission.id);
-      if (!mission) return;
-
-      const currentSessionId = getOrCreateSessionId();
-      const existing = (mission.editRequests || []).find(request => request.sessionId === currentSessionId);
-      const defaultNote = existing?.note || "";
-      const note = window.prompt("Qu'est-ce qu'il faudrait modifier sur cette mission ? (facultatif)", defaultNote);
-      if (note === null) return;
-
-      const profile = getUserProfile();
-      mission.editRequests = Array.isArray(mission.editRequests) ? mission.editRequests : [];
-
-      if (existing) {
-        existing.note = note.trim();
-        existing.createdAt = nowIso();
-        existing.displayName = profile.displayName || existing.displayName || "";
-      } else {
-        mission.editRequests.unshift({
-          id: uid(),
-          sessionId: currentSessionId,
-          displayName: profile.displayName || "",
-          note: note.trim(),
-          createdAt: nowIso()
-        });
-      }
-
-      saveMissions(MISSIONS);
-      renderMission(mission);
-      Toast.success("Mission signalée pour modification.");
     }
 
     // ===== Journal =====
@@ -3447,7 +1711,7 @@
     // ===== Photos =====
     function getSharedPhotos() {
       return getResults()
-        .filter(r => !!r.photoUrl && r.visibility === "participants" && r.reviewStatus === "approved")
+        .filter(r => !!r.photoUrl && r.visibility === "participants")
         .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
     }
 
@@ -3487,502 +1751,20 @@
       });
     }
 
-    function resetAdminMissionForm() {
-      STATE.adminEditingMissionId = null;
-      if (adminMissionText) adminMissionText.value = "";
-      if (adminMissionCategory) adminMissionCategory.value = "OSE";
-      if (adminMissionLevel) adminMissionLevel.value = "1";
-      if (adminMissionTheme) adminMissionTheme.value = "festival";
-      if (adminMissionNote) adminMissionNote.value = "";
-      if (adminSaveMissionBtn) adminSaveMissionBtn.textContent = "Ajouter la mission";
-    }
-
-    function populateAdminMissionForm(mission) {
-      if (!mission) return;
-      STATE.adminEditingMissionId = mission.id;
-      adminMissionText.value = mission.text || "";
-      adminMissionCategory.value = mission.category || "OSE";
-      adminMissionLevel.value = String(normalizeMissionLevel(mission.level));
-      adminMissionTheme.value = mission.theme || "festival";
-      adminMissionNote.value = mission.note || "";
-      adminSaveMissionBtn.textContent = `Enregistrer mission #${mission.id}`;
-      adminMissionText.focus();
-    }
-
-    function updateMissionById(id, updates) {
-      const mission = getMissionById(id);
-      if (!mission) return null;
-      Object.assign(mission, updates);
-      saveMissions(MISSIONS);
-      return mission;
-    }
-
-    function saveAdminMissionFromForm() {
-      const text = adminMissionText.value.trim();
-      if (!text) {
-        Toast.warning("Écris le texte de la mission.");
-        adminMissionText.focus();
-        return;
-      }
-
-      const payload = {
-        text,
-        category: adminMissionCategory.value,
-        level: Number(adminMissionLevel.value) || 1,
-        theme: adminMissionTheme.value || "festival",
-        note: adminMissionNote.value.trim()
-      };
-
-      if (STATE.adminEditingMissionId) {
-        updateMissionById(STATE.adminEditingMissionId, { ...payload, editRequests: [] });
-        Toast.success("Mission modifiée.");
-      } else {
-        const nextId = Math.max(0, ...MISSIONS.map(m => m.id), 0) + 1;
-        MISSIONS.push(normalizeMissionRecord(createMission({ id: nextId, ...payload, active: true })));
-        saveMissions(MISSIONS);
-        Toast.success("Mission ajoutée.");
-      }
-
-      resetAdminMissionForm();
-      renderOrga();
-      updateProgressBar();
-    }
-
-    function getThemePresentation(themeId) {
-      const theme = DRAW_THEMES.find(item => item.id === themeId);
-      if (theme) return theme;
-      return { id: themeId || "festival", label: themeId || "Autres", icon: "•" };
-    }
-
-    function clearMissionEditRequests(id) {
-      const mission = getMissionById(id);
-      if (!mission) return;
-      mission.editRequests = [];
-      saveMissions(MISSIONS);
-    }
-
-    function renderAdminThemeJump(groups) {
-      if (!adminThemeJump) return;
-      adminThemeJump.innerHTML = "";
-
-      groups.forEach(([themeId, missions]) => {
-        const theme = getThemePresentation(themeId);
-        const chip = document.createElement("a");
-        chip.className = "admin-theme-chip" + (missions.some(mission => (mission.editRequests || []).length) ? " is-flagged" : "");
-        chip.href = `#admin-theme-${theme.id}`;
-        chip.textContent = `${theme.icon} ${theme.label}`;
-        chip.addEventListener("click", event => {
-          event.preventDefault();
-          const target = document.getElementById(`admin-theme-${theme.id}`);
-          if (target) target.scrollIntoView({ behavior: "smooth", block: "start" });
-        });
-        adminThemeJump.appendChild(chip);
-      });
-    }
-
-    function renderAdminMissionList() {
-      if (!adminMissionsList) return;
-      const query = (adminMissionSearch?.value || "").trim().toLowerCase();
-      const items = [...MISSIONS]
-        .filter(m => {
-          if (!query) return true;
-          const searchText = [
-            m.text,
-            m.category,
-            m.theme,
-            m.note,
-            ...(m.editRequests || []).flatMap(request => [request.displayName, request.note])
-          ].filter(Boolean).join(" ").toLowerCase();
-          return searchText.includes(query);
-        });
-
-      adminMissionsList.innerHTML = "";
-
-      if (!items.length) {
-        adminMissionsList.innerHTML = '<div class="empty">Aucune mission trouvée.</div>';
-        return;
-      }
-
-      const themeIndex = DRAW_THEMES.reduce((map, theme, index) => {
-        map[theme.id] = index;
-        return map;
-      }, {});
-
-      const groups = items.reduce((map, mission) => {
-        const themeId = mission.theme || "festival";
-        if (!map.has(themeId)) map.set(themeId, []);
-        map.get(themeId).push(mission);
-        return map;
-      }, new Map());
-
-      const orderedGroups = [...groups.entries()].sort((a, b) => {
-        const aFlagged = a[1].some(mission => (mission.editRequests || []).length);
-        const bFlagged = b[1].some(mission => (mission.editRequests || []).length);
-        if (aFlagged !== bFlagged) return aFlagged ? -1 : 1;
-        return (themeIndex[a[0]] ?? 999) - (themeIndex[b[0]] ?? 999);
-      });
-
-      renderAdminThemeJump(orderedGroups);
-
-      orderedGroups.forEach(([themeId, missions]) => {
-        const theme = getThemePresentation(themeId);
-        const section = document.createElement("div");
-        section.className = "admin-theme-group";
-        section.id = `admin-theme-${theme.id}`;
-
-        const header = document.createElement("div");
-        header.className = "admin-theme-header";
-        const flaggedCount = missions.filter(mission => (mission.editRequests || []).length).length;
-        header.innerHTML = `
-          <div><strong>${theme.icon} ${escapeHtml(theme.label)}</strong></div>
-          <div class="admin-theme-meta">${missions.length} mission(s)${flaggedCount ? ` · ${flaggedCount} à revoir` : ""}</div>
-        `;
-        section.appendChild(header);
-
-        missions
-          .sort((a, b) => {
-            const aCount = (a.editRequests || []).length;
-            const bCount = (b.editRequests || []).length;
-            if (aCount !== bCount) return bCount - aCount;
-            return a.id - b.id;
-          })
-          .forEach(mission => {
-            const row = document.createElement("div");
-            row.className = "admin-item";
-            const stateLabel = mission.active ? "active" : "inactive";
-            const requestCount = (mission.editRequests || []).length;
-            const latestRequest = requestCount ? mission.editRequests[0] : null;
-            row.innerHTML = `
-              <div class="admin-item-main">
-                <div class="journal-title">#${mission.id} · ${escapeHtml(mission.text)}</div>
-                <div class="micro">${escapeHtml(mission.category)} · Niveau ${normalizeMissionLevel(mission.level)} · ${stateLabel}${mission.note ? ` · ${escapeHtml(mission.note)}` : ""}</div>
-                ${requestCount ? `<div class="flag-badge">À modifier · ${requestCount} signalement(s)</div>` : ""}
-                ${latestRequest ? `<div class="micro">Dernier retour: ${escapeHtml(latestRequest.note || "Sans détail")}${latestRequest.displayName ? ` · ${escapeHtml(latestRequest.displayName)}` : ""}</div>` : ""}
-              </div>
-            `;
-
-            const actions = document.createElement("div");
-            actions.className = "admin-item-actions";
-
-            const editBtn = document.createElement("button");
-            editBtn.className = "btn btn-secondary";
-            editBtn.textContent = "Modifier";
-            editBtn.addEventListener("click", () => populateAdminMissionForm(mission));
-
-            const toggleBtn = document.createElement("button");
-            toggleBtn.className = "btn btn-secondary";
-            toggleBtn.textContent = mission.active ? "Désactiver" : "Réactiver";
-            toggleBtn.addEventListener("click", () => {
-              toggleMissionActive(mission.id);
-              renderOrga();
-              updateProgressBar();
-            });
-
-            const deleteBtn = document.createElement("button");
-            deleteBtn.className = "btn btn-secondary";
-            deleteBtn.textContent = "Supprimer";
-            deleteBtn.addEventListener("click", () => {
-              if (!window.confirm(`Supprimer la mission #${mission.id} ?`)) return;
-              removeMissionById(mission.id);
-              if (STATE.adminEditingMissionId === mission.id) resetAdminMissionForm();
-              renderOrga();
-              updateProgressBar();
-            });
-
-            actions.appendChild(editBtn);
-            if (requestCount) {
-              const clearBtn = document.createElement("button");
-              clearBtn.className = "btn btn-secondary";
-              clearBtn.textContent = "Demandes traitées";
-              clearBtn.addEventListener("click", () => {
-                clearMissionEditRequests(mission.id);
-                renderOrga();
-              });
-              actions.appendChild(clearBtn);
-            }
-            actions.appendChild(toggleBtn);
-            actions.appendChild(deleteBtn);
-            row.appendChild(actions);
-            section.appendChild(row);
-          });
-
-        adminMissionsList.appendChild(section);
-      });
-    }
-
-    function renderAdminPhotoReview() {
-      if (!adminPhotoReviewList) return;
-      const items = getResults()
-        .filter(r => !!r.photoUrl)
-        .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
-
-      adminPhotoReviewList.innerHTML = "";
-
-      if (!items.length) {
-        adminPhotoReviewList.innerHTML = '<div class="empty">Aucune photo à modérer.</div>';
-        return;
-      }
-
-      items.forEach(result => {
-        const mission = getMissionById(result.missionId);
-        const row = document.createElement("div");
-        row.className = "admin-item";
-        row.innerHTML = `
-          <div class="admin-item-top">
-            <img class="admin-thumb" src="${escapeHtml(result.photoUrl)}" alt="Photo mission" />
-            <div class="admin-item-main">
-              <div class="journal-title">${mission ? escapeHtml(mission.text) : "Mission"}</div>
-              <div class="micro">${formatDateTime(result.createdAt)}${result.displayName ? ` · ${escapeHtml(result.displayName)}` : ""}</div>
-              <div class="status-badge">${escapeHtml(result.visibility)} · ${escapeHtml(result.reviewStatus || "none")}</div>
-            </div>
-          </div>
-        `;
-
-        const actions = document.createElement("div");
-        actions.className = "admin-item-actions";
-
-        if (result.visibility === "participants" && result.reviewStatus !== "approved") {
-          const approveBtn = document.createElement("button");
-          approveBtn.className = "btn btn-primary";
-          approveBtn.textContent = "Valider";
-          approveBtn.addEventListener("click", () => {
-            updateResultReview(result.id, { reviewStatus: "approved" });
-            renderOrga();
-            renderPhotos();
-          });
-          actions.appendChild(approveBtn);
-        }
-
-        if (result.reviewStatus !== "rejected") {
-          const rejectBtn = document.createElement("button");
-          rejectBtn.className = "btn btn-secondary";
-          rejectBtn.textContent = "Refuser";
-          rejectBtn.addEventListener("click", () => {
-            updateResultReview(result.id, { reviewStatus: "rejected" });
-            renderOrga();
-            renderPhotos();
-          });
-          actions.appendChild(rejectBtn);
-        }
-
-        if (result.visibility !== "private") {
-          const privateBtn = document.createElement("button");
-          privateBtn.className = "btn btn-secondary";
-          privateBtn.textContent = "Passer en privé";
-          privateBtn.addEventListener("click", () => {
-            updateResultReview(result.id, { visibility: "private", reviewStatus: "private" });
-            renderOrga();
-            renderPhotos();
-          });
-          actions.appendChild(privateBtn);
-        }
-
-        row.appendChild(actions);
-        adminPhotoReviewList.appendChild(row);
-      });
-    }
-
-    function importSuggestionAsMission(suggestion) {
-      const nextId = Math.max(0, ...MISSIONS.map(m => m.id), 0) + 1;
-      MISSIONS.push(normalizeMissionRecord(createMission({
-        id: nextId,
-        text: suggestion.text,
-        category: suggestion.category || "JOUE",
-        level: suggestion.level || 1,
-        theme: "festival",
-        note: `Suggestion ${suggestion.displayName || "participant"}`,
-        active: true
-      })));
-      saveMissions(MISSIONS);
-      updateSuggestionStatus(suggestion.id, "imported");
-    }
-
-    function renderAdminSuggestionsReview() {
-      if (!adminSuggestionsReviewList) return;
-      const items = getSuggestions()
-        .filter(item => item.status === "proposed")
-        .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
-
-      adminSuggestionsReviewList.innerHTML = "";
-
-      if (!items.length) {
-        adminSuggestionsReviewList.innerHTML = '<div class="empty">Aucune proposition en attente.</div>';
-        return;
-      }
-
-      items.forEach(item => {
-        const row = document.createElement("div");
-        row.className = "admin-item";
-        row.innerHTML = `
-          <div class="admin-item-main">
-            <div class="journal-title">${escapeHtml(item.text)}</div>
-            <div class="micro">${formatDateTime(item.createdAt)}${item.category ? ` · ${escapeHtml(item.category)}` : ""}${item.level ? ` · Niveau ${item.level}` : ""}${item.displayName ? ` · ${escapeHtml(item.displayName)}` : ""}</div>
-          </div>
-        `;
-
-        const actions = document.createElement("div");
-        actions.className = "admin-item-actions";
-
-        const importBtn = document.createElement("button");
-        importBtn.className = "btn btn-primary";
-        importBtn.textContent = "Ajouter aux missions";
-        importBtn.addEventListener("click", () => {
-          importSuggestionAsMission(item);
-          renderOrga();
-          updateProgressBar();
-        });
-
-        const rejectBtn = document.createElement("button");
-        rejectBtn.className = "btn btn-secondary";
-        rejectBtn.textContent = "Refuser";
-        rejectBtn.addEventListener("click", () => {
-          updateSuggestionStatus(item.id, "rejected");
-          renderOrga();
-        });
-
-        actions.appendChild(importBtn);
-        actions.appendChild(rejectBtn);
-        row.appendChild(actions);
-        adminSuggestionsReviewList.appendChild(row);
-      });
-    }
-
     // ===== Orga =====
     function sortMapDesc(map) {
       return Object.entries(map).sort((a, b) => b[1] - a[1]);
     }
 
-    function setActiveAdminTab(tabName) {
-      const tabBtns = document.querySelectorAll(".admin-tab-btn");
-      const tabContents = document.querySelectorAll(".admin-tab-content");
-      tabBtns.forEach(btn => btn.classList.toggle("active", btn.getAttribute("data-tab") === tabName));
-      tabContents.forEach(content => content.classList.toggle("active", content.id === `tab-${tabName}`));
-    }
-
-    function saveAdminTabOrder(nav) {
-      const order = [...nav.querySelectorAll(".admin-tab-btn")].map(btn => btn.getAttribute("data-tab"));
-      saveJSON(STORAGE_KEYS.adminTabOrder, order);
-    }
-
-    function applySavedAdminTabOrder(nav) {
-      const saved = loadJSON(STORAGE_KEYS.adminTabOrder, null);
-      if (!Array.isArray(saved) || !saved.length) return;
-
-      const btnById = new Map(
-        [...nav.querySelectorAll(".admin-tab-btn")].map(btn => [btn.getAttribute("data-tab"), btn])
-      );
-      const contentById = new Map(
-        [...document.querySelectorAll(".admin-tab-content")].map(panel => [panel.id.replace("tab-", ""), panel])
-      );
-
-      const normalized = saved.filter(id => btnById.has(id));
-      btnById.forEach((_, id) => {
-        if (!normalized.includes(id)) normalized.push(id);
-      });
-
-      normalized.forEach(id => {
-        const btn = btnById.get(id);
-        const panel = contentById.get(id);
-        if (btn) nav.appendChild(btn);
-        if (panel && panel.parentElement) panel.parentElement.appendChild(panel);
-      });
-    }
-
-    function initAdminTabReorder(nav) {
-      let draggedBtn = null;
-
-      function getDropTarget(event) {
-        return event.target.closest(".admin-tab-btn");
-      }
-
-      function attachDragHandlers(btn) {
-        btn.draggable = true;
-        btn.title = "Glisser-déposer pour réordonner";
-
-        btn.addEventListener("dragstart", () => {
-          draggedBtn = btn;
-          btn.classList.add("is-dragging");
-        });
-
-        btn.addEventListener("dragend", () => {
-          btn.classList.remove("is-dragging");
-          draggedBtn = null;
-          saveAdminTabOrder(nav);
-        });
-      }
-
-      [...nav.querySelectorAll(".admin-tab-btn")].forEach(attachDragHandlers);
-
-      nav.addEventListener("dragover", (event) => {
-        if (!draggedBtn) return;
-        event.preventDefault();
-        const target = getDropTarget(event);
-        if (!target || target === draggedBtn) return;
-
-        const rect = target.getBoundingClientRect();
-        const shouldInsertBefore = event.clientX < rect.left + rect.width / 2;
-        if (shouldInsertBefore) {
-          nav.insertBefore(draggedBtn, target);
-        } else {
-          nav.insertBefore(draggedBtn, target.nextElementSibling);
-        }
-      });
-    }
-
-    function initAdminTabs() {
-      const nav = document.querySelector(".admin-tabs-nav");
-      if (!nav) return;
-
-      applySavedAdminTabOrder(nav);
-      initAdminTabReorder(nav);
-
-      const tabBtns = [...nav.querySelectorAll(".admin-tab-btn")];
-      const activeBtn = tabBtns.find(btn => btn.classList.contains("active"));
-      const activeTab = activeBtn?.getAttribute("data-tab") || tabBtns[0]?.getAttribute("data-tab");
-      if (activeTab) setActiveAdminTab(activeTab);
-
-      tabBtns.forEach(btn => {
-        btn.addEventListener("click", (e) => {
-          e.preventDefault();
-          const tabName = btn.getAttribute("data-tab");
-          if (!tabName) return;
-          setActiveAdminTab(tabName);
-        });
-      });
-
-      const resetBtn = document.getElementById("admin-reset-tab-order-btn");
-      if (resetBtn) {
-        resetBtn.addEventListener("click", () => {
-          localStorage.removeItem(STORAGE_KEYS.adminTabOrder);
-          const defaultOrder = ["settings", "missions", "moderation", "suggestions", "stats"];
-          defaultOrder.forEach(id => {
-            const btn = nav.querySelector(`.admin-tab-btn[data-tab="${id}"]`);
-            const panel = document.getElementById(`tab-${id}`);
-            if (btn) nav.appendChild(btn);
-            if (panel && panel.parentElement) panel.parentElement.appendChild(panel);
-          });
-          setActiveAdminTab("settings");
-          Toast.info("Ordre des onglets réinitialisé.");
-        });
-      }
-    }
-
     function renderOrga() {
-      // Initialize tabs on first render
-      if (!document.body.hasAttribute("data-tabs-init")) {
-        initAdminTabs();
-        document.body.setAttribute("data-tabs-init", "true");
-      }
-
       const results = getResults();
       const shown = countShown(results);
       const done = countDone(results);
       const skipped = countSkipped();
       const photos = countPhotos(results);
       const shared = countSharedPhotos(results);
-      const pendingPhotos = countPendingPhotos(results);
       const messageCount = countOrgaMessages(results);
-      const suggestions = getSuggestions().filter(item => item.status === "proposed").length;
+      const suggestions = getSuggestions().length;
 
       const completionRate = shown ? Math.round((done / shown) * 100) : 0;
       const shareRate = photos ? Math.round((shared / photos) * 100) : 0;
@@ -3991,7 +1773,6 @@
       const recommendations = [];
       if (!done) recommendations.push("Démarrer avec une animation d'amorce pour générer les premières validations.");
       if (done && completionRate < 50) recommendations.push("Le taux de validation est bas : proposer plus de missions niveau 1 à 2.");
-      if (pendingPhotos > 0) recommendations.push(`${pendingPhotos} photo(s) attendent une validation admin.`);
       if (shared < 3) recommendations.push("Peu de photos partagées : rappeler le choix 'partager avec les participants'.");
       if (suggestions > 0) recommendations.push("Des idées de missions sont en attente : trier et activer les meilleures.");
       if (!recommendations.length) recommendations.push("Rythme global sain : continuer et observer les enchaînements les plus engageants.");
@@ -3999,7 +1780,7 @@
       orgaSummary.innerHTML = [
         `<div><strong>Participation:</strong> ${done} validations sur ${shown} missions vues (${completionRate}%).</div>`,
         `<div><strong>Fluidité:</strong> ${skipped} missions passées, ${feedbackRate}% des validations avec message orga.</div>`,
-        `<div><strong>Partage:</strong> ${shared} photos validées sur ${photos} photos (${shareRate}%).</div>`,
+        `<div><strong>Partage:</strong> ${shared} photos partagées sur ${photos} photos (${shareRate}%).</div>`,
         `<div><strong>Recommandations:</strong> ${escapeHtml(recommendations.join(" "))}</div>`
       ].join("");
 
@@ -4009,7 +1790,6 @@
         passées: skipped,
         photos: photos,
         partagées: shared,
-        en_attente: pendingPhotos,
         messages: messageCount,
         propositions: suggestions
       };
@@ -4056,10 +1836,6 @@
             return `<div><strong>${mission ? escapeHtml(mission.text) : "Mission"}</strong><br><span class="micro">${formatDateTime(r.createdAt)}${r.displayName ? ` · ${escapeHtml(r.displayName)}` : ""}</span><br>${escapeHtml(r.orgaMessage)}</div>`;
           }).join("")
         : '<div class="micro">Aucun message pour l\'instant.</div>';
-
-      renderAdminPhotoReview();
-      renderAdminMissionList();
-      renderAdminSuggestionsReview();
     }
 
     // ===== Utilitaires =====
@@ -4073,53 +1849,13 @@
     }
 
     // ===== Événements =====
-    document.getElementById("admin-access-btn").addEventListener("click", openAdminAccess);
-    if (clearThemeBtn) {
-      clearThemeBtn.addEventListener("click", () => {
-        STATE.selectedTheme = null;
-        renderThemePicker();
-      });
-    }
-    if (flagMissionEditBtn) {
-      flagMissionEditBtn.addEventListener("click", flagCurrentMissionForEdit);
-    }
-
-    // "Je joue" lance directement une mission, en tenant compte du thème choisi si présent
     document.getElementById("start-btn").addEventListener("click", startGame);
-
     document.getElementById("journal-btn").addEventListener("click", () => showScreen("journal"));
     document.getElementById("validate-mission-btn").addEventListener("click", openValidation);
     document.getElementById("another-mission-btn").addEventListener("click", goToAnotherMission);
     document.getElementById("confirm-validation-btn").addEventListener("click", confirmValidation);
     document.getElementById("cancel-validation-btn").addEventListener("click", () => showScreen("mission"));
     document.getElementById("submit-suggestion-btn").addEventListener("click", submitSuggestion);
-    document.getElementById("admin-save-settings-btn").addEventListener("click", saveAdminSettingsFromForm);
-    if (adminSaveMissionBtn) {
-      adminSaveMissionBtn.addEventListener("click", saveAdminMissionFromForm);
-    }
-    if (adminCancelMissionEditBtn) {
-      adminCancelMissionEditBtn.addEventListener("click", resetAdminMissionForm);
-    }
-    if (adminResetMissionsBtn) {
-      adminResetMissionsBtn.addEventListener("click", () => {
-        if (!window.confirm("Réinitialiser la liste complète des missions ?")) return;
-        resetMissions();
-        resetAdminMissionForm();
-        renderOrga();
-        updateProgressBar();
-        Toast.success("Missions réinitialisées.");
-      });
-    }
-    if (adminMissionSearch) {
-      adminMissionSearch.addEventListener("input", renderAdminMissionList);
-    }
-    if (missionModeSelect) {
-      missionModeSelect.addEventListener("change", () => {
-        setMissionMode(missionModeSelect.value);
-        Toast.info("Mode de missions mis à jour.");
-        updateProgressBar();
-      });
-    }
     photoInput.addEventListener("change", handlePhotoChange);
 
     // ===== Initialisation =====
@@ -4128,17 +1864,13 @@
       await bootstrapRemoteState();
       loadMissions();
       hydrateProfile();
-      dedupeMissionModeOptions();
-      hydrateMissionMode();
-      hydrateAdminSettingsForm();
-      renderThemePicker();
       renderJournal();
       renderSuggestions();
       renderPhotos();
       updateProgressBar();
 
       if (location.hash === "#orga") {
-        openAdminAccess();
+        showScreen("orga");
       }
       if (location.hash === "#missions") {
         showScreen("missions");
@@ -4149,53 +1881,7 @@
     }
 
     init();
-
-    if ("serviceWorker" in navigator) {
-      window.addEventListener("load", () => {
-        navigator.serviceWorker.register("./sw.js").catch(error => {
-          console.error("Service Worker non enregistre:", error);
-        });
-      });
-    }
-
-    // ===== PWA install prompt =====
-    let _deferredInstallPrompt = null;
-    window.addEventListener("beforeinstallprompt", (e) => {
-      e.preventDefault();
-      _deferredInstallPrompt = e;
-      const btn = document.getElementById("install-btn");
-      if (btn) btn.style.display = "";
-    });
-    document.getElementById("install-btn").addEventListener("click", async () => {
-      if (!_deferredInstallPrompt) return;
-      _deferredInstallPrompt.prompt();
-      const { outcome } = await _deferredInstallPrompt.userChoice;
-      _deferredInstallPrompt = null;
-      if (outcome === "accepted") {
-        document.getElementById("install-btn").style.display = "none";
-      }
-    });
-    window.addEventListener("appinstalled", () => {
-      document.getElementById("install-btn").style.display = "none";
-      _deferredInstallPrompt = null;
-    });
-
-    // ===== Offline / Online detection =====
-    window.addEventListener("offline", () => {
-      Toast.warning("Hors ligne — l'app continue de fonctionner normalement.", 4000);
-    });
-    window.addEventListener("online", () => {
-      Toast.success("Connexion rétablie.", 3000);
-    });
 </script>
-
-<!-- Roue de tirage (overlay plein écran) -->
-<div id="wheel-overlay" class="wheel-overlay draw-hidden" aria-live="polite">
-  <h2 id="wheel-title">Tirage en cours…</h2>
-  <div id="wheel-theme-label" class="wheel-theme-label"></div>
-  <div id="wheel-reel" class="wheel-reel">🎲</div>
-  <p id="wheel-subtext" class="wheel-subtext">La roue tourne…</p>
-</div>
 
 </body>
 </html>
