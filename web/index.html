@@ -1278,7 +1278,6 @@
       </div>
     </section>
 
-    <section id="screen-missions" class="screen" style="display: none;"></section>
     <section id="screen-journal" class="screen">
       <div class="stack">
         <div>
@@ -1584,7 +1583,6 @@
       missions: "festival_missions",
       backendConfig: "festival_backend_config",
       adminSettings: "festival_admin_settings",
-      missionMode: "festival_mission_mode",
       adminPin: "festival_admin_pin",
       adminRecoveryEmail: "festival_admin_recovery_email",
       adminTabOrder: "festival_admin_tab_order",
@@ -1697,22 +1695,6 @@
 
     function setAdminRecoveryEmail(value) {
       localStorage.setItem(STORAGE_KEYS.adminRecoveryEmail, value);
-    }
-
-    function getMissionMode() {
-      // Mode unique: le filtrage se fait via le choix de thème (icônes).
-      return "all";
-    }
-
-    function setMissionMode(mode) {
-      localStorage.setItem(STORAGE_KEYS.missionMode, mode);
-    }
-
-    function missionMatchesSelectedMode(mission, mode) {
-      const theme = mission.theme || "festival";
-      if (mode === "all") return true;
-      if (mode === "health") return theme === "health_sport" || theme === "health_mental" || theme === "health_wellness" || theme === "health_breathing" || theme === "health_yoga";
-      return theme === mode;
     }
 
     function missionAllowedByAdmin(mission, settings = getAdminSettings()) {
@@ -2063,7 +2045,6 @@
     function getMissionPoolForProgression(state) {
       const level = state.internalLevel;
       const allowedLevels = [level, level - 1, level + 1].filter(n => n >= 1 && n <= 8);
-      const mode = getMissionMode();
       const adminSettings = getAdminSettings();
       const selectedSubThemes = STATE?.selectedSubThemes || {};
       const hasSubThemeSelection = Object.values(selectedSubThemes).some(v => v);
@@ -2075,15 +2056,12 @@
         if (m.id === state.currentMissionId) return false;
         if (!missionAllowedByAdmin(m, adminSettings)) return false;
         if (missionBlockedByFunMode(m, adminSettings)) return false;
-        if (!missionMatchesSelectedMode(m, mode)) return false;
-        // Filtre par sous-thèmes sélectionnés
         if (hasSubThemeSelection && !selectedSubThemes[m.theme]) return false;
         return true;
       });
     }
 
     function getFallbackMissionPool(state) {
-      const mode = getMissionMode();
       const adminSettings = getAdminSettings();
       const selectedSubThemes = STATE?.selectedSubThemes || {};
       const hasSubThemeSelection = Object.values(selectedSubThemes).some(v => v);
@@ -2093,7 +2071,6 @@
         m.id !== state.currentMissionId &&
         missionAllowedByAdmin(m, adminSettings) &&
         !missionBlockedByFunMode(m, adminSettings) &&
-        missionMatchesSelectedMode(m, mode) &&
         (!hasSubThemeSelection || selectedSubThemes[m.theme])
       );
     }
@@ -3057,7 +3034,6 @@
       currentMission: null,
       currentPhotoDataUrl: "",
       drawMode: null,        // "choose-theme" | "random-theme"
-      selectedTheme: null,   // [DEPRECATED] pour compatibilité
       selectedCategory: null,   // "festival" | "quotidien" | "sante" | null
       selectedSubThemes: {},    // { themeId: boolean }
       adminEditingMissionId: null,
@@ -3070,7 +3046,6 @@
       mission: document.getElementById("screen-mission"),
       validation: document.getElementById("screen-validation"),
       journal: document.getElementById("screen-journal"),
-      missions: document.getElementById("screen-missions"),
       photos: document.getElementById("screen-photos"),
       suggest: document.getElementById("screen-suggest"),
       orga: document.getElementById("screen-orga")
@@ -3095,7 +3070,6 @@
     const suggestCategory = document.getElementById("suggest-category");
     const suggestLevel = document.getElementById("suggest-level");
     const suggestionsList = document.getElementById("suggestions-list");
-    const missionModeSelect = document.getElementById("mission-mode-select");
     const progressBarFill = document.getElementById("progress-bar-fill");
     const progressText = document.getElementById("progress-text");
     const photoVisibilityWrap = document.getElementById("photo-visibility-wrap");
@@ -3130,20 +3104,6 @@
     const adminMissionsList = document.getElementById("admin-missions-list");
     const adminExcludedMissionsList = document.getElementById("admin-excluded-missions-list");
     const adminSuggestionsReviewList = document.getElementById("admin-suggestions-review-list");
-
-    function dedupeMissionModeOptions() {
-      if (!missionModeSelect) return;
-      const seen = new Set();
-      [...missionModeSelect.options].forEach(opt => {
-        const key = (opt.value || "").trim();
-        if (!key) return;
-        if (seen.has(key)) {
-          opt.remove();
-          return;
-        }
-        seen.add(key);
-      });
-    }
 
     // ===== Navigation =====
     function openAdminAccess() {
@@ -3248,14 +3208,12 @@
 
     function updateProgressBar() {
       const state = getProgressState();
-      const mode = getMissionMode();
       const adminSettings = getAdminSettings();
       const available = MISSIONS.filter(m =>
         m.active &&
         !m.bonus &&
         missionAllowedByAdmin(m, adminSettings) &&
-        !missionBlockedByFunMode(m, adminSettings) &&
-        missionMatchesSelectedMode(m, mode)
+        !missionBlockedByFunMode(m, adminSettings)
       );
       const availableIds = new Set(available.map(m => m.id));
       const totalMissions = available.length;
@@ -3280,10 +3238,6 @@
     function hydrateProfile() {
       const profile = getUserProfile();
       displayNameInput.value = profile.displayName || "";
-    }
-
-    function hydrateMissionMode() {
-      if (missionModeSelect) missionModeSelect.value = getMissionMode();
     }
 
     function hydrateAdminSettingsForm() {
@@ -3344,14 +3298,12 @@
 
     function getAvailableThemesForDraw() {
       if (!MISSIONS.length) loadMissions();
-      const mode = getMissionMode();
       const adminSettings = getAdminSettings();
 
       const available = MISSIONS.filter(m => {
         if (!m.active || m.bonus) return false;
         if (!missionAllowedByAdmin(m, adminSettings)) return false;
         if (missionBlockedByFunMode(m, adminSettings)) return false;
-        if (!missionMatchesSelectedMode(m, mode)) return false;
         return true;
       });
 
@@ -3541,14 +3493,6 @@
           }, 90);
         }
       }, 80);
-    }
-
-    function showDrawModeBox() {
-      renderThemePicker();
-    }
-
-    function hideDrawUI() {
-      return;
     }
 
     function launchMissionDraw() {
@@ -4780,7 +4724,6 @@
     }
     if (clearThemeBtn) {
       clearThemeBtn.addEventListener("click", () => {
-        STATE.selectedTheme = null;
         STATE.selectedCategory = null;
         STATE.selectedSubThemes = {};
         localStorage.removeItem(STORAGE_KEYS.selectedCategory);
@@ -4826,13 +4769,6 @@
       STATE.activeThemeFilter = null;
     }
     
-    if (missionModeSelect) {
-      missionModeSelect.addEventListener("change", () => {
-        setMissionMode(missionModeSelect.value);
-        Toast.info("Mode de missions mis à jour.");
-        updateProgressBar();
-      });
-    }
     photoInput.addEventListener("change", handlePhotoChange);
 
     // ===== Initialisation =====
@@ -4841,8 +4777,6 @@
       await bootstrapRemoteState();
       loadMissions();
       hydrateProfile();
-      dedupeMissionModeOptions();
-      hydrateMissionMode();
       hydrateAdminSettingsForm();
       // Charger la catégorie et sous-thèmes sélectionnés
       STATE.selectedCategory = localStorage.getItem(STORAGE_KEYS.selectedCategory) || null;
