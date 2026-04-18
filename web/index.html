@@ -4049,15 +4049,6 @@
       // EFFACER COMPLÈTEMENT le DOM d'abord
       adminMissionsList.innerHTML = "";
       
-      // Si aucun thème n'est sélectionné ET pas de recherche: afficher "0 / total" et retourner
-      if (activeTheme === null && !query) {
-        console.log("📭 Aucun thème sélectionné - affichage initial");
-        if (adminMissionCountEl) {
-          adminMissionCountEl.textContent = `🔍 0 / ${MISSIONS.length}`;
-        }
-        return;
-      }
-      
       // Filtrer STRICTEMENT les missions
       let items = MISSIONS.filter(m => {
         // Filtre par thème
@@ -4090,11 +4081,7 @@
       if (missionCountEl) {
         const total = MISSIONS.length;
         const shown = items.length;
-        let countText = `${shown}`;
-        if (activeTheme !== null || query) {
-          countText += ` / ${total}`;
-        }
-        missionCountEl.textContent = `🔍 ${countText}`;
+        missionCountEl.textContent = `🔍 ${shown} / ${total}`;
       }
 
       if (!items.length) {
