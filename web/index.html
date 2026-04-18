@@ -3360,38 +3360,6 @@
       container.style.flexDirection = "column";
       container.style.gap = "12px";
 
-      const quickThemeSection = document.createElement("div");
-      quickThemeSection.style.display = "flex";
-      quickThemeSection.style.flexDirection = "column";
-      quickThemeSection.style.gap = "8px";
-      quickThemeSection.innerHTML = "<div class='micro'>Thèmes directs:</div>";
-
-      const quickThemeBtnContainer = document.createElement("div");
-      quickThemeBtnContainer.className = "theme-list";
-
-      DRAW_THEMES.forEach(theme => {
-        const btn = document.createElement("button");
-        btn.type = "button";
-        btn.className = "theme-btn" + (STATE.selectedSubThemes[theme.id] && Object.values(STATE.selectedSubThemes).filter(Boolean).length === 1 ? " active" : "");
-        btn.innerHTML = `<span class="theme-icon">${theme.icon}</span><span class="theme-label">${theme.label}<span class="theme-checkmark">✓</span></span>`;
-        btn.addEventListener("click", () => {
-          const categoryId = getCategoryForThemeId(theme.id);
-          STATE.selectedCategory = categoryId;
-          STATE.selectedSubThemes = { [theme.id]: true };
-          if (categoryId) {
-            localStorage.setItem(STORAGE_KEYS.selectedCategory, categoryId);
-          } else {
-            localStorage.removeItem(STORAGE_KEYS.selectedCategory);
-          }
-          saveJSON(STORAGE_KEYS.selectedSubThemes, STATE.selectedSubThemes);
-          renderThemePicker();
-        });
-        quickThemeBtnContainer.appendChild(btn);
-      });
-
-      quickThemeSection.appendChild(quickThemeBtnContainer);
-      container.appendChild(quickThemeSection);
-
       // Étape 1: Sélectionner une catégorie
       const categorySection = document.createElement("div");
       categorySection.style.display = "flex";
