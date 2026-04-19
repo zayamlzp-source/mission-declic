@@ -1138,11 +1138,11 @@
 
           <div id="theme-picker-box" class="draw-mode-box">
             <div class="row" style="justify-content:space-between;align-items:center;">
-              <h3>Choisis un thème</h3>
+              <h3>Choisis une catégorie</h3>
               <button id="clear-theme-btn" type="button" class="btn btn-link">Surprends-moi</button>
             </div>
             <div id="theme-list" class="theme-list"></div>
-            <div id="theme-choice-label" class="micro">Aucun thème imposé: tirage libre.</div>
+            <div id="theme-choice-label" class="micro">Aucune catégorie imposée : tirage libre.</div>
           </div>
 
           <div class="home-actions">
@@ -1336,6 +1336,7 @@
 
               <div class="admin-grid" style="margin-bottom: 8px;">
                 <div class="check-row"><input id="admin-theme-festival" type="checkbox" /><label for="admin-theme-festival">Festival</label></div>
+                <div class="check-row"><input id="admin-theme-communaute" type="checkbox" /><label for="admin-theme-communaute">Communauté</label></div>
                 <div class="check-row"><input id="admin-theme-pool" type="checkbox" /><label for="admin-theme-pool">Piscine</label></div>
                 <div class="check-row"><input id="admin-theme-daily" type="checkbox" /><label for="admin-theme-daily">Quotidien</label></div>
                 <div class="check-row"><input id="admin-theme-health-sport" type="checkbox" /><label for="admin-theme-health-sport">Santé sport</label></div>
@@ -1548,7 +1549,7 @@
     ]);
     let remoteSyncTimer = null;
 
-    const THEME_KEYS = ["festival", "pool", "daily", "health_sport", "health_mental", "health_wellness", "health_breathing", "health_yoga"];
+    const THEME_KEYS = ["festival", "communauté", "pool", "daily", "health_sport", "health_mental", "health_wellness", "health_breathing", "health_yoga"];
 
     // Thèmes affichés dans le sélecteur de tirage
     // Catégories principales
@@ -1560,8 +1561,8 @@
 
     // Mapping catégories → sous-thèmes (chips affichés dans le sélecteur)
     const CATEGORY_SUBTHEMES = {
-      festival: ["pool"],
-      quotidien: ["pool", "health_sport", "health_mental", "health_wellness", "health_breathing", "health_yoga"],
+      festival: ["communauté", "pool"],
+      quotidien: ["communauté", "pool", "health_sport", "health_mental", "health_wellness", "health_breathing", "health_yoga"],
       sante: ["health_sport", "health_mental", "health_wellness", "health_breathing", "health_yoga", "pool"]
     };
 
@@ -1569,12 +1570,13 @@
     const CATEGORY_BASE_THEMES = {
       festival: ["festival"],
       quotidien: ["daily"],
-      sante: []
+      sante: ["health_sport", "health_mental", "health_wellness", "health_breathing", "health_yoga"]
     };
 
     // Tous les sous-thèmes disponibles
     const DRAW_THEMES = [
       { id: "festival",         label: "Festival",    icon: "🎪" },
+      { id: "communauté",       label: "Communauté",  icon: "🤝" },
       { id: "daily",            label: "Quotidien",   icon: "☀️" },
       { id: "pool",             label: "Piscine",     icon: "🏊" },
       { id: "health_sport",     label: "Sport",       icon: "💪" },
@@ -1591,6 +1593,7 @@
         excludedMissionIds: [2, 6, 11, 20, 22, 23, 25, 26, 27, 30, 31, 32, 33, 34, 35, 36, 37, 38, 41, 42, 45, 50, 51, 52, 53, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 68, 69, 70, 77, 78, 79, 80, 84, 85, 86, 87, 88, 508],
         enabledThemes: {
           festival: true,
+          communauté: true,
           pool: true,
           daily: true,
           health_sport: true,
@@ -1614,6 +1617,7 @@
         excludedMissionIds,
         enabledThemes: {
           festival: raw.enabledThemes?.festival ?? defaults.enabledThemes.festival,
+          communauté: raw.enabledThemes?.communauté ?? defaults.enabledThemes.communauté,
           pool: raw.enabledThemes?.pool ?? defaults.enabledThemes.pool,
           daily: raw.enabledThemes?.daily ?? defaults.enabledThemes.daily,
           health_sport: raw.enabledThemes?.health_sport ?? defaults.enabledThemes.health_sport,
@@ -2431,7 +2435,7 @@
         text: r.t,
         category: CATEGORY_MAP[r.c] || "JOUE",
         level: r.l,
-        theme: "festival",
+        theme: "communauté",
         tags: ["communauté", r.c],
         details: r.d
       }));
@@ -2471,34 +2475,215 @@
       }));
     }
 
+    const dailyIntergenerationMissions = [
+      {
+        id: "daily_intergen_001",
+        scope: "daily",
+        variant: "solo",
+        module: "core",
+        level: 1,
+        theme: "lien",
+        tags: ["social", "intergenerationnel", "presence"],
+        text: "Va voir une personne âgée et prends un vrai moment avec elle.",
+        details: "Pas juste un salut rapide. Reste un peu. Écoute, regarde, laisse de la place à la conversation ou au silence.",
+        setup: "Choisis une personne : voisin, grand-parent, résident d'un home, connaissance du quartier.",
+        after: "Note une chose que tu as découverte, ressentie ou entendue."
+      },
+      {
+        id: "daily_intergen_002",
+        scope: "daily",
+        variant: "solo",
+        module: "core",
+        level: 2,
+        theme: "lien",
+        tags: ["social", "intergenerationnel", "entraide", "attention"],
+        text: "Apporte un petit quelque chose à une personne âgée.",
+        details: "Ça peut être un repas, un goûter, un fruit, du pain, une fleur, un dessin ou une boisson chaude. Le but n'est pas la valeur de ce que tu apportes, mais l'attention portée.",
+        setup: "Prépare quelque chose de simple, réaliste, respectueux et adapté.",
+        after: "Observe ce que ce petit geste change dans la rencontre."
+      },
+      {
+        id: "daily_intergen_003",
+        scope: "daily",
+        variant: "solo",
+        module: "core",
+        level: 1,
+        theme: "lien",
+        tags: ["social", "intergenerationnel", "memoire", "ecoute"],
+        text: "Demande à une personne âgée de te raconter un souvenir important de sa vie.",
+        details: "Pose une vraie question simple et laisse la place au récit.",
+        setup: "Tu peux demander : « C'est quoi un moment dont vous vous souvenez encore très bien ? »",
+        after: "Garde une phrase, une image ou une émotion de ce qu'elle t'a transmis."
+      },
+      {
+        id: "daily_intergen_004",
+        scope: "daily",
+        variant: "solo",
+        module: "core",
+        level: 1,
+        theme: "lien",
+        tags: ["social", "intergenerationnel", "presence"],
+        text: "Fais une visite courte mais entière à une personne âgée.",
+        details: "Même 10 à 20 minutes suffisent si tu es vraiment présent, sans téléphone ni dispersion.",
+        setup: "Préviens si nécessaire, ou profite d'un passage possible.",
+        after: "Demande-toi si tu étais vraiment là."
+      },
+      {
+        id: "daily_intergen_005",
+        scope: "daily",
+        variant: "solo",
+        module: "core",
+        level: 2,
+        theme: "lien",
+        tags: ["social", "intergenerationnel", "entraide", "concret"],
+        text: "Propose un petit service concret à une personne âgée.",
+        details: "Par exemple : porter quelque chose, faire une petite course, lire un papier, aider avec un téléphone, ranger un objet.",
+        setup: "Propose sans imposer. Pars de ce qui est réellement utile.",
+        after: "Note ce qui a été vraiment utile, pas juste ce que tu imaginais."
+      },
+      {
+        id: "daily_intergen_006",
+        scope: "daily",
+        variant: "solo",
+        module: "core",
+        level: 1,
+        theme: "lien",
+        tags: ["social", "intergenerationnel", "presence", "partage"],
+        text: "Partage un thé, un café, une tisane ou un goûter avec une personne âgée.",
+        details: "Le but est de créer un moment simple et humain, sans performance ni pression.",
+        setup: "Prévois un moment calme, même court.",
+        after: "Observe ce qui se passe quand on prend juste le temps."
+      },
+      {
+        id: "daily_intergen_007",
+        scope: "daily",
+        variant: "solo",
+        module: "core",
+        level: 2,
+        theme: "lien",
+        tags: ["social", "intergenerationnel", "presence", "ecoute"],
+        text: "Passe un moment avec une personne âgée sans chercher à remplir tous les silences.",
+        details: "Accepte les silences, le rythme plus lent, les détours de parole. Ne cherche pas à animer à tout prix.",
+        setup: "Viens avec une vraie disponibilité intérieure.",
+        after: "Observe ton propre rapport au silence et au temps."
+      },
+      {
+        id: "daily_intergen_008",
+        scope: "daily",
+        variant: "solo",
+        module: "core",
+        level: 2,
+        theme: "lien",
+        tags: ["social", "intergenerationnel", "ecoute", "attention"],
+        text: "Demande à une personne âgée ce qui lui ferait plaisir ces jours.",
+        details: "Ça peut être petit : une visite, une promenade, une photo imprimée, une course, une chanson, un peu de compagnie.",
+        setup: "Pose la question simplement, sans promettre trop vite.",
+        after: "Si c'est possible, réalise ensuite une version simple de ce plaisir."
+      },
+      {
+        id: "daily_intergen_009",
+        scope: "daily",
+        variant: "solo",
+        module: "core",
+        level: 3,
+        theme: "lien",
+        tags: ["social", "intergenerationnel", "presence", "sortie"],
+        text: "Accompagne une personne âgée pour une petite promenade si c'est possible.",
+        details: "Le but n'est pas la distance. C'est de changer d'air, regarder autour, partager un moment.",
+        setup: "Adapte-toi à son rythme, à ses capacités et à son envie.",
+        after: "Note ce que l'extérieur change dans l'échange."
+      },
+      {
+        id: "daily_intergen_010",
+        scope: "daily",
+        variant: "solo",
+        module: "core",
+        level: 1,
+        theme: "lien",
+        tags: ["social", "intergenerationnel", "attention", "beaute"],
+        text: "Apporte un peu de beauté dans la journée d'une personne âgée.",
+        details: "Ça peut être une fleur, une chanson, une photo, une histoire, un dessin ou un petit objet doux ou drôle.",
+        setup: "Choisis quelque chose de simple et humain.",
+        after: "Observe ce qui touche vraiment."
+      },
+      {
+        id: "daily_intergen_011",
+        scope: "daily",
+        variant: "solo",
+        module: "core",
+        level: 2,
+        theme: "lien",
+        tags: ["social", "intergenerationnel", "memoire", "ecoute"],
+        text: "Demande à une personne âgée de te raconter son ancien métier ou une époque marquante de sa vie.",
+        details: "Le but est de recevoir un morceau de vie, pas juste d'enchaîner des questions.",
+        setup: "Tu peux demander : « C'était comment, vos journées, à cette époque ? »",
+        after: "Note une chose qui t'a surpris."
+      },
+      {
+        id: "daily_intergen_012",
+        scope: "daily",
+        variant: "solo",
+        module: "core",
+        level: 1,
+        theme: "lien",
+        tags: ["social", "intergenerationnel", "presence"],
+        text: "Passe dire bonjour à une personne âgée juste pour montrer qu'elle existe dans ton regard.",
+        details: "Pas besoin de faire long. Parfois, une présence simple et sincère suffit déjà.",
+        setup: "Choisis un moment réaliste et respectueux.",
+        after: "Observe la différence entre faire quelque chose et être là."
+      },
+      {
+        id: "daily_intergen_013",
+        scope: "daily",
+        variant: "solo",
+        module: "core",
+        level: 3,
+        theme: "lien",
+        tags: ["social", "intergenerationnel", "entraide", "numerique"],
+        text: "Aide une personne âgée à envoyer un message, passer un appel ou retrouver une photo.",
+        details: "Le soutien peut être technique ou relationnel. Prends le temps sans imposer ton rythme.",
+        setup: "Pars d'un besoin concret ou d'une envie exprimée.",
+        after: "Regarde si cette petite aide ouvre quelque chose de plus grand."
+      },
+      {
+        id: "daily_intergen_014",
+        scope: "daily",
+        variant: "solo",
+        module: "core",
+        level: 2,
+        theme: "lien",
+        tags: ["social", "intergenerationnel", "transmission", "ecoute"],
+        text: "Demande à une personne âgée une phrase ou un conseil qu'elle aimerait transmettre.",
+        details: "C'est une mission de récolte de parole, pas une interview froide.",
+        setup: "Tu peux demander : « Si vous aviez une chose à transmettre, ce serait quoi ? »",
+        after: "Écris cette phrase quelque part."
+      },
+      {
+        id: "daily_intergen_015",
+        scope: "daily",
+        variant: "solo",
+        module: "core",
+        level: 4,
+        theme: "lien",
+        tags: ["social", "intergenerationnel", "engagement", "presence"],
+        text: "Reviens voir une deuxième fois la même personne âgée.",
+        details: "Le lien change souvent à partir de la deuxième rencontre. Cette fois, il ne s'agit plus juste d'un élan ponctuel.",
+        setup: "Choisis une visite simple, sans pression.",
+        after: "Compare la première et la deuxième rencontre."
+      }
+    ];
+
     function buildDailyIntergenerationMissions(startId) {
-      const raw = [
-        { l: 1, t: "Va voir une personne âgée et prends un vrai moment avec elle.", d: "Pas juste un salut rapide. Reste un peu. Écoute, regarde, laisse de la place à la conversation ou au silence.", s: "Choisis une personne : voisin, grand-parent, résident d'un home, connaissance du quartier.", a: "Note une chose que tu as découverte, ressentie ou entendue." },
-        { l: 2, t: "Apporte un petit quelque chose à une personne âgée.", d: "Ça peut être un repas, un goûter, un fruit, du pain, une fleur, un dessin ou une boisson chaude. Le but n'est pas la valeur de ce que tu apportes, mais l'attention portée.", s: "Prépare quelque chose de simple, réaliste, respectueux et adapté.", a: "Observe ce que ce petit geste change dans la rencontre." },
-        { l: 1, t: "Demande à une personne âgée de te raconter un souvenir important de sa vie.", d: "Pose une vraie question simple et laisse la place au récit.", s: "Tu peux demander : « C'est quoi un moment dont vous vous souvenez encore très bien ? »", a: "Garde une phrase, une image ou une émotion de ce qu'elle t'a transmis." },
-        { l: 1, t: "Fais une visite courte mais entière à une personne âgée.", d: "Même 10 à 20 minutes suffisent si tu es vraiment présent, sans téléphone ni dispersion.", s: "Préviens si nécessaire, ou profite d'un passage possible.", a: "Demande-toi si tu étais vraiment là." },
-        { l: 2, t: "Propose un petit service concret à une personne âgée.", d: "Par exemple : porter quelque chose, faire une petite course, lire un papier, aider avec un téléphone, ranger un objet.", s: "Propose sans imposer. Pars de ce qui est réellement utile.", a: "Note ce qui a été vraiment utile, pas juste ce que tu imaginais." },
-        { l: 1, t: "Partage un thé, un café, une tisane ou un goûter avec une personne âgée.", d: "Le but est de créer un moment simple et humain, sans performance ni pression.", s: "Prévois un moment calme, même court.", a: "Observe ce qui se passe quand on prend juste le temps." },
-        { l: 2, t: "Passe un moment avec une personne âgée sans chercher à remplir tous les silences.", d: "Accepte les silences, le rythme plus lent, les détours de parole. Ne cherche pas à animer à tout prix.", s: "Viens avec une vraie disponibilité intérieure.", a: "Observe ton propre rapport au silence et au temps." },
-        { l: 2, t: "Demande à une personne âgée ce qui lui ferait plaisir ces jours.", d: "Ça peut être petit : une visite, une promenade, une photo imprimée, une course, une chanson, un peu de compagnie.", s: "Pose la question simplement, sans promettre trop vite.", a: "Si c'est possible, réalise ensuite une version simple de ce plaisir." },
-        { l: 3, t: "Accompagne une personne âgée pour une petite promenade si c'est possible.", d: "Le but n'est pas la distance. C'est de changer d'air, regarder autour, partager un moment.", s: "Adapte-toi à son rythme, à ses capacités et à son envie.", a: "Note ce que l'extérieur change dans l'échange." },
-        { l: 1, t: "Apporte un peu de beauté dans la journée d'une personne âgée.", d: "Ça peut être une fleur, une chanson, une photo, une histoire, un dessin ou un petit objet doux ou drôle.", s: "Choisis quelque chose de simple et humain.", a: "Observe ce qui touche vraiment." },
-        { l: 2, t: "Demande à une personne âgée de te raconter son ancien métier ou une époque marquante de sa vie.", d: "Le but est de recevoir un morceau de vie, pas juste d'enchaîner des questions.", s: "Tu peux demander : « C'était comment, vos journées, à cette époque ? »", a: "Note une chose qui t'a surpris." },
-        { l: 1, t: "Passe dire bonjour à une personne âgée juste pour montrer qu'elle existe dans ton regard.", d: "Pas besoin de faire long. Parfois, une présence simple et sincère suffit déjà.", s: "Choisis un moment réaliste et respectueux.", a: "Observe la différence entre faire quelque chose et être là." },
-        { l: 3, t: "Aide une personne âgée à envoyer un message, passer un appel ou retrouver une photo.", d: "Le soutien peut être technique ou relationnel. Prends le temps sans imposer ton rythme.", s: "Pars d'un besoin concret ou d'une envie exprimée.", a: "Regarde si cette petite aide ouvre quelque chose de plus grand." },
-        { l: 2, t: "Demande à une personne âgée une phrase ou un conseil qu'elle aimerait transmettre.", d: "C'est une mission de récolte de parole, pas une interview froide.", s: "Tu peux demander : « Si vous aviez une chose à transmettre, ce serait quoi ? »", a: "Écris cette phrase quelque part." },
-        { l: 4, t: "Reviens voir une deuxième fois la même personne âgée.", d: "Le lien change souvent à partir de la deuxième rencontre. Cette fois, il ne s'agit plus juste d'un élan ponctuel.", s: "Choisis une visite simple, sans pression.", a: "Compare la première et la deuxième rencontre." }
-      ];
-      return raw.map((r, i) => createMission({
+      return dailyIntergenerationMissions.map((r, i) => createMission({
         id: startId + i,
-        text: r.t,
+        text: r.text,
         category: "LIEN",
-        level: r.l,
+        level: r.level,
         theme: "daily",
-        tags: ["social", "intergénérationnel", "présence"],
-        details: r.d,
-        setup: r.s,
-        after: r.a
+        tags: r.tags,
+        details: r.details,
+        setup: r.setup,
+        after: r.after
       }));
     }
 
@@ -2659,6 +2844,27 @@
           MISSIONS = coverage.missions;
           saveMissions(MISSIONS);
         }
+        // Ajoute les nouvelles missions de DEFAULT_MISSIONS absentes du stockage (nouveaux packs)
+        const existingIds = new Set(MISSIONS.map(m => m.id));
+        const newMissions = DEFAULT_MISSIONS
+          .filter(m => !existingIds.has(m.id))
+          .map(m => normalizeMissionRecord({ ...m }));
+        if (newMissions.length) {
+          MISSIONS = [...MISSIONS, ...newMissions];
+          saveMissions(MISSIONS);
+        }
+        // Resynchronise le thème depuis DEFAULT_MISSIONS (migration si thème a changé)
+        const defaultById = new Map(DEFAULT_MISSIONS.map(m => [m.id, m]));
+        let themePatched = false;
+        MISSIONS = MISSIONS.map(m => {
+          const def = defaultById.get(m.id);
+          if (def && def.theme && m.theme !== def.theme) {
+            themePatched = true;
+            return { ...m, theme: def.theme };
+          }
+          return m;
+        });
+        if (themePatched) saveMissions(MISSIONS);
       } else {
         MISSIONS = DEFAULT_MISSIONS.map(m => normalizeMissionRecord({ ...m }));
         saveMissions(MISSIONS);
@@ -3040,6 +3246,7 @@
     const adminAllowCommunityShare = document.getElementById("admin-allow-community-share");
     const adminFunMode = document.getElementById("admin-fun-mode");
     const adminThemeFestival = document.getElementById("admin-theme-festival");
+    const adminThemeCommunaute = document.getElementById("admin-theme-communaute");
     const adminThemePool = document.getElementById("admin-theme-pool");
     const adminThemeDaily = document.getElementById("admin-theme-daily");
     const adminThemeHealthSport = document.getElementById("admin-theme-health-sport");
@@ -3208,6 +3415,7 @@
       adminAllowCommunityShare.checked = settings.allowCommunityShare;
       if (adminFunMode) adminFunMode.checked = !!settings.funMode;
       if (adminThemeFestival) adminThemeFestival.checked = !!settings.enabledThemes.festival;
+      if (adminThemeCommunaute) adminThemeCommunaute.checked = !!settings.enabledThemes["communauté"];
       if (adminThemePool) adminThemePool.checked = !!settings.enabledThemes.pool;
       if (adminThemeDaily) adminThemeDaily.checked = !!settings.enabledThemes.daily;
       if (adminThemeHealthSport) adminThemeHealthSport.checked = !!settings.enabledThemes.health_sport;
@@ -3225,6 +3433,7 @@
 
       const enabledThemes = {
         festival: !!adminThemeFestival?.checked,
+        "communauté": !!adminThemeCommunaute?.checked,
         pool: !!adminThemePool?.checked,
         daily: !!adminThemeDaily?.checked,
         health_sport: !!adminThemeHealthSport?.checked,
@@ -3303,10 +3512,7 @@
         btn.innerHTML = `<span class="theme-icon">${cat.icon}</span><span class="theme-label">${cat.label}<span class="theme-checkmark">✓</span></span>`;
         btn.addEventListener("click", () => {
           STATE.selectedCategory = cat.id;
-          // Pré-sélectionne toutes les options par défaut
-          const themeIds = CATEGORY_SUBTHEMES[cat.id] || [];
           STATE.selectedSubThemes = {};
-          themeIds.forEach(id => { STATE.selectedSubThemes[id] = true; });
           localStorage.setItem(STORAGE_KEYS.selectedCategory, cat.id);
           saveJSON(STORAGE_KEYS.selectedSubThemes, STATE.selectedSubThemes);
           renderThemePicker();
@@ -3326,7 +3532,7 @@
         subThemeSection.style.display = "flex";
         subThemeSection.style.flexDirection = "column";
         subThemeSection.style.gap = "8px";
-        subThemeSection.innerHTML = "<div class='micro'>Toutes les options sont activées. Tu peux en décocher pour affiner:</div>";
+        subThemeSection.innerHTML = "<div class='micro'>Tu peux ajouter des options si tu veux élargir les missions proposées :</div>";
 
         const subThemeBtnContainer = document.createElement("div");
         subThemeBtnContainer.style.display = "flex";
@@ -3357,15 +3563,14 @@
           const cat = DRAW_CATEGORIES.find(c => c.id === STATE.selectedCategory);
           const selectedCount = Object.values(STATE.selectedSubThemes).filter(v => v).length;
           const availableCount = (CATEGORY_SUBTHEMES[STATE.selectedCategory] || []).length;
+
           if (selectedCount === 0) {
-            themeChoiceLabel.textContent = `${cat.label} sélectionné (toutes les missions ${cat.label.toLowerCase()}).`;
-          } else if (selectedCount === availableCount) {
-            themeChoiceLabel.textContent = `${cat.label} sélectionné (toutes les options activées).`;
+            themeChoiceLabel.textContent = `${cat.label} sélectionné (missions de base uniquement).`;
           } else {
-            themeChoiceLabel.textContent = `${cat.label} sélectionné (${selectedCount}/${availableCount} option(s) activée(s)).`;
+            themeChoiceLabel.textContent = `${cat.label} sélectionné + ${selectedCount}/${availableCount} option(s).`;
           }
         } else {
-          themeChoiceLabel.textContent = "Aucune catégorie imposée: tirage libre.";
+          themeChoiceLabel.textContent = "Aucune catégorie imposée : tirage libre.";
         }
       }
     }
@@ -3418,9 +3623,6 @@
 
       if (STATE.selectedCategory && selectedSubThemesWithValues) {
         activeSubThemes = STATE.selectedSubThemes;
-      } else if (STATE.selectedCategory) {
-        const themeIds = CATEGORY_SUBTHEMES[STATE.selectedCategory] || [];
-        themeIds.forEach(id => { activeSubThemes[id] = true; });
       }
 
       const mission = STATE.selectedCategory
@@ -3457,9 +3659,6 @@
 
       if (STATE.selectedCategory && selectedSubThemesWithValues) {
         activeSubThemes = STATE.selectedSubThemes;
-      } else if (STATE.selectedCategory) {
-        const themeIds = CATEGORY_SUBTHEMES[STATE.selectedCategory] || [];
-        themeIds.forEach(id => { activeSubThemes[id] = true; });
       }
 
       const mission = STATE.selectedCategory
