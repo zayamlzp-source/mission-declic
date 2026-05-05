@@ -53,6 +53,10 @@
           backdrop-filter: blur(2px);
         }
 
+        .admin-login-modal[hidden] {
+          display: none !important;
+        }
+
         .admin-login-panel {
           width: 100%;
           max-width: 420px;
