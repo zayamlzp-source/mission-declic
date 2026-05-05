@@ -106,31 +106,61 @@
         }
 
         .install-btn-top {
-          border-width: 2px;
-          font-weight: 800;
+          border-width: 1px;
+          font-weight: 600;
+          padding: 8px 12px;
+          font-size: 0.82rem;
+          background: rgba(255, 255, 255, 0.72);
+          color: #5b6554;
+          box-shadow: none;
         }
 
         .app-update-banner {
           display: flex;
           justify-content: flex-end;
           align-items: center;
-          padding: 8px 12px;
-          background: rgba(232, 242, 228, 0.9);
-          border-bottom: 1px solid #c7dbc0;
+          padding: 6px 10px;
+          background: rgba(244, 247, 242, 0.65);
+          border-bottom: 1px solid rgba(199, 219, 192, 0.65);
         }
 
         .install-callout {
           display: flex;
           justify-content: center;
-          border: 1px solid #bfd3b4;
-          background: #edf7e9;
+          border: 1px solid rgba(191, 211, 180, 0.55);
+          background: rgba(237, 247, 233, 0.52);
           border-radius: 14px;
-          padding: 10px;
+          padding: 8px;
         }
 
         .btn-install-main {
-          min-width: 150px;
-          font-size: 1rem;
+          min-width: 124px;
+          font-size: 0.88rem;
+          padding: 9px 12px;
+          font-weight: 600;
+          box-shadow: none;
+          background: rgba(122, 143, 111, 0.16);
+          color: #4b6142;
+          border: 1px solid rgba(122, 143, 111, 0.35);
+        }
+
+        #update-app-btn {
+          padding: 8px 12px;
+          font-size: 0.8rem;
+          font-weight: 600;
+          box-shadow: none;
+          background: rgba(122, 143, 111, 0.15);
+          color: #4b6142;
+          border: 1px solid rgba(122, 143, 111, 0.35);
+        }
+
+        #update-app-btn:hover,
+        .btn-install-main:hover,
+        .install-btn-top:hover {
+          background: rgba(122, 143, 111, 0.22);
+          color: #3f5338;
+          transform: none;
+          box-shadow: none;
         }
 
         .screen {
