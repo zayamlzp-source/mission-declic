@@ -18,1094 +18,11 @@
     <meta property="og:image" content="https://zayamlzp-source.github.io/mission-declic/assets/icons/icon-512.png">
     <meta name="twitter:card" content="summary">
     <meta name="twitter:title" content="Missions Déclic">
-    <style>
-        * { box-sizing: border-box; }
-
-        :root {
-          --bg: #f7f3eb;
-          --bg-2: #efe7db;
-          --card: rgba(255,255,255,0.9);
-          --text: #2f2a24;
-          --muted: #6c6358;
-          --line: #ded5c8;
-          --accent: #7a8f6f;
-          --accent-2: #b76f53;
-          --soft: #f4ede4;
-          --shadow: 0 14px 36px rgba(0,0,0,0.08);
-          --radius: 22px;
-          --radius-sm: 14px;
-        }
-
-        body {
-          margin: 0;
-          font-family: Arial, sans-serif;
-          background: linear-gradient(180deg, var(--bg) 0%, var(--bg-2) 100%);
-          color: var(--text);
-          min-height: 100vh;
-          padding: 18px;
-        }
-
-        .app {
-          width: 100%;
-          max-width: 720px;
-          margin: 0 auto;
-          background: var(--card);
-          backdrop-filter: blur(8px);
-          border-radius: 28px;
-          box-shadow: var(--shadow);
-          overflow: hidden;
-          border: 1px solid rgba(255,255,255,0.65);
-        }
-
-        .topbar {
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-          gap: 12px;
-          padding: 16px 18px;
-          border-bottom: 1px solid var(--line);
-          background: rgba(255,255,255,0.65);
-          position: sticky;
-          top: 0;
-          z-index: 5;
-          backdrop-filter: blur(10px);
-        }
-
-        .brand {
-          font-weight: 700;
-          letter-spacing: 0.02em;
-        }
-
-        .top-actions {
-          display: flex;
-          gap: 8px;
-          flex-wrap: wrap;
-          justify-content: flex-end;
-        }
-
-        .screen {
-          display: none;
-          padding: 20px 18px 28px;
-          animation: fadeIn 0.25s ease;
-        }
-
-        .screen.active {
-          display: block;
-        }
-
-        @keyframes fadeIn {
-          from {
-            opacity: 0;
-            transform: translateY(8px);
-          }
-          to {
-            opacity: 1;
-            transform: translateY(0);
-          }
-        }
-
-        h1, h2, h3, p {
-          margin: 0;
-        }
-
-        h1 {
-          font-size: 1.9rem;
-          line-height: 1.12;
-          margin-bottom: 10px;
-        }
-
-        h2 {
-          font-size: 1.3rem;
-          margin-bottom: 10px;
-        }
-
-        h3 {
-          margin-bottom: 12px;
-        }
-
-        .sub {
-          color: var(--muted);
-          line-height: 1.45;
-          margin-top: 4px;
-        }
-
-        .stack {
-          display: grid;
-          gap: 14px;
-        }
-
-        .card {
-          background: rgba(255,255,255,0.92);
-          border: 1px solid rgba(222,213,200,0.7);
-          border-radius: var(--radius);
-          padding: 18px;
-          box-shadow: 0 20px 40px rgba(0,0,0,0.08);
-          backdrop-filter: blur(10px);
-        }
-
-        .mission-card {
-          padding: 26px;
-          background: linear-gradient(180deg, rgba(255,255,255,0.98), rgba(255,255,255,0.88));
-          border-color: rgba(122,143,111,0.18);
-        }
-
-        .mission-text {
-          font-size: 1.72rem;
-          line-height: 1.22;
-          text-align: center;
-          margin: 18px 0 10px;
-          color: #2a2a22;
-        }
-
-        .micro {
-          font-size: 0.92rem;
-          color: #6e6457;
-        }
-
-        .input, .textarea, .select {
-          width: 100%;
-          border: 1px solid rgba(47,42,36,0.12);
-          border-radius: 16px;
-          padding: 14px 16px;
-          font-size: 1rem;
-          background: rgba(255,255,255,0.95);
-          color: var(--text);
-          box-shadow: inset 0 1px 2px rgba(47,42,36,0.05);
-        }
-
-        .textarea {
-          min-height: 120px;
-          resize: vertical;
-          font-family: inherit;
-        }
-
-        .label {
-          display: block;
-          font-weight: 700;
-          margin-bottom: 10px;
-        }
-
-        .row {
-          display: flex;
-          gap: 12px;
-          flex-wrap: wrap;
-          align-items: center;
-        }
-
-        .btn {
-          border: 1px solid rgba(0,0,0,0.08);
-          border-radius: 999px;
-          padding: 14px 18px;
-          font-size: 0.98rem;
-          font-weight: 700;
-          cursor: pointer;
-          color: var(--text);
-          background: rgba(255,255,255,0.95);
-          box-shadow: 0 10px 18px rgba(0,0,0,0.08);
-          transition: transform 0.14s ease, opacity 0.2s ease, box-shadow 0.25s ease, filter 0.25s ease;
-        }
-
-        .btn:hover {
-          opacity: 1;
-          transform: translateY(-1px);
-          box-shadow: 0 14px 22px rgba(0,0,0,0.12);
-          filter: saturate(1.08);
-        }
-
-        .btn:active {
-          transform: translateY(1px);
-        }
-
-        .btn-primary {
-          background: linear-gradient(135deg, #7a8f6f 0%, #6f7c65 46%, #5f7164 100%);
-          color: white;
-          border-color: transparent;
-        }
-
-        .btn-secondary {
-          background: rgba(247,241,232,0.95);
-          color: var(--text);
-        }
-
-        .admin-theme-btn.active {
-          background: linear-gradient(135deg, #8b5a3c 0%, #6f4830 100%);
-          color: white;
-          border-color: #5a3a25;
-          font-weight: 600;
-          box-shadow: 0 0 8px rgba(0,0,0,0.2);
-        }
-
-        .btn-warm {
-          background: linear-gradient(135deg, #b76f53 0%, #9f624f 100%);
-          color: white;
-          border-color: transparent;
-        }
-
-        .btn-link {
-          background: transparent;
-          border: 0;
-          padding: 8px 0;
-          color: var(--accent);
-          text-decoration: underline;
-          border-radius: 0;
-          font-weight: 700;
-        }
-
-        .home-hero {
-          padding: 14px 16px;
-          background: linear-gradient(135deg, rgba(122,143,111,0.1), rgba(183,111,83,0.08));
-          border: 1px solid rgba(122,143,111,0.14);
-          border-radius: 18px;
-          box-shadow: inset 0 1px 0 rgba(255,255,255,0.6);
-          animation: heroReveal 0.55s ease;
-        }
-
-        .home-value-line {
-          margin: 6px 0 0;
-          color: #6b6256;
-          font-size: 0.95rem;
-        }
-
-        .home-tagline {
-          margin: 10px 0 0;
-          color: #3f433b;
-          font-weight: 600;
-          font-size: 0.95rem;
-          min-height: 1.4em;
-        }
-
-        @keyframes heroReveal {
-          from {
-            opacity: 0;
-            transform: translateY(8px);
-          }
-          to {
-            opacity: 1;
-            transform: translateY(0);
-          }
-        }
-
-        .home-actions {
-          display: grid;
-          gap: 10px;
-          margin-top: 8px;
-        }
-
-        .home-admin-access {
-          display: flex;
-          gap: 8px;
-          flex-wrap: wrap;
-          justify-content: center;
-          margin-top: 8px;
-          opacity: 0.82;
-        }
-
-        .home-admin-access .btn {
-          font-size: 0.82rem;
-          padding: 8px 12px;
-          font-weight: 600;
-          background: rgba(255, 255, 255, 0.65);
-          border-color: rgba(0, 0, 0, 0.06);
-          box-shadow: none;
-          color: var(--muted);
-        }
-
-        .home-admin-access .btn:hover {
-          color: var(--text);
-          opacity: 1;
-        }
-
-        .pill {
-          display: inline-block;
-          font-size: 0.8rem;
-          color: var(--muted);
-          background: var(--soft);
-          border: 1px solid var(--line);
-          border-radius: 999px;
-          padding: 7px 10px;
-        }
-
-        .hint-box {
-          background: #fff8ef;
-          border: 1px solid #edd9ba;
-          color: #695233;
-          border-radius: 16px;
-          padding: 12px 14px;
-          line-height: 1.4;
-        }
-
-        .validation-photo-box {
-          display: grid;
-          gap: 10px;
-        }
-
-        .radio-group {
-          display: grid;
-          gap: 10px;
-          margin-top: 6px;
-        }
-
-        .radio-option {
-          display: flex;
-          gap: 10px;
-          align-items: flex-start;
-          border: 1px solid var(--line);
-          border-radius: 16px;
-          padding: 12px;
-          background: white;
-        }
-
-        .radio-option input {
-          margin-top: 3px;
-        }
-
-        .list {
-          display: grid;
-          gap: 12px;
-        }
-
-        .journal-item,
-        .photo-item,
-        .suggestion-item {
-          border: 1px solid var(--line);
-          border-radius: 18px;
-          padding: 14px;
-          background: white;
-          display: grid;
-          gap: 10px;
-        }
-
-        .journal-top {
-          display: flex;
-          gap: 12px;
-          align-items: flex-start;
-        }
-
-        .thumb {
-          width: 72px;
-          height: 72px;
-          border-radius: 14px;
-          object-fit: cover;
-          background: var(--soft);
-          border: 1px solid var(--line);
-          flex: 0 0 72px;
-        }
-
-        .journal-main {
-          flex: 1 1 auto;
-          min-width: 0;
-          display: grid;
-          gap: 8px;
-        }
-
-        .journal-title,
-        .photo-title {
-          font-weight: 700;
-          line-height: 1.35;
-        }
-
-        .stars {
-          display: flex;
-          gap: 6px;
-          flex-wrap: wrap;
-        }
-
-        .star-btn {
-          border: 1px solid var(--line);
-          border-radius: 999px;
-          background: white;
-          min-width: 40px;
-          padding: 8px 10px;
-          cursor: pointer;
-          font-weight: 700;
-        }
-
-        .star-btn.active {
-          background: var(--soft);
-          border-color: #c5b196;
-        }
-
-        .grid-photos {
-          display: grid;
-          grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-          gap: 12px;
-        }
-
-        .photo-card {
-          background: white;
-          border: 1px solid var(--line);
-          border-radius: 18px;
-          padding: 10px;
-          display: grid;
-          gap: 8px;
-        }
-
-        .photo-card img {
-          width: 100%;
-          aspect-ratio: 1 / 1;
-          object-fit: cover;
-          border-radius: 12px;
-          background: var(--soft);
-          border: 1px solid var(--line);
-        }
-
-        .empty {
-          color: var(--muted);
-          text-align: center;
-          padding: 22px 12px;
-          border: 1px dashed var(--line);
-          border-radius: 18px;
-          background: rgba(255,255,255,0.6);
-        }
-
-        .orga-grid {
-          display: grid;
-          grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-          gap: 12px;
-        }
-
-        .stat {
-          background: white;
-          border: 1px solid var(--line);
-          border-radius: 18px;
-          padding: 14px;
-          display: grid;
-          gap: 6px;
-        }
-
-        .stat strong {
-          font-size: 1.5rem;
-        }
-
-        .muted-list {
-          display: grid;
-          gap: 8px;
-          color: var(--muted);
-          line-height: 1.45;
-        }
-
-        details summary {
-          cursor: pointer;
-          font-weight: 700;
-        }
-
-        .footer-note {
-          color: var(--muted);
-          text-align: center;
-          font-size: 0.9rem;
-          margin-top: 8px;
-        }
-
-        /* Toast Notifications */
-        .toast-container {
-          position: fixed;
-          bottom: 20px;
-          right: 20px;
-          z-index: 999;
-          display: flex;
-          flex-direction: column;
-          gap: 8px;
-          pointer-events: none;
-        }
-
-        .toast {
-          background: var(--accent);
-          color: white;
-          padding: 14px 18px;
-          border-radius: 12px;
-          box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-          opacity: 0;
-          transform: translateY(20px);
-          transition: opacity 0.3s ease, transform 0.3s ease;
-          font-size: 0.95rem;
-          font-weight: 600;
-          max-width: 280px;
-          pointer-events: auto;
-        }
-
-        .toast.show {
-          opacity: 1;
-          transform: translateY(0);
-        }
-
-        .toast-success { background: #7a8f6f; }
-        .toast-error { background: #b76f53; }
-        .toast-info { background: #7a8f6f; }
-        .toast-warning { background: #d4a574; color: #2f2a24; }
-
-        /* Progress Bar */
-        .progress-section {
-          padding: 12px 0;
-          margin-bottom: 8px;
-        }
-
-        .progress-bar {
-          width: 100%;
-          height: 4px;
-          background: rgba(0,0,0,0.08);
-          border-radius: 999px;
-          overflow: hidden;
-          margin: 8px 0;
-        }
-
-        .progress-bar-fill {
-          height: 100%;
-          background: var(--accent);
-          transition: width 0.4s ease;
-        }
-
-        .progress-text {
-          font-size: 0.85rem;
-          color: var(--muted);
-          text-align: center;
-        }
-
-        @media (max-width: 560px) {
-          .topbar {
-            gap: 8px;
-          }
-
-          .brand {
-            font-size: 0.9rem;
-          }
-
-          .brand-subline {
-            font-size: 0.65rem;
-          }
-
-          .top-actions {
-            justify-content: flex-end;
-            flex-shrink: 0;
-          }
-
-          .mission-text {
-            font-size: 1.32rem;
-          }
-
-          .journal-top {
-            flex-direction: column;
-          }
-        }
-
-        .input-file-hidden {
-          display: none;
-        }
-
-        .file-label {
-          cursor: pointer;
-          margin-bottom: 8px;
-        }
-
-        .file-name {
-          margin-top: 4px;
-          color: var(--muted);
-        }
-
-        .admin-grid {
-          display: grid;
-          gap: 10px;
-          grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-        }
-
-        .check-row {
-          display: flex;
-          gap: 8px;
-          align-items: center;
-          padding: 10px 12px;
-          border: 1px solid var(--line);
-          border-radius: 12px;
-          background: #fff;
-        }
-
-        .admin-form-grid {
-          display: grid;
-          gap: 10px;
-          grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-        }
-
-        .admin-list {
-          display: grid;
-          gap: 10px;
-        }
-
-        .admin-item {
-          display: grid;
-          gap: 10px;
-          padding: 12px;
-          border: 1px solid var(--line);
-          border-radius: 14px;
-          background: #fff;
-        }
-
-        .admin-item-top {
-          display: flex;
-          gap: 12px;
-          align-items: flex-start;
-        }
-
-        .admin-item-main {
-          flex: 1;
-          min-width: 0;
-        }
-
-        .admin-item-actions {
-          display: flex;
-          gap: 8px;
-          flex-wrap: wrap;
-        }
-
-        .admin-thumb {
-          width: 72px;
-          height: 72px;
-          object-fit: cover;
-          border-radius: 12px;
-          border: 1px solid var(--line);
-          background: var(--soft);
-          flex: 0 0 auto;
-        }
-
-        .status-badge {
-          display: inline-flex;
-          align-items: center;
-          gap: 6px;
-          padding: 4px 8px;
-          border-radius: 999px;
-          background: var(--soft);
-          border: 1px solid var(--line);
-          font-size: 0.78rem;
-          color: var(--muted);
-        }
-
-        .admin-list-scroll {
-          max-height: 70vh;
-          overflow-y: scroll;
-          overflow-x: hidden;
-          padding-right: 12px;
-          /* Scrollbar pour Chrome/Edge */
-          scrollbar-width: thin;
-          scrollbar-color: rgba(120, 120, 120, 0.6) transparent;
-        }
-
-        .admin-list-scroll::-webkit-scrollbar {
-          width: 14px;
-        }
-
-        .admin-list-scroll::-webkit-scrollbar-track {
-          background: transparent;
-        }
-
-        .admin-list-scroll::-webkit-scrollbar-thumb {
-          background: rgba(120, 120, 120, 0.6);
-          border-radius: 10px;
-          border: 4px solid transparent;
-          background-clip: padding-box;
-        }
-
-        .admin-list-scroll::-webkit-scrollbar-thumb:hover {
-          background: rgba(100, 100, 100, 0.85);
-          background-clip: padding-box;
-        }
-
-        .admin-toolbar {
-          position: sticky;
-          top: 0;
-          z-index: 2;
-          display: grid;
-          gap: 10px;
-          padding: 10px;
-          margin: 0 0 6px 0;
-          border: 1px solid var(--line);
-          border-radius: 14px;
-          background: rgba(247, 243, 235, 0.96);
-          backdrop-filter: blur(6px);
-        }
-
-        .admin-theme-jump {
-          display: flex;
-          gap: 8px;
-          overflow-x: auto;
-          padding-bottom: 2px;
-          scrollbar-width: thin;
-        }
-
-        .admin-theme-jump::-webkit-scrollbar {
-          height: 6px;
-        }
-
-        .admin-theme-chip {
-          flex: 0 0 auto;
-          border: 1px solid var(--line);
-          border-radius: 999px;
-          padding: 8px 12px;
-          background: #fff;
-          color: var(--text);
-          font-size: 0.82rem;
-          font-weight: 600;
-          text-decoration: none;
-          white-space: nowrap;
-        }
-
-        .admin-theme-chip.is-flagged {
-          border-color: #e4c898;
-          background: #fff4df;
-          color: #8a6423;
-        }
-
-        .admin-theme-chip.is-active {
-          background: linear-gradient(135deg, #7a8f6f 0%, #6f7c65 100%);
-          color: #fff;
-          border-color: #6f7c65;
-        }
-
-        /* Admin tabs */
-        .admin-tabs-container {
-          border-radius: 16px;
-          background: #fff;
-          overflow: hidden;
-          border: 1px solid var(--line);
-          box-shadow: 0 10px 24px rgba(30, 20, 10, 0.06);
-        }
-
-        .admin-tabs-nav {
-          display: flex;
-          gap: 6px;
-          flex-wrap: nowrap;
-          border-bottom: 2px solid var(--line);
-          overflow-x: auto;
-          overflow-y: hidden;
-          position: sticky;
-          top: 64px;
-          z-index: 4;
-          background: linear-gradient(180deg, #fbf7ef 0%, #f6efdf 100%);
-          box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-          padding: 8px;
-          margin: 0;
-        }
-
-        .admin-tab-btn {
-          flex: 0 0 auto;
-          min-width: 120px;
-          padding: 11px 14px;
-          border: 1px solid rgba(0, 0, 0, 0.05);
-          border-radius: 12px;
-          background: rgba(255, 255, 255, 0.85);
-          color: var(--muted);
-          font-size: 0.9rem;
-          font-weight: 600;
-          cursor: pointer;
-          position: relative;
-          white-space: nowrap;
-          transition: transform 0.16s ease, color 0.2s, background 0.2s, box-shadow 0.2s;
-          box-shadow: 0 1px 0 rgba(0, 0, 0, 0.04);
-        }
-
-        .admin-tab-btn:hover {
-          background: #ffffff;
-          color: var(--text);
-          transform: translateY(-1px);
-          box-shadow: 0 6px 14px rgba(32, 18, 9, 0.08);
-        }
-
-        .admin-tab-btn.active {
-          color: #2a4a2a;
-          border-color: rgba(122, 143, 111, 0.35);
-          background: linear-gradient(180deg, #eef7e8 0%, #e7f1df 100%);
-          box-shadow: 0 8px 16px rgba(122, 143, 111, 0.18);
-        }
-
-        .admin-tab-btn.is-dragging {
-          opacity: 0.7;
-          transform: scale(0.98);
-          box-shadow: 0 10px 18px rgba(0,0,0,0.15);
-        }
-
-        .admin-tabs-controls {
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-          gap: 10px;
-          padding: 8px 12px;
-          border-bottom: 1px solid var(--line);
-          background: #fff;
-        }
-
-        .admin-tabs-controls .micro {
-          color: var(--muted);
-        }
-
-        .admin-tabs-controls .btn {
-          white-space: nowrap;
-        }
-
-        .admin-tab-content {
-          display: none;
-          padding: 20px;
-          animation: fadeIn 0.25s ease;
-        }
-
-        .admin-tab-content.active {
-          display: block;
-        }
-
-        .admin-theme-group {
-          display: grid;
-          gap: 10px;
-        }
-
-        .admin-theme-header {
-          position: sticky;
-          top: 0;
-          z-index: 1;
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-          gap: 10px;
-          padding: 8px 10px;
-          border: 1px solid var(--line);
-          border-radius: 12px;
-          background: #f7f3eb;
-        }
-
-        .admin-theme-meta {
-          color: var(--muted);
-          font-size: 0.82rem;
-        }
-
-        .flag-badge {
-          display: inline-flex;
-          align-items: center;
-          gap: 6px;
-          padding: 4px 8px;
-          border-radius: 999px;
-          background: #fff4df;
-          border: 1px solid #e4c898;
-          color: #8a6423;
-          font-size: 0.78rem;
-          font-weight: 700;
-        }
-
-        /* ===== Draw / Tirage ===== */
-        .draw-hidden { display: none !important; }
-
-        .draw-mode-box {
-          margin-top: 4px;
-          display: flex;
-          flex-direction: column;
-          gap: 10px;
-        }
-
-        .draw-mode-box h3 {
-          font-size: 0.95rem;
-          font-weight: 600;
-          color: var(--text);
-          margin: 0 0 4px 0;
-        }
-
-        .theme-list {
-          display: grid;
-          grid-template-columns: 1fr 1fr;
-          gap: 10px;
-          margin: 8px 0 4px 0;
-        }
-
-        .theme-btn {
-          padding: 12px 14px;
-          border-radius: 16px;
-          border: 2px solid var(--line);
-          background: linear-gradient(135deg, #fff 0%, #fafaf8 100%);
-          cursor: pointer;
-          text-align: left;
-          font-size: 0.87rem;
-          line-height: 1.35;
-          font-weight: 500;
-          transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-          position: relative;
-          overflow: hidden;
-          box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
-        }
-
-        .theme-btn::before {
-          content: '';
-          position: absolute;
-          top: 0;
-          left: -100%;
-          width: 100%;
-          height: 100%;
-          background: rgba(122, 143, 111, 0.05);
-          transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-          pointer-events: none;
-        }
-
-        .theme-btn:hover {
-          transform: translateY(-2px);
-          box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
-          border-color: #d4c9be;
-        }
-
-        .theme-btn:hover::before {
-          left: 0;
-        }
-
-        .theme-btn .theme-icon { 
-          font-size: 1.3rem; 
-          display: block; 
-          margin-bottom: 6px;
-          transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-        
-        .theme-btn .theme-label { 
-          font-weight: 600; 
-          color: var(--text);
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-        }
-
-        .theme-btn .theme-checkmark {
-          display: none;
-          color: var(--accent);
-          font-size: 1rem;
-          font-weight: 700;
-        }
-
-        .theme-btn.active {
-          border-color: var(--accent);
-          background: linear-gradient(135deg, #f0f5ec 0%, #eaf0e5 100%);
-          box-shadow: 0 8px 20px rgba(122, 143, 111, 0.15);
-          color: var(--accent);
-        }
-
-        .theme-btn.active .theme-icon {
-          transform: scale(1.15) rotate(5deg);
-        }
-
-        .theme-btn.active .theme-checkmark {
-          display: inline;
-          animation: checkPulse 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-        }
-
-        @keyframes checkPulse {
-          0% {
-            opacity: 0;
-            transform: scale(0);
-          }
-          50% {
-            transform: scale(1.2);
-          }
-          100% {
-            opacity: 1;
-            transform: scale(1);
-          }
-        }
-
-        @media (max-width: 700px) {
-          .admin-list-scroll {
-            max-height: 62vh;
-            padding-right: 8px;
-          }
-
-          .admin-tabs-nav {
-            top: 56px;
-          }
-
-          .admin-theme-header {
-            align-items: flex-start;
-            flex-direction: column;
-          }
-
-          .admin-item-actions {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-          }
-
-          .admin-item-actions .btn {
-            width: 100%;
-            justify-content: center;
-          }
-
-          .admin-tab-btn {
-            min-width: 100px;
-            padding: 10px 12px;
-            font-size: 0.85rem;
-          }
-
-          .admin-tabs-nav {
-            gap: 5px;
-            padding: 7px;
-          }
-
-          .admin-tab-content {
-            padding: 16px;
-          }
-        }
-
-        @media (max-width: 560px) {
-          .admin-toolbar {
-            padding: 8px;
-            margin-bottom: 8px;
-          }
-
-          .admin-tabs-nav {
-            top: 52px;
-          }
-
-          .admin-tabs-controls {
-            flex-direction: column;
-            align-items: flex-start;
-          }
-
-          .admin-form-grid {
-            grid-template-columns: 1fr;
-          }
-
-          .admin-item {
-            padding: 10px;
-          }
-
-          .admin-item-top {
-            flex-direction: column;
-          }
-
-          .admin-thumb {
-            width: 100%;
-            height: auto;
-            max-height: 220px;
-          }
-
-          .admin-item-actions {
-            grid-template-columns: 1fr;
-          }
-
-          .admin-theme-chip {
-            padding: 7px 10px;
-            font-size: 0.78rem;
-          }
-
-          .theme-list {
-            grid-template-columns: 1fr;
-            gap: 12px;
-          }
-
-          .theme-btn {
-            padding: 14px 16px;
-            font-size: 0.92rem;
-          }
-
-          .theme-btn .theme-icon {
-            font-size: 1.5rem;
-            margin-bottom: 8px;
-          }
-        }
-
-      /* Historique admin */
-      .admin-history-list { font-size: 0.95em; }
-      .admin-history-item { border-bottom: 1px solid #eee; padding: 6px 0; }
-      .admin-history-item:last-child { border-bottom: none; }
-      .admin-history-action { font-weight: bold; }
-      .admin-history-date { color: #888; font-size: 0.9em; margin-left: 8px; }
-    </style>
+    <meta name="description" content="Missions Déclic: défis, photos, journal et administration festival, en version installable mobile.">
+    <link rel="stylesheet" href="./missions-declic.css">
 </head>
 <body>
+<a class="skip-link" href="#screen-home">Aller au contenu principal</a>
 <div id="toast-container" class="toast-container"></div>
 <div class="app">
     <div class="topbar">
@@ -1114,20 +31,36 @@
         <div class="brand-subline">Les 5 doigts de la main</div>
       </div>
       <div class="top-actions">
-        <button id="install-btn" class="btn btn-secondary" style="display:none;">Installer l'app</button>
-        <button class="btn btn-link" data-go="home">Accueil</button>
-        <button class="btn btn-link" data-go="suggest">Proposer</button>
+        <button id="install-btn" class="btn btn-secondary install-btn-top" style="display:none;" type="button" aria-label="Installer Missions Déclic">Installer l'app</button>
+        <button class="btn btn-link" data-go="home" type="button" aria-label="Aller à l'accueil">Accueil</button>
+        <button class="btn btn-link" data-go="suggest" type="button" aria-label="Aller à la proposition de mission">Proposer</button>
       </div>
+    </div>
+    <div id="app-update-banner" class="app-update-banner" hidden role="status" aria-live="polite">
+      <div>
+        <strong>Nouvelle version disponible.</strong>
+        <div class="micro">Mets l’app à jour pour profiter des derniers correctifs.</div>
+      </div>
+      <button id="update-app-btn" class="btn btn-primary" type="button" aria-label="Mettre à jour l'application">Mettre à jour</button>
     </div>
 
     <section id="screen-home" class="screen active">
       <div class="stack">
+        <div id="install-callout" class="install-callout" hidden role="status" aria-live="polite">
+          <div class="install-callout-main">
+            <div class="install-callout-title">Installe Missions Déclic sur ton téléphone</div>
+            <div class="micro">Accès rapide, plein écran, et mode app.</div>
+          </div>
+          <button id="install-btn-home" class="btn btn-primary btn-install-main" type="button" aria-label="Installer l'application Missions Déclic">Installer</button>
+        </div>
+        <div id="install-help" class="install-help micro" hidden aria-live="polite"></div>
+
         <div class="progress-section">
           <div class="micro">Ta jauge de progression</div>
           <div class="progress-bar">
             <div id="progress-bar-fill" class="progress-bar-fill" style="width: 0%;"></div>
           </div>
-          <div id="progress-text" class="progress-text">0 mission validée</div>
+          <div id="progress-text" class="progress-text" aria-live="polite">0 mission validée</div>
         </div>
 
         <div class="home-hero">
@@ -1138,21 +71,21 @@
         <div class="card stack">
           <div>
             <label class="label" for="display-name-input">Prénom ou pseudo <span class="micro">(facultatif)</span></label>
-            <input id="display-name-input" class="input" type="text" placeholder="Ex. Léo" maxlength="40" />
+            <input id="display-name-input" class="input" type="text" placeholder="Ex. Léo" maxlength="40" aria-label="Prénom ou pseudo" />
           </div>
 
           <div id="theme-picker-box" class="draw-mode-box">
             <div class="row" style="justify-content:space-between;align-items:center;">
               <h3>Choisis une catégorie</h3>
-              <button id="clear-theme-btn" type="button" class="btn btn-link">Surprends-moi</button>
+              <button id="clear-theme-btn" type="button" class="btn btn-link" aria-label="Effacer le filtre de catégorie">Surprends-moi</button>
             </div>
-            <div id="theme-list" class="theme-list"></div>
-            <div id="theme-choice-label" class="micro">Aucune catégorie imposée : tirage libre.</div>
+            <div id="theme-list" class="theme-list" role="group" aria-label="Choix de catégorie et options"></div>
+            <div id="theme-choice-label" class="micro" aria-live="polite">Aucune catégorie imposée : tirage libre.</div>
           </div>
 
           <div class="home-actions">
-            <button id="start-btn" class="btn btn-primary">Je joue</button>
-            <button id="journal-btn" class="btn btn-secondary">Mon journal</button>
+            <button id="start-btn" class="btn btn-primary" type="button" aria-label="Lancer une mission">Je joue</button>
+            <button id="journal-btn" class="btn btn-secondary" type="button" aria-label="Afficher mon journal">Mon journal</button>
           </div>
         </div>
 
@@ -1161,8 +94,8 @@
         </div>
 
         <div class="home-admin-access">
-          <button id="share-link-btn" class="btn btn-link" type="button">Copier le lien</button>
-          <button id="admin-access-btn" class="btn btn-link" type="button">Espace admin</button>
+          <button id="share-link-btn" class="btn btn-link" type="button" aria-label="Copier le lien de l'application">Copier le lien</button>
+          <button id="admin-access-btn" class="btn btn-link" type="button" aria-label="Ouvrir l'espace admin">Espace admin</button>
         </div>
       </div>
     </section>
@@ -1171,14 +104,14 @@
       <div class="stack">
         <div class="card mission-card stack">
           <span class="pill">Mission du moment</span>
-          <div id="mission-text" class="mission-text">…</div>
+          <div id="mission-text" class="mission-text" aria-live="polite">…</div>
           <div class="footer-note">Tu peux essayer, passer, ou revenir plus tard.</div>
         </div>
 
         <div class="row">
-          <button id="validate-mission-btn" class="btn btn-primary">Valider</button>
-          <button id="flag-mission-edit-btn" class="btn btn-secondary">💡 Suggestion d'amélioration</button>
-          <button id="another-mission-btn" class="btn btn-secondary">Autre mission</button>
+          <button id="validate-mission-btn" class="btn btn-primary" type="button">Valider</button>
+          <button id="flag-mission-edit-btn" class="btn btn-secondary" type="button">💡 Suggestion d'amélioration</button>
+          <button id="another-mission-btn" class="btn btn-secondary" type="button">Autre mission</button>
         </div>
       </div>
     </section>
@@ -1205,11 +138,11 @@
             <label class="label">Partage de la photo</label>
             <div class="radio-group">
               <label class="radio-option">
-                <input type="radio" name="photo-visibility" value="private" checked />
+                <input type="radio" name="photo-visibility" value="private" checked aria-label="Photo privée" />
                 <span>Privé (seulement dans mon journal)</span>
               </label>
               <label class="radio-option">
-                <input type="radio" name="photo-visibility" value="participants" />
+                <input type="radio" name="photo-visibility" value="participants" aria-label="Photo partagée avec les participants" />
                 <span>Partagée à la commu</span>
               </label>
             </div>
@@ -1220,7 +153,7 @@
         <div class="card stack">
           <div>
             <label class="label" for="orga-message-input">Un retour sur cette mission <span class="micro">(facultatif)</span></label>
-            <textarea id="orga-message-input" class="textarea" placeholder="Un ressenti, un retour, ou un petit mot pour les orgas…"></textarea>
+            <textarea id="orga-message-input" class="textarea" placeholder="Un ressenti, un retour, ou un petit mot pour les orgas…" aria-label="Retour sur la mission"></textarea>
           </div>
         </div>
 
@@ -1255,7 +188,7 @@
       <div class="stack">
         <div>
           <h2>Proposer une mission</h2>
-          <p class="sub">Tu as une idée de dèfi, de rencontre ou de jeu ? Ajoute-la. Elle ne sera pas publiée automatiquement.</p>
+          <p class="sub">Tu as une idée de défi, de rencontre ou de jeu ? Ajoute-la. Elle ne sera pas publiée automatiquement.</p>
         </div>
 
         <div class="card stack">
@@ -1366,12 +299,63 @@
                 <button id="admin-save-settings-btn" class="btn btn-primary">Enregistrer réglages</button>
               </div>
             </div>
+
+            <div class="card stack">
+              <h3>Sécurité admin</h3>
+              <div class="micro">Le code admin est stocké chiffré (hash) et la session admin expire automatiquement.</div>
+              <div>
+                <label class="label" for="admin-session-minutes-input">Durée de session admin (minutes)</label>
+                <input id="admin-session-minutes-input" class="input" type="number" min="5" max="240" step="5" value="45" />
+              </div>
+              <div>
+                <label class="label" for="admin-supabase-url-input">Supabase URL <span class="micro">(facultatif)</span></label>
+                <input id="admin-supabase-url-input" class="input" type="url" placeholder="https://xxxx.supabase.co" />
+              </div>
+              <div>
+                <label class="label" for="admin-supabase-key-input">Supabase anon key <span class="micro">(facultatif)</span></label>
+                <input id="admin-supabase-key-input" class="input" type="text" placeholder="eyJ..." />
+              </div>
+              <div class="row">
+                <button id="admin-recovery-test-btn" class="btn btn-secondary" type="button">Tester l'envoi de code de récupération</button>
+              </div>
+              <div id="admin-security-status" class="micro" aria-live="polite"></div>
+            </div>
+
+            <div class="card stack">
+              <h3>Sauvegarde utilisateur</h3>
+              <p class="sub">Exporte ou importe toutes les données (missions, journal, paramètres) en JSON.</p>
+              <div class="row">
+                <button id="export-data-btn" class="btn btn-secondary" type="button">Exporter mes données (JSON)</button>
+                <label for="import-data-input" class="btn btn-secondary file-label">Importer un JSON</label>
+                <input id="import-data-input" class="input-file-hidden" type="file" accept=".json,application/json" />
+              </div>
+              <div id="import-data-status" class="micro" aria-live="polite"></div>
+            </div>
           </div>
 
           <!-- TAB: MISSIONS -->
           <div class="admin-tab-content" id="tab-missions">
             <div class="card stack">
               <h3>Gestion des missions</h3>
+              <div class="card stack quality-tool">
+                <h3>Correcteur rapide fautes/accents</h3>
+                <div class="admin-form-grid">
+                  <div>
+                    <label class="label" for="admin-replace-search">Texte à corriger</label>
+                    <input id="admin-replace-search" class="input" type="text" placeholder="Ex. défi" />
+                  </div>
+                  <div>
+                    <label class="label" for="admin-replace-value">Remplacer par</label>
+                    <input id="admin-replace-value" class="input" type="text" placeholder="Ex. défi" />
+                  </div>
+                </div>
+                <div class="row">
+                  <button id="admin-preview-replace-btn" class="btn btn-secondary" type="button">Prévisualiser</button>
+                  <button id="admin-apply-replace-btn" class="btn btn-primary" type="button">Appliquer</button>
+                  <button id="admin-auto-fix-accents-btn" class="btn btn-secondary" type="button">Auto-corriger les accents fréquents</button>
+                </div>
+                <div id="admin-replace-preview" class="micro" aria-live="polite"></div>
+              </div>
               <div class="admin-toolbar">
                 <div style="display: flex; gap: 10px; align-items: flex-end;">
                   <div style="flex:1;">
@@ -1380,7 +364,7 @@
                   </div>
                   <button id="admin-export-csv-btn" class="btn btn-secondary" type="button" style="white-space:nowrap;">Exporter en CSV</button>
                 </div>
-                <div id="admin-mission-count" class="micro" style="padding: 4px 0; font-weight: 600;"></div>
+                <div id="admin-mission-count" class="micro" style="padding: 4px 0; font-weight: 600;" aria-live="polite"></div>
                 <div id="admin-theme-jump" class="admin-theme-jump"></div>
               </div>
               <div id="admin-missions-list" class="admin-list admin-list-scroll"></div>
@@ -1458,176 +442,8 @@
     </section>
   </div>
 
-<script>
-// ===== Annulation d'action historique =====
-function undoLastMissionHistory() {
-  let history = JSON.parse(localStorage.getItem(STORAGE_KEYS_HISTORY) || "[]");
-  if (!history.length) {
-    Toast.warning("Aucune action à annuler.");
-    return;
-  }
-  const last = history.shift();
-  let missions = JSON.parse(localStorage.getItem(STORAGE_KEYS.missions) || "[]");
-  let changed = false;
-  if (last.action === "Création" && last.mission) {
-    // Supprimer la mission créée
-    missions = missions.filter(m => m.id !== last.mission.id);
-    changed = true;
-  } else if (last.action === "Suppression" && last.mission) {
-    // Restaurer la mission supprimée
-    missions.push(last.mission);
-    changed = true;
-  } else if (last.action === "Modification" && last.mission) {
-    // Revenir à l'état précédent si possible (chercher l'entrée précédente pour cette mission)
-    const prev = history.find(h => h.mission && h.mission.id === last.mission.id && h.action !== "Modification");
-    if (prev && prev.mission) {
-      missions = missions.map(m => m.id === last.mission.id ? prev.mission : m);
-      changed = true;
-    } else {
-      Toast.warning("Impossible d'annuler cette modification (état précédent introuvable).");
-    }
-  }
-  if (changed) {
-    localStorage.setItem(STORAGE_KEYS.missions, JSON.stringify(missions));
-    localStorage.setItem(STORAGE_KEYS_HISTORY, JSON.stringify(history));
-    Toast.success("Dernière action annulée.");
-    renderMissionHistory();
-    if (typeof renderAdminMissionList === "function") renderAdminMissionList();
-  } else {
-    // Même si pas changé, on retire l'entrée pour éviter de bloquer
-    localStorage.setItem(STORAGE_KEYS_HISTORY, JSON.stringify(history));
-  }
-}
-
-document.addEventListener("DOMContentLoaded", function() {
-  const undoBtn = document.getElementById("admin-undo-history-btn");
-  if (undoBtn) undoBtn.addEventListener("click", undoLastMissionHistory);
-});
-// ===== Historique des modifications =====
-const STORAGE_KEYS_HISTORY = "missions_history";
-
-function addMissionHistory(action, mission, extra) {
-  const history = JSON.parse(localStorage.getItem(STORAGE_KEYS_HISTORY) || "[]");
-  const entry = {
-    date: new Date().toISOString(),
-    action,
-    mission: mission ? { id: mission.id, texte: mission.text, category: mission.category, level: mission.level, theme: mission.theme, note: mission.note } : null,
-    ...extra
-  };
-  history.unshift(entry); // Ajoute en haut
-  localStorage.setItem(STORAGE_KEYS_HISTORY, JSON.stringify(history.slice(0, 1000)));
-}
-
-function renderMissionHistory() {
-  const history = JSON.parse(localStorage.getItem(STORAGE_KEYS_HISTORY) || "[]");
-  const list = document.getElementById("admin-history-list");
-  if (!list) return;
-  if (!history.length) {
-    list.innerHTML = '<div style="color:#888">Aucune modification enregistrée.</div>';
-    return;
-  }
-  list.innerHTML = history.map(entry => {
-    const d = new Date(entry.date);
-    const dateStr = d.toLocaleString();
-    let txt = `<span class='admin-history-action'>${entry.action}</span>`;
-    if (entry.mission) {
-      txt += ` mission <b>#${entry.mission.id||"?"}</b> : <span>${(entry.mission.texte||"").slice(0,60)}</span>`;
-    }
-    return `<div class='admin-history-item'>${txt}<span class='admin-history-date'>${dateStr}</span></div>`;
-  }).join("");
-}
-
-// Affichage de l'onglet historique
-document.addEventListener("DOMContentLoaded", function() {
-  const tabBtns = document.querySelectorAll('.admin-tab-btn');
-  tabBtns.forEach(btn => {
-    btn.addEventListener('click', function() {
-      if (btn.dataset.tab === "history") {
-        renderMissionHistory();
-      }
-    });
-  });
-});
-// ===== Export CSV Missions =====
-function exportMissionsToCSV() {
-  // Récupère les missions depuis le stockage local
-  let missions = [];
-  try {
-    missions = JSON.parse(localStorage.getItem(STORAGE_KEYS.missions) || "[]");
-  } catch (e) {}
-  if (!Array.isArray(missions) || missions.length === 0) {
-    Toast.warning("Aucune mission à exporter.");
-    return;
-  }
-  // Prépare les entêtes et lignes CSV
-  const headers = ["id","texte","catégorie","niveau","thème","note"];
-  const rows = missions.map(m => [
-    m.id,
-    '"'+(m.text||"").replace(/"/g,'""')+'"',
-    m.category||"",
-    m.level||"",
-    m.theme||"",
-    '"'+(m.note||"").replace(/"/g,'""')+'"'
-  ]);
-  let csv = headers.join(",")+"\r\n"+rows.map(r=>r.join(",")).join("\r\n");
-  // Téléchargement
-  const blob = new Blob([csv], {type: "text/csv"});
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement("a");
-  a.href = url;
-  a.download = "missions_declic.csv";
-  document.body.appendChild(a);
-  a.click();
-  setTimeout(()=>{document.body.removeChild(a);URL.revokeObjectURL(url);}, 200);
-  Toast.success("Export CSV téléchargé.");
-}
-
-document.addEventListener("DOMContentLoaded", function() {
-  const btn = document.getElementById("admin-export-csv-btn");
-  if (btn) btn.addEventListener("click", exportMissionsToCSV);
-});
-
-// ===== PWA: install + offline =====
-let deferredInstallPrompt = null;
-window.addEventListener("beforeinstallprompt", (event) => {
-  event.preventDefault();
-  deferredInstallPrompt = event;
-  const installBtn = document.getElementById("install-btn");
-  if (installBtn) installBtn.style.display = "";
-});
-
-const installBtn = document.getElementById("install-btn");
-if (installBtn) {
-  installBtn.addEventListener("click", async () => {
-    if (!deferredInstallPrompt) return;
-    deferredInstallPrompt.prompt();
-    const choice = await deferredInstallPrompt.userChoice;
-    if (choice?.outcome === "accepted") {
-      installBtn.style.display = "none";
-    }
-    deferredInstallPrompt = null;
-  });
-}
-
-window.addEventListener("appinstalled", () => {
-  const btn = document.getElementById("install-btn");
-  if (btn) btn.style.display = "none";
-  deferredInstallPrompt = null;
-});
-
-if ("serviceWorker" in navigator) {
-  window.addEventListener("load", async () => {
-    try {
-      const isLocalhost = ["localhost", "127.0.0.1", "[::1]"].includes(location.hostname);
-      if (location.protocol === "file:") return;
-      if (!window.isSecureContext && !isLocalhost) return;
-      await navigator.serviceWorker.register("./sw.js");
-    } catch (error) {
-      console.warn("Service worker registration failed:", error);
-    }
-  });
-}
-</script>
+  <script src="./missions-declic.js"></script>
   </body>
 </html>
+
 
