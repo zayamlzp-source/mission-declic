@@ -165,7 +165,6 @@ const orgaMessages = byId("orga-messages");
 const installBtnTop = byId("install-btn");
 const installBtnHome = byId("install-btn-home");
 const installCallout = byId("install-callout");
-const installHelp = byId("install-help");
 const updateBanner = byId("app-update-banner");
 const adminLoginModal = byId("admin-login-modal");
 const adminLoginInput = byId("admin-login-code-input");
@@ -2344,27 +2343,9 @@ function initNavigation() {
   });
 }
 
-function isMobileLike() {
-  return /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent);
-}
-
 function updateInstallUx(showPrompt) {
-  const shouldShow = isMobileLike() || showPrompt;
-  if (installCallout) installCallout.hidden = !shouldShow;
-  if (installBtnTop) installBtnTop.style.display = showPrompt ? "" : "none";
-
-  if (installHelp) {
-    if (showPrompt) {
-      installHelp.hidden = true;
-      installHelp.textContent = "";
-    } else if (isMobileLike()) {
-      installHelp.hidden = false;
-      installHelp.textContent = "Si le bouton n’apparaît pas, utilise le menu du navigateur puis “Ajouter à l’écran d’accueil”.";
-    } else {
-      installHelp.hidden = false;
-      installHelp.textContent = "Sur ordinateur, l’installation dépend du navigateur (Chrome/Edge principalement).";
-    }
-  }
+  if (installCallout) installCallout.hidden = !showPrompt;
+  if (installBtnTop) installBtnTop.style.display = "none";
 }
 
 async function launchInstallPrompt() {

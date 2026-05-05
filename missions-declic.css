@@ -112,39 +112,25 @@
 
         .app-update-banner {
           display: flex;
-          gap: 12px;
-          justify-content: space-between;
+          justify-content: flex-end;
           align-items: center;
-          padding: 12px 16px;
-          background: #e8f2e4;
-          border-bottom: 1px solid #b7cfad;
+          padding: 8px 12px;
+          background: rgba(232, 242, 228, 0.9);
+          border-bottom: 1px solid #c7dbc0;
         }
 
         .install-callout {
           display: flex;
-          gap: 14px;
-          align-items: center;
-          justify-content: space-between;
+          justify-content: center;
           border: 1px solid #bfd3b4;
-          background: linear-gradient(135deg, #eff8ea 0%, #e5f0df 100%);
-          border-radius: 18px;
-          padding: 14px;
-        }
-
-        .install-callout-title {
-          font-size: 1.05rem;
-          font-weight: 800;
-          color: #1e3323;
+          background: #edf7e9;
+          border-radius: 14px;
+          padding: 10px;
         }
 
         .btn-install-main {
-          min-width: 130px;
+          min-width: 150px;
           font-size: 1rem;
-        }
-
-        .install-help {
-          margin-top: -4px;
-          color: #4f5f54;
         }
 
         .screen {
