@@ -41,6 +41,28 @@
           left: 12px;
         }
 
+        .admin-login-modal {
+          position: fixed;
+          inset: 0;
+          z-index: 1100;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          padding: 16px;
+          background: rgba(18, 19, 17, 0.5);
+          backdrop-filter: blur(2px);
+        }
+
+        .admin-login-panel {
+          width: 100%;
+          max-width: 420px;
+          background: #fff;
+          border: 1px solid var(--line);
+          border-radius: 18px;
+          padding: 18px;
+          box-shadow: 0 20px 38px rgba(0, 0, 0, 0.18);
+        }
+
         .app {
           width: 100%;
           max-width: 720px;

@@ -167,6 +167,9 @@ const installBtnHome = byId("install-btn-home");
 const installCallout = byId("install-callout");
 const installHelp = byId("install-help");
 const updateBanner = byId("app-update-banner");
+const adminLoginModal = byId("admin-login-modal");
+const adminLoginInput = byId("admin-login-code-input");
+const adminLoginStatus = byId("admin-login-status");
 
 const Toast = {
   container: byId("toast-container"),
@@ -593,6 +596,26 @@ function ensureAdminSessionOrWarn() {
   if (hasValidAdminSession()) return true;
   Toast.warning("Session admin expirée.");
   return false;
+}
+
+function setAdminLoginStatus(message = "") {
+  if (adminLoginStatus) adminLoginStatus.textContent = message;
+}
+
+function openAdminLoginModal() {
+  if (!adminLoginModal) return;
+  adminLoginModal.hidden = false;
+  setAdminLoginStatus("");
+  if (adminLoginInput) {
+    adminLoginInput.value = "";
+    setTimeout(() => adminLoginInput.focus(), 0);
+  }
+}
+
+function closeAdminLoginModal() {
+  if (!adminLoginModal) return;
+  adminLoginModal.hidden = true;
+  setAdminLoginStatus("");
 }
 
 function getBackendConfigFromSettings() {
@@ -2078,42 +2101,7 @@ async function openAdminAccess() {
     showScreen("orga");
     return;
   }
-
-  const lockMs = getRemainingLockMs();
-  if (lockMs > 0) {
-    const minutes = Math.ceil(lockMs / 60000);
-    Toast.error(`Trop d’essais. Réessaie dans ${minutes} min.`);
-    return;
-  }
-
-  const code = window.prompt("Code admin :");
-  if (!code) return;
-
-  if (!ADMIN_SECURITY.ready) {
-    try {
-      await ensureAdminSecurityReady();
-    } catch (error) {
-      Toast.error("Sécurité admin indisponible. Recharge la page.");
-      return;
-    }
-  }
-
-  const valid = await verifyAdminPin(code.trim());
-  if (!valid) {
-    registerAuthFailure();
-    Toast.error("Code admin incorrect.");
-    const wantsRecovery = window.confirm("Code oublié ? Cliquer sur OK pour lancer la récupération par e-mail.");
-    if (wantsRecovery) {
-      await recoverAdminAccessFlow();
-    }
-    return;
-  }
-
-  resetAuthFailures();
-  const sessionMinutes = getAdminSettings().sessionMinutes;
-  setAdminSession(sessionMinutes);
-  Toast.success("Accès admin autorisé.");
-  showScreen("orga");
+  openAdminLoginModal();
 }
 
 async function recoverAdminAccessFlow() {
@@ -2173,6 +2161,44 @@ async function recoverAdminAccessFlow() {
   } catch (error) {
     Toast.error(`Impossible d'enregistrer le nouveau code: ${error.message}`);
   }
+}
+
+async function submitAdminLoginFromModal() {
+  const lockMs = getRemainingLockMs();
+  if (lockMs > 0) {
+    const minutes = Math.ceil(lockMs / 60000);
+    setAdminLoginStatus(`Trop d’essais. Réessaie dans ${minutes} min.`);
+    return;
+  }
+
+  const code = String(adminLoginInput?.value || "").trim();
+  if (!code) {
+    setAdminLoginStatus("Entre un code admin.");
+    adminLoginInput?.focus();
+    return;
+  }
+
+  if (!ADMIN_SECURITY.ready) {
+    try {
+      await ensureAdminSecurityReady();
+    } catch (error) {
+      setAdminLoginStatus("Sécurité admin indisponible. Recharge la page.");
+      return;
+    }
+  }
+
+  const valid = await verifyAdminPin(code);
+  if (!valid) {
+    registerAuthFailure();
+    setAdminLoginStatus("Code admin incorrect.");
+    return;
+  }
+
+  resetAuthFailures();
+  setAdminSession(getAdminSettings().sessionMinutes);
+  closeAdminLoginModal();
+  Toast.success("Accès admin autorisé.");
+  showScreen("orga");
 }
 
 async function testRecoveryDelivery() {
@@ -2444,6 +2470,35 @@ function bindEvents() {
       console.error("Admin access error:", error);
       Toast.error("Impossible d’ouvrir l’espace admin.");
     });
+  });
+  byId("admin-login-submit-btn")?.addEventListener("click", () => {
+    submitAdminLoginFromModal().catch(error => {
+      console.error("Admin login error:", error);
+      setAdminLoginStatus("Erreur inattendue. Réessaie.");
+    });
+  });
+  byId("admin-login-cancel-btn")?.addEventListener("click", closeAdminLoginModal);
+  byId("admin-login-forgot-btn")?.addEventListener("click", () => {
+    recoverAdminAccessFlow().catch(error => {
+      console.error("Recovery error:", error);
+      setAdminLoginStatus("Récupération impossible.");
+    });
+  });
+  adminLoginInput?.addEventListener("keydown", event => {
+    if (event.key === "Enter") {
+      event.preventDefault();
+      submitAdminLoginFromModal().catch(error => {
+        console.error("Admin login enter error:", error);
+        setAdminLoginStatus("Erreur inattendue. Réessaie.");
+      });
+    }
+    if (event.key === "Escape") {
+      event.preventDefault();
+      closeAdminLoginModal();
+    }
+  });
+  adminLoginModal?.addEventListener("click", event => {
+    if (event.target === adminLoginModal) closeAdminLoginModal();
   });
   byId("share-link-btn")?.addEventListener("click", copyFestivalLink);
   byId("clear-theme-btn")?.addEventListener("click", () => {

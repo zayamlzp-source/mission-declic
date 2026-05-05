@@ -24,6 +24,22 @@
 <body>
 <a class="skip-link" href="#screen-home">Aller au contenu principal</a>
 <div id="toast-container" class="toast-container"></div>
+<div id="admin-login-modal" class="admin-login-modal" hidden>
+  <div class="admin-login-panel" role="dialog" aria-modal="true" aria-labelledby="admin-login-title">
+    <h2 id="admin-login-title">Accès admin</h2>
+    <p class="sub">Entre le code admin pour ouvrir l’espace de gestion.</p>
+    <div class="stack">
+      <label class="label" for="admin-login-code-input">Code admin</label>
+      <input id="admin-login-code-input" class="input" type="password" maxlength="32" autocomplete="current-password" />
+    </div>
+    <div id="admin-login-status" class="micro" aria-live="polite"></div>
+    <div class="row" style="margin-top: 12px;">
+      <button id="admin-login-submit-btn" class="btn btn-primary" type="button">Entrer</button>
+      <button id="admin-login-cancel-btn" class="btn btn-secondary" type="button">Annuler</button>
+      <button id="admin-login-forgot-btn" class="btn btn-link" type="button">Code oublié</button>
+    </div>
+  </div>
+</div>
 <div class="app">
     <div class="topbar">
       <div>
