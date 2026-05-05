@@ -1,7 +1,8 @@
-﻿{
-  "name": "Missions DÃ©clic",
+{
+  "id": "/mission-declic/",
+  "name": "Missions D\u00e9clic",
   "short_name": "Missions",
-  "description": "Missions DÃ©clic - application installable sur tÃ©lÃ©phone",
+  "description": "Missions D\u00e9clic - application installable sur t\u00e9l\u00e9phone",
   "lang": "fr",
   "start_url": "./missions-declic.html",
   "scope": "./",
@@ -11,17 +12,28 @@
   "theme_color": "#7a8f6f",
   "icons": [
     {
-      "src": "./assets/icons/icon-192.svg",
+      "src": "./assets/icons/icon-192.png",
       "sizes": "192x192",
-      "type": "image/svg+xml",
-      "purpose": "any maskable"
+      "type": "image/png",
+      "purpose": "any"
     },
     {
-      "src": "./assets/icons/icon-512.svg",
+      "src": "./assets/icons/icon-512.png",
       "sizes": "512x512",
-      "type": "image/svg+xml",
-      "purpose": "any maskable"
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "./assets/icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "./assets/icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
     }
   ]
 }
-

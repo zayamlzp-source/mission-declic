@@ -1,9 +1,9 @@
-const CACHE_NAME = "missions-declic-v2";
+const CACHE_NAME = "missions-declic-v3";
 const APP_SHELL = [
   "./missions-declic.html",
   "./manifest.webmanifest",
-  "./assets/icons/icon-192.svg",
-  "./assets/icons/icon-512.svg"
+  "./assets/icons/icon-192.png",
+  "./assets/icons/icon-512.png"
 ];
 
 self.addEventListener("install", (event) => {
