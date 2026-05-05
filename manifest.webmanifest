@@ -1,7 +1,7 @@
-{
-  "name": "Missions Déclic",
+﻿{
+  "name": "Missions DÃ©clic",
   "short_name": "Missions",
-  "description": "Missions Déclic - application installable sur téléphone",
+  "description": "Missions DÃ©clic - application installable sur tÃ©lÃ©phone",
   "lang": "fr",
   "start_url": "./missions-declic.html",
   "scope": "./",
@@ -24,3 +24,4 @@
     }
   ]
 }
+

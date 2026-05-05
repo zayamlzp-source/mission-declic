@@ -1,4 +1,4 @@
-const CACHE_NAME = "missions-declic-v1";
+const CACHE_NAME = "missions-declic-v2";
 const APP_SHELL = [
   "./missions-declic.html",
   "./manifest.webmanifest",
