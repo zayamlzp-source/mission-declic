@@ -105,39 +105,28 @@
           justify-content: flex-end;
         }
 
-        .install-btn-top {
-          border-width: 1px;
-          font-weight: 600;
-          padding: 8px 12px;
-          font-size: 0.82rem;
-          background: rgba(255, 255, 255, 0.72);
-          color: #5b6554;
-          box-shadow: none;
-        }
-
-        .install-callout {
+        .app-nav {
           display: flex;
-          justify-content: center;
-          border: 1px solid rgba(191, 211, 180, 0.55);
-          background: rgba(237, 247, 233, 0.52);
-          border-radius: 14px;
-          padding: 8px;
+          flex-wrap: wrap;
+          gap: 0.5rem;
+          align-items: center;
+          justify-content: flex-end;
+          margin: 0;
         }
 
-        .btn-install-main {
-          min-width: 124px;
-          font-size: 0.88rem;
-          padding: 9px 12px;
+        .app-nav .nav-btn {
+          padding: 0.45rem 0.75rem;
+          border-radius: 999px;
+          font-size: 0.85rem;
+          line-height: 1;
           font-weight: 600;
           box-shadow: none;
-          background: rgba(122, 143, 111, 0.16);
-          color: #4b6142;
-          border: 1px solid rgba(122, 143, 111, 0.35);
+          min-height: 32px;
         }
 
-        #update-app-btn {
-          padding: 8px 12px;
-          font-size: 0.8rem;
+        .app-nav .install-btn-top,
+        .app-nav .update-btn-top {
+          border-width: 1px;
           font-weight: 600;
           box-shadow: none;
           background: rgba(255, 255, 255, 0.72);
@@ -145,9 +134,8 @@
           border: 1px solid rgba(0, 0, 0, 0.1);
         }
 
-        #update-app-btn:hover,
-        .btn-install-main:hover,
-        .install-btn-top:hover {
+        .app-nav .install-btn-top:hover,
+        .app-nav .update-btn-top:hover {
           background: rgba(122, 143, 111, 0.22);
           color: #3f5338;
           transform: none;
@@ -716,19 +704,6 @@
         }
 
         @media (max-width: 560px) {
-          .install-callout {
-            flex-direction: column;
-            align-items: stretch;
-          }
-
-          .btn-install-main {
-            width: 100%;
-          }
-
-          .install-btn-top:not(.update-btn-top) {
-            display: none !important;
-          }
-
           .topbar {
             gap: 8px;
           }
@@ -742,8 +717,13 @@
           }
 
           .top-actions {
-            justify-content: flex-end;
-            flex-shrink: 0;
+            justify-content: flex-start;
+            flex-shrink: 1;
+            width: 100%;
+          }
+
+          .app-nav {
+            justify-content: flex-start;
           }
 
           .mission-text {
@@ -1085,9 +1065,26 @@
 
         .theme-list {
           display: grid;
-          grid-template-columns: 1fr 1fr;
+          grid-template-columns: repeat(3, minmax(0, 1fr));
           gap: 10px;
           margin: 8px 0 4px 0;
+        }
+
+        .theme-options-wrap {
+          grid-column: 1 / -1;
+          display: grid;
+          gap: 8px;
+        }
+
+        .theme-options-grid {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 8px;
+        }
+
+        .theme-option-btn {
+          flex: 0 0 auto;
+          min-width: 120px;
         }
 
         .theme-btn {
@@ -1266,6 +1263,11 @@
           .theme-list {
             grid-template-columns: 1fr;
             gap: 12px;
+          }
+
+          .theme-options-grid {
+            display: grid;
+            grid-template-columns: 1fr;
           }
 
           .theme-btn {
