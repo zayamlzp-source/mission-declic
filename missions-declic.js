@@ -704,7 +704,25 @@ function missionBlockedByFunMode(mission, settings = getAdminSettings()) {
 }
 
 function getResults() {
-  return loadJSON(STORAGE_KEYS.results, []).map(normalizeResultRecord);
+  const raw = loadJSON(STORAGE_KEYS.results, []);
+  const normalized = raw.map(normalizeResultRecord);
+  const requiresMigration = normalized.some((item, index) => {
+    const source = raw[index] || {};
+    return (
+      !source.id ||
+      typeof source.isRated === "undefined" ||
+      typeof source.isHiddenFromUserJournal === "undefined" ||
+      typeof source.hiddenAt === "undefined" ||
+      typeof source.userComment === "undefined" ||
+      typeof source.dateDone === "undefined" ||
+      typeof source.missionText === "undefined" ||
+      typeof source.theme === "undefined" ||
+      typeof source.category === "undefined" ||
+      typeof source.level === "undefined"
+    );
+  });
+  if (requiresMigration) saveJSON(STORAGE_KEYS.results, normalized);
+  return normalized;
 }
 
 function saveResults(results) {
@@ -713,12 +731,133 @@ function saveResults(results) {
 
 function normalizeResultRecord(result) {
   const normalized = { ...result };
+  normalized.id = normalized.id || uid();
+  normalized.createdAt = normalized.createdAt || normalized.dateDone || nowIso();
+  normalized.dateDone = normalized.dateDone || normalized.createdAt;
+  normalized.status = normalized.status || "done";
+  normalized.missionId = toNumber(normalized.missionId, 0);
+  normalized.level = Math.max(1, Math.min(10, toNumber(normalized.level, 1)));
+  normalized.missionText = String(normalized.missionText || "");
+  normalized.theme = String(normalized.theme || "festival");
+  normalized.category = String(normalized.category || "");
+  normalized.userComment = String(normalized.userComment ?? normalized.orgaMessage ?? "");
+  normalized.orgaMessage = String(normalized.orgaMessage ?? normalized.userComment ?? "");
+
+  const parsedRating = toNumber(normalized.rating, 0);
+  const hasRating = parsedRating >= 1 && parsedRating <= 5;
+  normalized.rating = hasRating ? parsedRating : null;
+  normalized.isRated = typeof normalized.isRated === "boolean" ? normalized.isRated : hasRating;
+  if (!normalized.isRated && hasRating) normalized.isRated = true;
+  normalized.ratedAt = normalized.isRated ? (normalized.ratedAt || normalized.createdAt) : null;
+  normalized.isHiddenFromUserJournal = normalized.isHiddenFromUserJournal === true;
+  normalized.hiddenAt = normalized.isHiddenFromUserJournal ? (normalized.hiddenAt || null) : null;
+
   normalized.visibility = normalized.visibility || "private";
   if (!normalized.photoUrl) normalized.reviewStatus = "none";
   if (!normalized.reviewStatus && normalized.photoUrl) {
     normalized.reviewStatus = normalized.visibility === "participants" ? "pending" : "private";
   }
   return normalized;
+}
+
+function normalizeJournalEntry(entry) {
+  const normalized = normalizeResultRecord(entry || {});
+  const mission = getMissionById(normalized.missionId);
+  const parsedRating = toNumber(normalized.rating, 0);
+  const hasRating = parsedRating >= 1 && parsedRating <= 5;
+  const hasHiddenAtProperty = Object.prototype.hasOwnProperty.call(normalized, "hiddenAt");
+
+  return {
+    ...normalized,
+    missionId: normalized.missionId || mission?.id || 0,
+    missionText: String(normalized.missionText || mission?.text || ""),
+    dateDone: normalized.dateDone || normalized.createdAt || nowIso(),
+    theme: String(normalized.theme || mission?.theme || "festival"),
+    category: String(normalized.category || mission?.category || ""),
+    level: Math.max(1, Math.min(10, toNumber(normalized.level, mission?.level || 1))),
+    userComment: String(normalized.userComment ?? normalized.orgaMessage ?? ""),
+    orgaMessage: String(normalized.orgaMessage ?? normalized.userComment ?? ""),
+    rating: hasRating ? parsedRating : null,
+    isRated: typeof normalized.isRated === "boolean" ? normalized.isRated : hasRating,
+    ratedAt: normalized.ratedAt || (hasRating ? (normalized.dateDone || normalized.createdAt || nowIso()) : null),
+    isHiddenFromUserJournal: normalized.isHiddenFromUserJournal === true,
+    hiddenAt: hasHiddenAtProperty ? (normalized.hiddenAt || null) : null
+  };
+}
+
+function getJournalEntries() {
+  const currentSessionId = getOrCreateSessionId();
+  return getResults()
+    .filter(item => item.sessionId === currentSessionId && (item.status || "done") === "done")
+    .map(normalizeJournalEntry)
+    .sort((a, b) => new Date(b.dateDone || b.createdAt || 0) - new Date(a.dateDone || a.createdAt || 0));
+}
+
+function saveJournalEntries(entries) {
+  const currentSessionId = getOrCreateSessionId();
+  const normalizedEntries = (entries || []).map(normalizeJournalEntry);
+  const entryById = new Map(normalizedEntries.map(entry => [entry.id, entry]));
+  const allResults = getResults();
+  const updated = allResults.map(result => {
+    if (result.sessionId !== currentSessionId) return result;
+    if ((result.status || "done") !== "done") return result;
+    const replacement = entryById.get(result.id);
+    return replacement ? normalizeResultRecord(replacement) : result;
+  });
+
+  normalizedEntries.forEach(entry => {
+    if (!updated.some(result => result.id === entry.id)) {
+      updated.push(normalizeResultRecord(entry));
+    }
+  });
+
+  saveResults(updated);
+  return normalizedEntries;
+}
+
+function getVisibleJournalEntries() {
+  return getJournalEntries().filter(entry => entry.isHiddenFromUserJournal !== true);
+}
+
+function getHiddenJournalEntries() {
+  return getJournalEntries().filter(entry => entry.isHiddenFromUserJournal === true);
+}
+
+function hideJournalEntry(entryId) {
+  const entries = getJournalEntries();
+  const target = entries.find(entry => entry.id === entryId);
+  if (!target) return null;
+  target.isHiddenFromUserJournal = true;
+  target.hiddenAt = nowIso();
+  saveJournalEntries(entries);
+  return target;
+}
+
+function unhideJournalEntry(entryId) {
+  const entries = getJournalEntries();
+  const target = entries.find(entry => entry.id === entryId);
+  if (!target) return null;
+  target.isHiddenFromUserJournal = false;
+  target.hiddenAt = null;
+  saveJournalEntries(entries);
+  return target;
+}
+
+function rateJournalEntry(entryId, rating) {
+  const safeRating = Math.max(1, Math.min(5, toNumber(rating, 0)));
+  if (!safeRating) return null;
+  const entries = getJournalEntries();
+  const target = entries.find(entry => entry.id === entryId);
+  if (!target) return null;
+  target.rating = safeRating;
+  target.isRated = true;
+  target.ratedAt = nowIso();
+  saveJournalEntries(entries);
+  return target;
+}
+
+function getJournalEntriesForSouvenirBook() {
+  return getJournalEntries().filter(entry => entry.isHiddenFromUserJournal !== true);
 }
 
 function saveResult(result) {
@@ -728,10 +867,14 @@ function saveResult(result) {
 }
 
 function updateResultRating(resultId, rating) {
+  const updated = rateJournalEntry(resultId, rating);
+  if (updated) return;
   const results = getResults();
   const found = results.find(item => item.id === resultId);
   if (!found) return;
-  found.rating = rating;
+  found.rating = Math.max(1, Math.min(5, toNumber(rating, 0))) || null;
+  found.isRated = !!found.rating;
+  found.ratedAt = found.isRated ? (found.ratedAt || nowIso()) : null;
   saveResults(results);
 }
 
@@ -745,10 +888,7 @@ function updateResultReview(resultId, updates) {
 }
 
 function getOwnResults() {
-  const currentSessionId = getOrCreateSessionId();
-  return getResults()
-    .filter(item => item.sessionId === currentSessionId)
-    .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+  return getJournalEntries();
 }
 
 function getSuggestions() {
@@ -1064,20 +1204,32 @@ function confirmValidation() {
     ? progress.doneMissionIds[progress.doneMissionIds.length - 1]
     : null;
   const profile = getUserProfile();
+  const userComment = orgaMessageInput?.value.trim() || "";
+  const doneAt = nowIso();
 
   saveResult({
     id: uid(),
     sessionId: getOrCreateSessionId(),
     missionId: STATE.currentMission.id,
+    missionText: STATE.currentMission.text || "",
+    theme: STATE.currentMission.theme || "festival",
+    category: STATE.currentMission.category || "",
+    level: STATE.currentMission.level || 1,
     previousMissionId,
     status: "done",
     photoUrl: STATE.currentPhotoDataUrl,
     visibility,
     reviewStatus: STATE.currentPhotoDataUrl ? (visibility === "participants" ? "pending" : "private") : "none",
-    orgaMessage: orgaMessageInput?.value.trim() || "",
+    orgaMessage: userComment,
+    userComment,
     rating: null,
+    isRated: false,
+    ratedAt: null,
+    isHiddenFromUserJournal: false,
+    hiddenAt: null,
     displayName: profile.displayName || "",
-    createdAt: nowIso()
+    dateDone: doneAt,
+    createdAt: doneAt
   });
 
   completeCurrentMission();
@@ -1113,25 +1265,8 @@ function goToAnotherMission() {
   renderMission(mission);
 }
 
-function renderStars(result) {
-  const wrapper = document.createElement("div");
-  wrapper.className = "stars";
-  for (let i = 1; i <= 5; i += 1) {
-    const button = document.createElement("button");
-    button.className = `star-btn${result.rating === i ? " active" : ""}`;
-    button.type = "button";
-    button.textContent = String(i);
-    button.addEventListener("click", () => {
-      updateResultRating(result.id, i);
-      renderJournal();
-      renderOrga();
-    });
-    wrapper.appendChild(button);
-  }
-  return wrapper;
-}
-
-function renderJournal() {
+function renderJournalLegacyFallback() {
+  return renderJournal();
   if (!journalList) return;
   const results = getOwnResults();
   journalList.innerHTML = "";
@@ -1184,6 +1319,170 @@ function renderJournal() {
     item.appendChild(top);
     journalList.appendChild(item);
   });
+}
+
+function buildJournalRatingBlock(entry) {
+  const wrapper = document.createElement("div");
+  wrapper.className = "journal-rating-block";
+
+  const label = document.createElement("div");
+  label.className = "micro";
+  label.textContent = "Ta note de 1 à 5";
+  wrapper.appendChild(label);
+
+  const stars = document.createElement("div");
+  stars.className = "stars";
+  for (let i = 1; i <= 5; i += 1) {
+    const button = document.createElement("button");
+    button.className = "star-btn";
+    button.type = "button";
+    button.textContent = String(i);
+    button.setAttribute("aria-label", `Noter ${i} sur 5`);
+    button.addEventListener("click", () => {
+      const updated = rateJournalEntry(entry.id, i);
+      if (!updated) return;
+      Toast.success("Merci pour ton retour.");
+      renderJournal();
+      if (screens.orga?.classList.contains("active") && hasValidAdminSession()) renderOrga();
+    });
+    stars.appendChild(button);
+  }
+  wrapper.appendChild(stars);
+  return wrapper;
+}
+
+function buildJournalCard(entry, { hiddenView = false } = {}) {
+  const mission = getMissionById(entry.missionId);
+  const card = document.createElement("article");
+  card.className = "journal-card";
+  if (hiddenView) card.classList.add("is-hidden");
+
+  if (entry.photoUrl) {
+    const img = document.createElement("img");
+    img.className = "journal-photo";
+    img.src = entry.photoUrl;
+    img.alt = "Photo de mission";
+    card.appendChild(img);
+  }
+
+  const content = document.createElement("div");
+  content.className = "journal-content";
+
+  const title = document.createElement("div");
+  title.className = "journal-title";
+  title.textContent = entry.missionText || mission?.text || "Mission";
+  content.appendChild(title);
+
+  const meta = document.createElement("div");
+  meta.className = "journal-meta";
+  const themeLabel = getThemePresentation(entry.theme).label;
+  const metaParts = [
+    formatDateTime(entry.dateDone || entry.createdAt),
+    themeLabel,
+    entry.category || "",
+    `Niveau ${entry.level || 1}`
+  ].filter(Boolean);
+  meta.textContent = metaParts.join(" · ");
+  content.appendChild(meta);
+
+  if (entry.userComment) {
+    const comment = document.createElement("div");
+    comment.className = "micro";
+    comment.textContent = entry.userComment;
+    content.appendChild(comment);
+  }
+
+  if (entry.isRated && entry.rating) {
+    const rated = document.createElement("div");
+    rated.className = "journal-rating-done";
+    rated.textContent = `Merci pour ton retour · ${entry.rating}/5`;
+    content.appendChild(rated);
+  }
+
+  const actions = document.createElement("div");
+  actions.className = "journal-actions";
+
+  const replayBtn = document.createElement("button");
+  replayBtn.className = "btn btn-secondary";
+  replayBtn.type = "button";
+  replayBtn.textContent = "Refaire";
+  replayBtn.addEventListener("click", () => {
+    const replay = replayMission(entry.missionId);
+    if (replay) renderMission(replay);
+  });
+  actions.appendChild(replayBtn);
+
+  if (hiddenView) {
+    const unhideBtn = document.createElement("button");
+    unhideBtn.className = "btn btn-secondary journal-unhide-button";
+    unhideBtn.type = "button";
+    unhideBtn.textContent = "Démasquer";
+    unhideBtn.addEventListener("click", () => {
+      const updated = unhideJournalEntry(entry.id);
+      if (!updated) return;
+      Toast.success("Mission remise dans ton journal.");
+      renderJournal();
+    });
+    actions.appendChild(unhideBtn);
+  } else {
+    const hideBtn = document.createElement("button");
+    hideBtn.className = "btn btn-secondary journal-hide-button";
+    hideBtn.type = "button";
+    hideBtn.textContent = "Masquer";
+    hideBtn.addEventListener("click", () => {
+      const updated = hideJournalEntry(entry.id);
+      if (!updated) return;
+      Toast.info("Mission masquée. Elle n'apparaîtra pas dans ton livret souvenir.");
+      renderJournal();
+    });
+    actions.appendChild(hideBtn);
+  }
+
+  content.appendChild(actions);
+
+  if (!hiddenView && !entry.isRated) {
+    content.appendChild(buildJournalRatingBlock(entry));
+  }
+
+  card.appendChild(content);
+  return card;
+}
+
+function renderJournal() {
+  if (!journalList) return;
+
+  const visibleEntries = getVisibleJournalEntries();
+  const hiddenEntries = getHiddenJournalEntries();
+  journalList.innerHTML = "";
+
+  if (!visibleEntries.length && !hiddenEntries.length) {
+    journalList.innerHTML = "<div class=\"empty\">Aucune mission pour l’instant.</div>";
+    return;
+  }
+
+  if (!visibleEntries.length) {
+    const noVisible = document.createElement("div");
+    noVisible.className = "empty";
+    noVisible.textContent = "Aucune mission visible. Tu peux en restaurer depuis les missions masquées.";
+    journalList.appendChild(noVisible);
+  }
+
+  visibleEntries.forEach(entry => {
+    journalList.appendChild(buildJournalCard(entry));
+  });
+
+  const hiddenSection = document.createElement("details");
+  hiddenSection.className = "journal-hidden-section";
+  hiddenSection.hidden = hiddenEntries.length === 0;
+  hiddenSection.innerHTML = `<summary>Voir les missions masquées (${hiddenEntries.length})</summary>`;
+
+  const hiddenList = document.createElement("div");
+  hiddenList.className = "list";
+  hiddenEntries.forEach(entry => {
+    hiddenList.appendChild(buildJournalCard(entry, { hiddenView: true }));
+  });
+  hiddenSection.appendChild(hiddenList);
+  journalList.appendChild(hiddenSection);
 }
 
 function renderPhotos() {
