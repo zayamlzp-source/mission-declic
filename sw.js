@@ -1,4 +1,4 @@
-const CACHE_NAME = "missions-declic-v5";
+const CACHE_NAME = "missions-declic-v6";
 const APP_SHELL = [
   "./",
   "./index.html",
@@ -12,7 +12,19 @@ const APP_SHELL = [
 
 self.addEventListener("install", (event) => {
   event.waitUntil(
-    caches.open(CACHE_NAME).then((cache) => cache.addAll(APP_SHELL))
+    caches.open(CACHE_NAME).then(async (cache) => {
+      await Promise.all(APP_SHELL.map(async (url) => {
+        try {
+          const request = new Request(url, { cache: "reload" });
+          const response = await fetch(request);
+          if (response && response.ok) {
+            await cache.put(request, response.clone());
+          }
+        } catch (error) {
+          // ignore individual preload failures
+        }
+      }));
+    })
   );
 });
 
@@ -34,28 +46,35 @@ self.addEventListener("fetch", (event) => {
   const { request } = event;
   const isNavigationRequest = request.mode === "navigate";
   const isSameOrigin = new URL(request.url).origin === self.location.origin;
+  const isCriticalAsset = request.destination === "document" || request.destination === "script" || request.destination === "style";
 
   event.respondWith(
-    caches.match(request).then((cachedResponse) => {
-      const networkFetch = fetch(request)
-        .then((networkResponse) => {
+    (async () => {
+      if (isCriticalAsset || isNavigationRequest) {
+        try {
+          const networkResponse = await fetch(request);
           if (isSameOrigin && networkResponse.ok) {
-            const copy = networkResponse.clone();
-            caches.open(CACHE_NAME).then((cache) => cache.put(request, copy));
+            const cache = await caches.open(CACHE_NAME);
+            await cache.put(request, networkResponse.clone());
           }
           return networkResponse;
-        });
-
-      if (cachedResponse) {
-        event.waitUntil(networkFetch.catch(() => null));
-        return cachedResponse;
+        } catch (error) {
+          const fallback = await caches.match(request);
+          if (fallback) return fallback;
+          if (isNavigationRequest) return caches.match("./missions-declic.html");
+          throw error;
+        }
       }
 
-      return networkFetch.catch(() => {
-        if (isNavigationRequest) return caches.match("./missions-declic.html");
-        return caches.match(request);
-      });
-    })
+      const cachedResponse = await caches.match(request);
+      if (cachedResponse) return cachedResponse;
+      const networkResponse = await fetch(request);
+      if (isSameOrigin && networkResponse.ok) {
+        const cache = await caches.open(CACHE_NAME);
+        await cache.put(request, networkResponse.clone());
+      }
+      return networkResponse;
+    })()
   );
 });
 

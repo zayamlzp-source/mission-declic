@@ -2100,7 +2100,25 @@ async function openAdminAccess() {
     showScreen("orga");
     return;
   }
-  openAdminLoginModal();
+
+  if (adminLoginModal) {
+    openAdminLoginModal();
+    return;
+  }
+
+  const code = window.prompt("Code admin :");
+  if (!code) return;
+  const result = await authorizeAdminCode(code.trim());
+  if (!result.ok) {
+    Toast.error(result.message);
+    const wantsRecovery = window.confirm("Code oublié ? Cliquer sur OK pour lancer la récupération par e-mail.");
+    if (wantsRecovery) {
+      await recoverAdminAccessFlow();
+    }
+    return;
+  }
+  Toast.success("Accès admin autorisé.");
+  showScreen("orga");
 }
 
 async function recoverAdminAccessFlow() {
@@ -2162,39 +2180,44 @@ async function recoverAdminAccessFlow() {
   }
 }
 
-async function submitAdminLoginFromModal() {
+async function authorizeAdminCode(code) {
   const lockMs = getRemainingLockMs();
   if (lockMs > 0) {
     const minutes = Math.ceil(lockMs / 60000);
-    setAdminLoginStatus(`Trop d’essais. Réessaie dans ${minutes} min.`);
-    return;
+    return { ok: false, message: `Trop d’essais. Réessaie dans ${minutes} min.` };
   }
 
-  const code = String(adminLoginInput?.value || "").trim();
   if (!code) {
-    setAdminLoginStatus("Entre un code admin.");
-    adminLoginInput?.focus();
-    return;
+    return { ok: false, message: "Entre un code admin." };
   }
 
   if (!ADMIN_SECURITY.ready) {
     try {
       await ensureAdminSecurityReady();
     } catch (error) {
-      setAdminLoginStatus("Sécurité admin indisponible. Recharge la page.");
-      return;
+      return { ok: false, message: "Sécurité admin indisponible. Recharge la page." };
     }
   }
 
   const valid = await verifyAdminPin(code);
   if (!valid) {
     registerAuthFailure();
-    setAdminLoginStatus("Code admin incorrect.");
-    return;
+    return { ok: false, message: "Code admin incorrect." };
   }
 
   resetAuthFailures();
   setAdminSession(getAdminSettings().sessionMinutes);
+  return { ok: true, message: "" };
+}
+
+async function submitAdminLoginFromModal() {
+  const code = String(adminLoginInput?.value || "").trim();
+  const result = await authorizeAdminCode(code);
+  if (!result.ok) {
+    setAdminLoginStatus(result.message);
+    if (result.message.startsWith("Entre")) adminLoginInput?.focus();
+    return;
+  }
   closeAdminLoginModal();
   Toast.success("Accès admin autorisé.");
   showScreen("orga");
@@ -2446,12 +2469,6 @@ function bindEvents() {
   byId("confirm-validation-btn")?.addEventListener("click", confirmValidation);
   byId("cancel-validation-btn")?.addEventListener("click", () => showScreen("mission"));
   byId("submit-suggestion-btn")?.addEventListener("click", submitSuggestion);
-  byId("admin-access-btn")?.addEventListener("click", () => {
-    openAdminAccess().catch(error => {
-      console.error("Admin access error:", error);
-      Toast.error("Impossible d’ouvrir l’espace admin.");
-    });
-  });
   byId("admin-login-submit-btn")?.addEventListener("click", () => {
     submitAdminLoginFromModal().catch(error => {
       console.error("Admin login error:", error);
@@ -2530,6 +2547,10 @@ async function init() {
 }
 
 bindEvents();
+window.__openAdminAccess = () => openAdminAccess().catch(error => {
+  console.error("Admin access error:", error);
+  Toast.error("Impossible d’ouvrir l’espace admin.");
+});
 init().catch(error => {
   console.error("Init error:", error);
   Toast.error("Erreur d’initialisation de l’application.");
