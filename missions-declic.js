@@ -2845,6 +2845,13 @@ async function init() {
   }
 }
 
+window.openAdminAccess = openAdminAccess;
+byId("admin-access-btn")?.addEventListener("click", () => {
+  openAdminAccess().catch(error => {
+    console.error("Admin access eager click error:", error);
+    Toast.error("Impossible d’ouvrir l’espace admin.");
+  });
+});
 bindEvents();
 window.__openAdminAccess = () => openAdminAccess().catch(error => {
   console.error("Admin access error:", error);

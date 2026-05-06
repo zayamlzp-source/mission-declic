@@ -1,4 +1,4 @@
-const CACHE_NAME = "missions-declic-v6";
+const CACHE_NAME = "missions-declic-v7";
 const APP_SHELL = [
   "./",
   "./index.html",
