@@ -165,7 +165,7 @@ const orgaMessages = byId("orga-messages");
 const installBtnTop = byId("install-btn");
 const installBtnHome = byId("install-btn-home");
 const installCallout = byId("install-callout");
-const updateBanner = byId("app-update-banner");
+const updateBtnTop = byId("update-app-btn");
 const adminLoginModal = byId("admin-login-modal");
 const adminLoginInput = byId("admin-login-code-input");
 const adminLoginStatus = byId("admin-login-status");
@@ -2705,11 +2705,11 @@ function initPwaInstall() {
 }
 
 function showUpdateBanner() {
-  if (updateBanner) updateBanner.hidden = false;
+  if (updateBtnTop) updateBtnTop.style.display = "";
 }
 
 function hideUpdateBanner() {
-  if (updateBanner) updateBanner.hidden = true;
+  if (updateBtnTop) updateBtnTop.style.display = "none";
 }
 
 function bindUpdateBannerAction() {
